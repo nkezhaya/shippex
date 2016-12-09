@@ -28,6 +28,7 @@ defmodule Shippex.Carriers.UPS do
           price = body["RatedShipment"]["TotalCharges"]["MonetaryValue"]
             |> D.new
             |> D.mult(D.new(100))
+            |> D.round
 
           rate = %Shippex.Rate{service: service, price: price}
 

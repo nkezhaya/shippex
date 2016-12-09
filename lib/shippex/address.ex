@@ -3,9 +3,12 @@ defmodule Shippex.Address do
   defstruct [:name, :phone, :address, :address_line_2, :city, :state, :zip]
 
   alias __MODULE__, as: Address
+  alias Shippex.Util
 
   def to_struct(params) when is_map(params) do
     %Address{
+      name: params["name"],
+      phone: params["phone"],
       address: params["address"],
       address_line_2: params["address_line_2"],
       city: params["city"],

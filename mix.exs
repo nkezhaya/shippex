@@ -36,6 +36,7 @@ defmodule Shippex.Mixfile do
 
   defp deps do
     [
+      {:ex_doc, ">= 0.0.0", only: :dev},
       {:httpoison, ">= 0.0.0"},
       {:poison, ">= 0.0.0"},
       {:decimal, "~> 1.3"}

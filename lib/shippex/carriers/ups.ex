@@ -4,14 +4,8 @@ defmodule Shippex.Carriers.UPS do
   def fetch_rates(%Shippex.Shipment{} = shipment) do
     services = Shippex.Service.services_for_carrier(:ups)
 
-    rates = Enum.map services, fn (service) ->
+    Enum.map services, fn (service) ->
       fetch_rate(shipment, service)
-    end
-
-    if length(rates) == 0 do
-      {:error, "No rates found."}
-    else
-      {:ok, rates}
     end
   end
 

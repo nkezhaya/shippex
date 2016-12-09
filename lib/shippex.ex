@@ -20,8 +20,7 @@ defmodule Shippex do
   """
   def config do
     case Application.get_env(:shippex, :carriers, :not_found) do
-      :not_found -> raise InvalidConfigError,
-        message: "Shippex config not found"
+      :not_found -> raise InvalidConfigError, "Shippex config not found"
 
       config -> config
     end

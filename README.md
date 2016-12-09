@@ -1,8 +1,8 @@
 # Shippex
 
-Shippex is an abstraction of commonly used features in shipping with various carriers. As of now, only UPS is supported. More carrier support will come in the future.
+Shippex is an abstraction of commonly used features in shipping with various carriers. It provides a (hopefully) pleasant API to work with carrier-provided web interfaces for fetching rates and printing shipping labels.
 
-Units of measurement are currently hardcoded to inches and miles.
+As of now, only UPS is supported. More carrier support will come in the future. Units of measurement are currently hardcoded to inches and miles.
 
 ## Installation
 

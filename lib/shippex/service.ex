@@ -1,4 +1,5 @@
 defmodule Shippex.Service do
+  @enforce_keys [:carrier, :code, :description]
   defstruct [:carrier, :code, :description]
 
   alias __MODULE__, as: S

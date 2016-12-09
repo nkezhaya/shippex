@@ -42,7 +42,7 @@ defmodule UPSTest do
 
   test "rates generated, label fetched", %{shipment: shipment} do
     # Fetch rates
-    {:ok, rates} = Shippex.Carriers.UPS.fetch_rates(shipment)
+    rates = Shippex.Carriers.UPS.fetch_rates(shipment)
 
     assert rates
 

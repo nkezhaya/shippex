@@ -4,7 +4,8 @@ defmodule Shippex.Service do
 
   alias __MODULE__, as: S
 
-  def services_for_carrier(carrier) do
+  def services_for_carrier(carrier) when is_bitstring(carrier), do: services_for_carrier(String.to_atom(carrier))
+  def services_for_carrier(carrier) when is_atom(carrier) do
     case carrier do
       :ups ->
         [

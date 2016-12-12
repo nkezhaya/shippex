@@ -4,9 +4,19 @@ defmodule Shippex.Carriers.UPS do
   def fetch_rates(%Shippex.Shipment{} = shipment) do
     services = Shippex.Service.services_for_carrier(:ups)
 
-    Enum.map services, fn (service) ->
+    rates = Enum.map services, fn (service) ->
       fetch_rate(shipment, service)
     end
+
+    oks    = Enum.filter rates, &(elem(&1, 0) == :ok)
+    errors = Enum.filter rates, &(elem(&1, 0) == :error)
+
+    Enum.sort(oks, fn (r1, r2) ->
+      {:ok, r1} = r1
+      {:ok, r2} = r2
+
+      r1.price < r2.price
+    end) ++ errors
   end
 
   def fetch_rate(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do

@@ -53,10 +53,10 @@ defmodule Shippex.Carriers.UPS do
     end
   end
 
-  def fetch_label(%Shippex.Rate{} = rate, %Shippex.Shipment{} = shipment) do
+  def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
     params = Map.new
       |> Map.merge(security_params)
-      |> Map.merge(shipment_request_params(shipment, rate.service))
+      |> Map.merge(shipment_request_params(shipment, service))
 
     {:ok, response} = post("/Ship", params, [{"Content-Type", "application/json"}])
 
@@ -84,6 +84,9 @@ defmodule Shippex.Carriers.UPS do
       error = fault["detail"]["Errors"]["ErrorDetail"]["PrimaryErrorCode"]
       {:error, %{code: error["Code"], message: error["Description"]}}
     end
+  end
+  def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Rate{} = rate) do
+    fetch_label(shipment, rate.service)
   end
 
   # HTTPoison implementation

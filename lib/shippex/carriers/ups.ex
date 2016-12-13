@@ -133,7 +133,7 @@ defmodule Shippex.Carriers.UPS do
           ShipmentCharge: %{
             Type: "01",
             BillShipper: %{
-              AccountNumber: config.shipper_number
+              AccountNumber: config.shipper.account_number
             }
           }
         }
@@ -159,7 +159,7 @@ defmodule Shippex.Carriers.UPS do
     %{
       Description: shipment.package.description,
 
-      Shipper: address_params(shipment.from, include_shipper_number: true),
+      Shipper: shipper_address_params,
       ShipFrom: address_params(shipment.from),
       ShipTo: address_params(shipment.to),
 
@@ -175,8 +175,8 @@ defmodule Shippex.Carriers.UPS do
     }
   end
 
-  defp address_params(%Shippex.Address{} = address, options \\ []) do
-    params = %{
+  defp address_params(%Shippex.Address{} = address) do
+    %{
       Name: address.name,
       Phone: %{
         Number: address.phone
@@ -189,11 +189,22 @@ defmodule Shippex.Carriers.UPS do
         CountryCode: "US"
       }
     }
+  end
 
-    case Keyword.get(options, :include_shipper_number) do
-      true -> Map.put(params, :ShipperNumber, config.shipper_number)
-      _    -> params
-    end
+  defp shipper_address_params() do
+    address = Shippex.Address.to_struct(%{
+      "name" => config.shipper.name,
+      "phone" => config.shipper.phone,
+      "address" => config.shipper.address,
+      "address_line_2" => Map.get(config.shipper, :address_line_2),
+      "city" => config.shipper.city,
+      "state" => config.shipper.state,
+      "zip" => config.shipper.zip
+    })
+
+    address
+    |> address_params
+    |> Map.put(:ShipperNumber, config.shipper.account_number)
   end
 
   defp package_params(%Shippex.Package{} = package) do
@@ -228,18 +239,31 @@ defmodule Shippex.Carriers.UPS do
   defp config do
     with cfg when is_list(cfg) <- Keyword.get(Shippex.config, :ups, {:error, :not_found}),
 
-         sk <- Keyword.get(cfg, :secret_key,      {:error, :not_found, :secret_key}),
-         sn <- Keyword.get(cfg, :shipper_number,  {:error, :not_found, :shipper_number}),
-         un <- Keyword.get(cfg, :username,        {:error, :not_found, :username}),
-         pw <- Keyword.get(cfg, :password,        {:error, :not_found, :password}) do
+         sk when is_bitstring(sk) <-
+           Keyword.get(cfg, :secret_key, {:error, :not_found, :secret_key}),
+
+         sh when is_map(sh) <-
+           Keyword.get(cfg, :shipper, {:error, :not_found, :shipper}),
+
+         an when is_bitstring(an) <-
+           Keyword.get(cfg, :shipper) |> Map.get(:account_number, {:error, :not_found, :account_number}),
+
+         un when is_bitstring(an) <-
+           Keyword.get(cfg, :username, {:error, :not_found, :username}),
+
+         pw when is_bitstring(pw) <-
+           Keyword.get(cfg, :password, {:error, :not_found, :password}) do
 
          %{
            username: un,
            password: pw,
            secret_key: sk,
-           shipper_number: sn
+           shipper: sh
          }
     else
+      {:error, :not_found, :shipper} -> raise Shippex.InvalidConfigError,
+        message: "UPS shipper config key missing. This could be because was provided as a keyword list instead of a map."
+
       {:error, :not_found, token} -> raise Shippex.InvalidConfigError,
         message: "UPS config key missing: #{token}"
 

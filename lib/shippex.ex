@@ -16,7 +16,15 @@ defmodule Shippex do
         username: "MyUsername",
         password: "MyPassword",
         secret_key: "123123",
-        shipper_number: "AB1234"
+        shipper: %{
+          account_number: "AB1234",
+          name: "My Company",
+          phone: "123-456-7890",
+          address: "1234 Foo St",
+          city: "Foo",
+          state: "TX",
+          zip: "78999"
+        }
       ]
     ]
   """

@@ -54,6 +54,8 @@ defmodule Shippex.Carriers.UPS do
   end
 
   def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
+    alias Decimal, as: D
+
     params = Map.new
       |> Map.merge(security_params)
       |> Map.merge(shipment_request_params(shipment, service))

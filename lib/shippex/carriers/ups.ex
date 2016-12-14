@@ -68,8 +68,17 @@ defmodule Shippex.Carriers.UPS do
       case body["Response"]["ResponseStatus"] do
         %{"Code" => "1", "Description" => "Success"} ->
 
-          package_response = body["ShipmentResults"]["PackageResults"]
-          label = %Shippex.Label{tracking_number: package_response["TrackingNumber"],
+          results = body["ShipmentResults"]
+          price = results["ShipmentCharges"]["TotalCharges"]["MonetaryValue"]
+            |> D.new
+            |> D.mult(D.new(100))
+            |> D.round
+
+          rate = %Shippex.Rate{service: service, price: price}
+
+          package_response = results["PackageResults"]
+          label = %Shippex.Label{rate: rate,
+                                 tracking_number: package_response["TrackingNumber"],
                                  format: "gif",
                                  image: package_response["ShippingLabel"]["GraphicImage"]}
 

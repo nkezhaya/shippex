@@ -1,5 +1,20 @@
 defmodule Shippex.Carriers.UPS do
-  use HTTPoison.Base
+
+  alias Shippex.Carriers.UPS.Client
+
+  defmacro with_response(response, do: block) do
+    quote do
+      response = unquote(response)
+      fault = response.body["Fault"]
+
+      if not is_nil(fault) do
+        error = fault["detail"]["Errors"]["ErrorDetail"]["PrimaryErrorCode"]
+        {:error, %{code: error["Code"], message: error["Description"]}}
+      else
+        unquote(block)
+      end
+    end
+  end
 
   def fetch_rates(%Shippex.Shipment{} = shipment) do
     services = Shippex.Service.services_for_carrier(:ups)
@@ -26,11 +41,9 @@ defmodule Shippex.Carriers.UPS do
       |> Map.merge(security_params)
       |> Map.merge(rate_request_params(shipment, service))
 
-    {:ok, response} = post("/Rate", params, [{"Content-Type", "application/json"}])
+    {:ok, response} = Client.post("/Rate", params, [{"Content-Type", "application/json"}])
 
-    fault = response.body["Fault"]
-
-    if is_nil(fault) do
+    with_response response do
       body = response.body["RateResponse"]
 
       case body["Response"]["ResponseStatus"] do
@@ -47,9 +60,6 @@ defmodule Shippex.Carriers.UPS do
         %{"Code" => code, "Description" => description} ->
           {:error, %{code: code, message: description}}
       end
-    else
-      error = fault["detail"]["Errors"]["ErrorDetail"]["PrimaryErrorCode"]
-      {:error, %{code: error["Code"], message: error["Description"]}}
     end
   end
 
@@ -60,11 +70,9 @@ defmodule Shippex.Carriers.UPS do
       |> Map.merge(security_params)
       |> Map.merge(shipment_request_params(shipment, service))
 
-    {:ok, response} = post("/Ship", params, [{"Content-Type", "application/json"}])
+    {:ok, response} = Client.post("/Ship", params, [{"Content-Type", "application/json"}])
 
-    fault = response.body["Fault"]
-
-    if is_nil(fault) do
+    with_response response do
       body = response.body["ShipmentResponse"]
 
       case body["Response"]["ResponseStatus"] do
@@ -91,24 +99,57 @@ defmodule Shippex.Carriers.UPS do
 
         _ -> raise "Invalid response: #{response}"
       end
-    else
-      error = fault["detail"]["Errors"]["ErrorDetail"]["PrimaryErrorCode"]
-      {:error, %{code: error["Code"], message: error["Description"]}}
     end
   end
   def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Rate{} = rate) do
     fetch_label(shipment, rate.service)
   end
 
-  # HTTPoison implementation
-  def process_url(endpoint), do: base_url <> endpoint
-  def process_request_body(body), do: Poison.encode!(body)
-  def process_response_body(body), do: Poison.decode!(body)
+  def validate_address(%Shippex.Address{} = address) do
+    xav_params = %{
+      XAVRequest: %{
+        Request: %{
+          RequestOption: "1"
+        },
+        MaximumListSize: "10",
+        AddressKeyFormat: %{
+          AddressLine: address.address,
+          PoliticalDivision2: address.city,
+          PoliticalDivision1: address.state,
+          PostcodePrimaryLow: address.zip,
+          CountryCode: "US"
+        }
+      }
+    }
 
-  defp base_url do
-    case Mix.env do
-      :prod -> "https://onlinetools.ups.com/rest"
-      _     -> "https://wwwcie.ups.com/rest"
+    params = Map.new
+      |> Map.merge(security_params)
+      |> Map.merge(xav_params)
+
+    {:ok, response} = Client.post("/XAV", params, [{"Content-Type", "application/json"}])
+
+    with_response response do
+      body = response.body["XAVResponse"]
+
+      if Map.has_key?(body, "NoCandidatesIndicator") do
+        {:error, %{code: 2001, description: "Invalid address."}}
+      else
+        candidates = List.flatten([body["Candidate"]])
+
+        candidates = Enum.map candidates, fn (candidate) ->
+          candidate = candidate["AddressKeyFormat"]
+          Shippex.Address.to_struct(%{
+            "name" => address.name,
+            "phone" => address.phone,
+            "address" => candidate["AddressLine"],
+            "city" => candidate["PoliticalDivision2"],
+            "state" => candidate["PoliticalDivision1"],
+            "zip" => candidate["PostcodePrimaryLow"]
+          })
+        end
+
+        {:ok, candidates}
+      end
     end
   end
 
@@ -245,6 +286,22 @@ defmodule Shippex.Carriers.UPS do
         Weight: "#{package.weight}"
       }
     }
+  end
+
+  defmodule Client do
+    use HTTPoison.Base
+
+    # HTTPoison implementation
+    def process_url(endpoint), do: base_url <> endpoint
+    def process_request_body(body), do: Poison.encode!(body)
+    def process_response_body(body), do: Poison.decode!(body)
+
+    defp base_url do
+      case Mix.env do
+        :prod -> "https://onlinetools.ups.com/rest"
+        _     -> "https://wwwcie.ups.com/rest"
+      end
+    end
   end
 
   defp config do

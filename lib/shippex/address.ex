@@ -1,12 +1,12 @@
 defmodule Shippex.Address do
-  @enforce_keys [:name, :address, :city, :state, :zip]
+  @enforce_keys [:name, :phone, :address, :address_line_2, :city, :state, :zip]
   defstruct [:name, :phone, :address, :address_line_2, :city, :state, :zip]
 
   alias __MODULE__, as: Address
   alias Shippex.Util
 
   def to_struct(params) when is_map(params) do
-    %Address{
+    address = %Address{
       name: params["name"],
       phone: params["phone"],
       address: params["address"],
@@ -15,6 +15,20 @@ defmodule Shippex.Address do
       state: Util.full_state_to_abbreviation(params["state"]),
       zip: params["zip"]
     }
+
+    # Check for a passed array.
+    address = case params["address"] do
+      [line1] -> Map.put(address, :address, line1)
+
+      [line1, line2 | _] ->
+        address
+        |> Map.put(:address, line1)
+        |> Map.put(:address_line_2, line2)
+
+      _ -> address
+    end
+
+    address
   end
 
   def address_line_list(%Shippex.Address{} = address) do

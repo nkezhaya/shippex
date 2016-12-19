@@ -52,14 +52,40 @@ defmodule Shippex do
     Enum.filter [ups, fedex, usps], fn (c) -> not is_nil(c) end
   end
 
-  def fetch_rates(%Shippex.Shipment{} = shipment, carrier) when is_atom(carrier) do
+  def fetch_rates(%Shippex.Shipment{} = shipment, carriers \\ :all) do
+    # Convert the atom to a list if necessary.
+    carriers = cond do
+      is_nil(carriers)  -> [:all]
+      is_atom(carriers) -> [carriers]
+      is_list(carriers) -> carriers
+
+      true ->
+        raise """
+        #{inspect carriers} is an invalid carrier or list of carriers. Try using an atom. For example:
+
+          Shippex.fetch_rates(shipment, :ups)
+        """
+    end
+
+    # Validate each carrier.
     available_carriers = Shippex.carriers()
-    unless Enum.any?(available_carriers, fn (c) -> c == carrier end) do
-      raise "#{inspect carrier} not found in #{inspect available_carriers}"
+    Enum.each carriers, fn (carrier) ->
+      unless Enum.any?(available_carriers, fn (c) -> c == carrier end) do
+        raise "#{inspect carrier} not found in #{inspect available_carriers}"
+      end
     end
 
     # TODO
-    Shippex.Carriers.UPS.fetch_rates(shipment)
+    rates  = Shippex.Carriers.UPS.fetch_rates(shipment)
+    oks    = Enum.filter rates, &(elem(&1, 0) == :ok)
+    errors = Enum.filter rates, &(elem(&1, 0) == :error)
+
+    Enum.sort(oks, fn (r1, r2) ->
+      {:ok, r1} = r1
+      {:ok, r2} = r2
+
+      r1.price < r2.price
+    end) ++ errors
   end
 
   def fetch_rate(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
@@ -68,5 +94,9 @@ defmodule Shippex do
 
   def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
     Shippex.Carriers.UPS.fetch_label(shipment, service)
+  end
+
+  def validate_address(%Shippex.Address{} = address) do
+    Shippex.Carriers.UPS.validate_address(address)
   end
 end

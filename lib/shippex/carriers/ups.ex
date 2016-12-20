@@ -134,7 +134,7 @@ defmodule Shippex.Carriers.UPS do
       if Map.has_key?(body, "NoCandidatesIndicator") do
         {:error, %{code: 2001, description: "Invalid address."}}
       else
-        candidates = List.flatten([body["Candidate"]])
+        candidates = List.flatten([body["Candidate"] || []])
 
         candidates = Enum.map candidates, fn (candidate) ->
           candidate = candidate["AddressKeyFormat"]

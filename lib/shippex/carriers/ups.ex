@@ -47,7 +47,7 @@ defmodule Shippex.Carriers.UPS do
       body = response.body["RateResponse"]
 
       case body["Response"]["ResponseStatus"] do
-        %{"Code" => "1", "Description" => "Success"} ->
+        %{"Code" => "1"} ->
           price = body["RatedShipment"]["TotalCharges"]["MonetaryValue"]
             |> D.new
             |> D.mult(D.new(100))
@@ -76,7 +76,7 @@ defmodule Shippex.Carriers.UPS do
       body = response.body["ShipmentResponse"]
 
       case body["Response"]["ResponseStatus"] do
-        %{"Code" => "1", "Description" => "Success"} ->
+        %{"Code" => "1"} ->
 
           results = body["ShipmentResults"]
           price = results["ShipmentCharges"]["TotalCharges"]["MonetaryValue"]
@@ -103,6 +103,37 @@ defmodule Shippex.Carriers.UPS do
   end
   def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Rate{} = rate) do
     fetch_label(shipment, rate.service)
+  end
+
+  def cancel_shipment(%Shippex.Label{} = label) do
+    void_params = %{
+      VoidShipmentRequest: %{
+        Request: %{},
+        VoidShipment: %{
+          ShipmentIdentificationNumber: label.tracking_number
+        }
+      }
+    }
+
+    params = Map.new
+      |> Map.merge(security_params)
+      |> Map.merge(void_params)
+
+    {:ok, response} = Client.post("/Void", params, [{"Content-Type", "application/json"}])
+
+    with_response response do
+      body = response.body["VoidShipmentResponse"]
+
+      case body["SummaryResult"]["Status"] do
+        %{"Code" => "1"} ->
+          {:ok, label}
+
+        %{"Code" => code, "Description" => description} ->
+          {:error, %{code: code, message: description}}
+
+        _ -> raise "Invalid response: #{response}"
+      end
+    end
   end
 
   def validate_address(%Shippex.Address{} = address) do

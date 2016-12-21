@@ -96,6 +96,10 @@ defmodule Shippex do
     Shippex.Carriers.UPS.fetch_label(shipment, service)
   end
 
+  def cancel_shipment(%Shippex.Label{} = label) do
+    Shippex.Carriers.UPS.cancel_shipment(label)
+  end
+
   def validate_address(%Shippex.Address{} = address) do
     Shippex.Carriers.UPS.validate_address(address)
   end

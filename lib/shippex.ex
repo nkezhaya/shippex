@@ -97,7 +97,10 @@ defmodule Shippex do
   end
 
   def cancel_shipment(%Shippex.Label{} = label) do
-    Shippex.Carriers.UPS.cancel_shipment(label)
+    Shippex.Carriers.UPS.cancel_shipment(label.tracking_number)
+  end
+  def cancel_shipment(tracking_number) when is_bitstring(tracking_number) do
+    Shippex.Carriers.UPS.cancel_shipment(tracking_number)
   end
 
   def validate_address(%Shippex.Address{} = address) do

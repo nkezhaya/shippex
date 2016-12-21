@@ -106,11 +106,14 @@ defmodule Shippex.Carriers.UPS do
   end
 
   def cancel_shipment(%Shippex.Label{} = label) do
+    cancel_shipment(label.tracking_number)
+  end
+  def cancel_shipment(tracking_number) when is_bitstring(tracking_number) do
     void_params = %{
       VoidShipmentRequest: %{
         Request: %{},
         VoidShipment: %{
-          ShipmentIdentificationNumber: label.tracking_number
+          ShipmentIdentificationNumber: tracking_number
         }
       }
     }
@@ -126,7 +129,7 @@ defmodule Shippex.Carriers.UPS do
 
       case body["SummaryResult"]["Status"] do
         %{"Code" => "1"} ->
-          {:ok, label}
+          {:ok, %{code: "1", message: "Voided successfully."}}
 
         %{"Code" => code, "Description" => description} ->
           {:error, %{code: code, message: description}}

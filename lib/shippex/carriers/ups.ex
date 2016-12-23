@@ -58,7 +58,7 @@ defmodule Shippex.Carriers.UPS do
           {:ok, rate}
 
         %{"Code" => code, "Description" => description} ->
-          {:error, %{code: code, message: description}}
+          {:error, %{code: code, message: description, service: service}}
       end
     end
   end
@@ -95,7 +95,7 @@ defmodule Shippex.Carriers.UPS do
           {:ok, label}
 
         %{"Code" => code, "Description" => description} ->
-          {:error, %{code: code, message: description}}
+          {:error, %{code: code, message: description, service: service}}
 
         _ -> raise "Invalid response: #{response}"
       end

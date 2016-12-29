@@ -4,7 +4,7 @@ defmodule Shippex do
     defexception [:message]
 
     def exception(message) do
-      "Invalid config: #{message}"
+      "Invalid config: #{inspect message}"
     end
   end
 

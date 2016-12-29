@@ -4,7 +4,6 @@ defmodule Shippex.Service do
 
   alias __MODULE__, as: S
 
-  def services_for_carrier(carrier) when is_bitstring(carrier), do: services_for_carrier(String.to_atom(carrier))
   def services_for_carrier(carrier) when is_atom(carrier) do
     case carrier do
       :ups ->
@@ -18,6 +17,12 @@ defmodule Shippex.Service do
       _ ->
         raise "Invalid carrier: #{inspect carrier}"
     end
+  end
+  def services_for_carrier(carrier) when is_bitstring(carrier) do
+    carrier
+    |> String.downcase
+    |> String.to_atom
+    |> services_for_carrier
   end
 
   def all() do

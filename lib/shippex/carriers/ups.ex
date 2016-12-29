@@ -5,13 +5,23 @@ defmodule Shippex.Carriers.UPS do
   defmacro with_response(response, do: block) do
     quote do
       response = unquote(response)
-      fault = response.body["Fault"]
+      case response do
+        {:ok, response} ->
+          fault = response.body["Fault"]
 
-      if not is_nil(fault) do
-        error = fault["detail"]["Errors"]["ErrorDetail"]["PrimaryErrorCode"]
-        {:error, %{code: error["Code"], message: error["Description"]}}
-      else
-        unquote(block)
+          if not is_nil(fault) do
+            error = fault["detail"]["Errors"]["ErrorDetail"]["PrimaryErrorCode"]
+            {:error, %{code: error["Code"], message: error["Description"]}}
+          else
+            var!(response) = response
+            unquote(block)
+          end
+
+        {:error, _} ->
+          {:error, %{code: 1, message: "The UPS API is down."}}
+
+        _ ->
+          {:error, %{code: 0, message: "Unknown error."}}
       end
     end
   end
@@ -41,7 +51,7 @@ defmodule Shippex.Carriers.UPS do
       |> Map.merge(security_params)
       |> Map.merge(rate_request_params(shipment, service))
 
-    {:ok, response} = Client.post("/Rate", params, [{"Content-Type", "application/json"}])
+    response = Client.post("/Rate", params, [{"Content-Type", "application/json"}])
 
     with_response response do
       body = response.body["RateResponse"]
@@ -70,7 +80,7 @@ defmodule Shippex.Carriers.UPS do
       |> Map.merge(security_params)
       |> Map.merge(shipment_request_params(shipment, service))
 
-    {:ok, response} = Client.post("/Ship", params, [{"Content-Type", "application/json"}])
+    response = Client.post("/Ship", params, [{"Content-Type", "application/json"}])
 
     with_response response do
       body = response.body["ShipmentResponse"]
@@ -122,7 +132,7 @@ defmodule Shippex.Carriers.UPS do
       |> Map.merge(security_params)
       |> Map.merge(void_params)
 
-    {:ok, response} = Client.post("/Void", params, [{"Content-Type", "application/json"}])
+    response = Client.post("/Void", params, [{"Content-Type", "application/json"}])
 
     with_response response do
       body = response.body["VoidShipmentResponse"]
@@ -160,7 +170,7 @@ defmodule Shippex.Carriers.UPS do
       |> Map.merge(security_params)
       |> Map.merge(xav_params)
 
-    {:ok, response} = Client.post("/XAV", params, [{"Content-Type", "application/json"}])
+    response = Client.post("/XAV", params, [{"Content-Type", "application/json"}])
 
     with_response response do
       body = response.body["XAVResponse"]

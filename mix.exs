@@ -13,7 +13,7 @@ defmodule Shippex.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :httpoison]]
+    []
   end
 
   defp description do

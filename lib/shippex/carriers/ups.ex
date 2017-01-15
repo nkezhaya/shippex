@@ -345,7 +345,7 @@ defmodule Shippex.Carriers.UPS do
     def process_response_body(body), do: Poison.decode!(body)
 
     defp base_url do
-      case Mix.env do
+      case Shippex.env do
         :prod -> "https://onlinetools.ups.com/rest"
         _     -> "https://wwwcie.ups.com/rest"
       end

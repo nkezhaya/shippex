@@ -11,22 +11,24 @@ defmodule Shippex do
   @doc """
   Fetches the Shippex config for all carriers.
 
-    config :shippex, :carriers, [
-      ups: [
-        username: "MyUsername",
-        password: "MyPassword",
-        secret_key: "123123",
-        shipper: %{
-          account_number: "AB1234",
-          name: "My Company",
-          phone: "123-456-7890",
-          address: "1234 Foo St",
-          city: "Foo",
-          state: "TX",
-          zip: "78999"
-        }
+    config :shippex,
+      env: :dev,
+      carriers: [
+        ups: [
+          username: "MyUsername",
+          password: "MyPassword",
+          secret_key: "123123",
+          shipper: %{
+            account_number: "AB1234",
+            name: "My Company",
+            phone: "123-456-7890",
+            address: "1234 Foo St",
+            city: "Foo",
+            state: "TX",
+            zip: "78999"
+          }
+        ]
       ]
-    ]
   """
   def config do
     case Application.get_env(:shippex, :carriers, :not_found) do
@@ -50,6 +52,21 @@ defmodule Shippex do
     usps  = if Keyword.get(cfg, :usps),   do: :usps
 
     Enum.filter [ups, fedex, usps], fn (c) -> not is_nil(c) end
+  end
+
+  @doc """
+  Fetches the env atom for the config. Must be either `:dev` or `:prod`, or an
+  exception will be thrown.
+
+    config :shippex, :env, :dev
+
+    Shippex.env #=> :dev
+  """
+  def env do
+    case Application.get_env(:shippex, :env, :dev) do
+      e when e in [:dev, :prod] -> e
+      _ -> raise InvalidConfigError, "Shippex env must be either :dev or :prod"
+    end
   end
 
   def fetch_rates(%Shippex.Shipment{} = shipment, carriers \\ :all) do

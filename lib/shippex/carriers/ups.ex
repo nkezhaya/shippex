@@ -199,6 +199,8 @@ defmodule Shippex.Carriers.UPS do
   end
 
   defp security_params do
+    config = config()
+
     %{
       UPSSecurity: %{
         UsernameToken: %{
@@ -289,6 +291,8 @@ defmodule Shippex.Carriers.UPS do
   end
 
   defp shipper_address_params() do
+    config = config()
+
     address = Shippex.Address.to_struct(%{
       "name" => config().shipper.name,
       "phone" => config().shipper.phone,

@@ -204,11 +204,11 @@ defmodule Shippex.Carriers.UPS do
     %{
       UPSSecurity: %{
         UsernameToken: %{
-          Username: config().username,
-          Password: config().password
+          Username: config.username,
+          Password: config.password
         },
         ServiceAccessToken: %{
-          AccessLicenseNumber: config().secret_key
+          AccessLicenseNumber: config.secret_key
         }
       }
     }
@@ -294,18 +294,18 @@ defmodule Shippex.Carriers.UPS do
     config = config()
 
     address = Shippex.Address.to_struct(%{
-      "name" => config().shipper.name,
-      "phone" => config().shipper.phone,
-      "address" => config().shipper.address,
-      "address_line_2" => Map.get(config().shipper, :address_line_2),
-      "city" => config().shipper.city,
-      "state" => config().shipper.state,
-      "zip" => config().shipper.zip
+      "name" => config.shipper.name,
+      "phone" => config.shipper.phone,
+      "address" => config.shipper.address,
+      "address_line_2" => Map.get(config.shipper, :address_line_2),
+      "city" => config.shipper.city,
+      "state" => config.shipper.state,
+      "zip" => config.shipper.zip
     })
 
     address
     |> address_params
-    |> Map.put(:ShipperNumber, config().shipper.account_number)
+    |> Map.put(:ShipperNumber, config.shipper.account_number)
   end
 
   defp package_params(%Shippex.Package{} = package) do

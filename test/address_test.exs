@@ -38,18 +38,26 @@ defmodule AddressTest do
       "name" => name,
       "phone" => phone,
       "address" => "404 S Figueroa St",
+      "address_line_2" => "Suite 101",
       "city" => "Los Angeles",
       "state" => "CA",
       "zip" => "90071"
     })
+
+    assert valid_address.address_line_2 == "Suite 101"
 
     {:ok, candidates} = Shippex.Carriers.UPS.validate_address(valid_address)
     assert length(candidates) == 1
     assert hd(candidates).name == name
     assert hd(candidates).phone == phone
 
+    Enum.each candidates, fn(candidate) ->
+      assert candidate.address_line_2 == "Suite 101"
+    end
+
     ambiguous_address = Shippex.Address.to_struct(%{
       "address" => "404 S Figaro St",
+      "address_line_2" => "Suite 101",
       "city" => "Los Angeles",
       "state" => "CA",
       "zip" => "90071"

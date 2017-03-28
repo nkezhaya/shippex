@@ -48,7 +48,7 @@ defmodule Shippex.Carriers.UPS do
     alias Decimal, as: D
 
     params = Map.new
-      |> Map.merge(security_params)
+      |> Map.merge(security_params())
       |> Map.merge(rate_request_params(shipment, service))
 
     response = Client.post("/Rate", params, [{"Content-Type", "application/json"}])
@@ -77,7 +77,7 @@ defmodule Shippex.Carriers.UPS do
     alias Decimal, as: D
 
     params = Map.new
-      |> Map.merge(security_params)
+      |> Map.merge(security_params())
       |> Map.merge(shipment_request_params(shipment, service))
 
     response = Client.post("/Ship", params, [{"Content-Type", "application/json"}])
@@ -129,7 +129,7 @@ defmodule Shippex.Carriers.UPS do
     }
 
     params = Map.new
-      |> Map.merge(security_params)
+      |> Map.merge(security_params())
       |> Map.merge(void_params)
 
     response = Client.post("/Void", params, [{"Content-Type", "application/json"}])
@@ -167,7 +167,7 @@ defmodule Shippex.Carriers.UPS do
     }
 
     params = Map.new
-      |> Map.merge(security_params)
+      |> Map.merge(security_params())
       |> Map.merge(xav_params)
 
     response = Client.post("/XAV", params, [{"Content-Type", "application/json"}])
@@ -186,6 +186,7 @@ defmodule Shippex.Carriers.UPS do
             "name" => address.name,
             "phone" => address.phone,
             "address" => candidate["AddressLine"],
+            "address_line_2" => address.address_line_2,
             "city" => candidate["PoliticalDivision2"],
             "state" => candidate["PoliticalDivision1"],
             "zip" => candidate["PostcodePrimaryLow"]
@@ -201,11 +202,11 @@ defmodule Shippex.Carriers.UPS do
     %{
       UPSSecurity: %{
         UsernameToken: %{
-          Username: config.username,
-          Password: config.password
+          Username: config().username,
+          Password: config().password
         },
         ServiceAccessToken: %{
-          AccessLicenseNumber: config.secret_key
+          AccessLicenseNumber: config().secret_key
         }
       }
     }
@@ -229,7 +230,7 @@ defmodule Shippex.Carriers.UPS do
           ShipmentCharge: %{
             Type: "01",
             BillShipper: %{
-              AccountNumber: config.shipper.account_number
+              AccountNumber: config().shipper.account_number
             }
           }
         }
@@ -255,7 +256,7 @@ defmodule Shippex.Carriers.UPS do
     %{
       Description: shipment.package.description,
 
-      Shipper: shipper_address_params,
+      Shipper: shipper_address_params(),
       ShipFrom: address_params(shipment.from),
       ShipTo: address_params(shipment.to),
 
@@ -289,18 +290,18 @@ defmodule Shippex.Carriers.UPS do
 
   defp shipper_address_params() do
     address = Shippex.Address.to_struct(%{
-      "name" => config.shipper.name,
-      "phone" => config.shipper.phone,
-      "address" => config.shipper.address,
-      "address_line_2" => Map.get(config.shipper, :address_line_2),
-      "city" => config.shipper.city,
-      "state" => config.shipper.state,
-      "zip" => config.shipper.zip
+      "name" => config().shipper.name,
+      "phone" => config().shipper.phone,
+      "address" => config().shipper.address,
+      "address_line_2" => Map.get(config().shipper, :address_line_2),
+      "city" => config().shipper.city,
+      "state" => config().shipper.state,
+      "zip" => config().shipper.zip
     })
 
     address
     |> address_params
-    |> Map.put(:ShipperNumber, config.shipper.account_number)
+    |> Map.put(:ShipperNumber, config().shipper.account_number)
   end
 
   defp package_params(%Shippex.Package{} = package) do
@@ -336,7 +337,7 @@ defmodule Shippex.Carriers.UPS do
     use HTTPoison.Base
 
     # HTTPoison implementation
-    def process_url(endpoint), do: base_url <> endpoint
+    def process_url(endpoint), do: base_url() <> endpoint
     def process_request_body(body), do: Poison.encode!(body)
     def process_response_body(body), do: Poison.decode!(body)
 

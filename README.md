@@ -6,21 +6,21 @@ As of now, only UPS is supported. More carrier support will come in the future. 
 
 ## Installation
 
-  1. Add `shippex` to your list of dependencies in `mix.exs`:
+1. Add `shippex` to your list of dependencies in `mix.exs`:
 
-    ```elixir
-    def deps do
-      [{:shippex, "~> 0.1.0"}]
-    end
-    ```
+```elixir
+def deps do
+  [{:shippex, "~> 0.1.0"}]
+end
+```
 
-  2. Ensure `shippex` is started before your application:
+2. Ensure `shippex` is started before your application:
 
-    ```elixir
-    def application do
-      [applications: [:shippex]]
-    end
-    ```
+```elixir
+def application do
+  [applications: [:shippex]]
+end
+```
 
 ## Fetching rates
 

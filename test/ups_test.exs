@@ -9,7 +9,7 @@ defmodule UPSTest do
   test "rates generated, label fetched", %{shipment: shipment} do
     # Fetch rates
     rates = shipment
-      |> Shippex.Carriers.UPS.fetch_rates
+      |> Shippex.Carrier.UPS.fetch_rates
 
     assert rates
 
@@ -17,7 +17,7 @@ defmodule UPSTest do
     {:ok, rate} = Enum.shuffle(rates) |> hd
 
     {:ok, label} = shipment
-      |> Shippex.Carriers.UPS.fetch_label(rate)
+      |> Shippex.Carrier.UPS.fetch_label(rate)
 
     assert label
   end

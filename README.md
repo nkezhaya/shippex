@@ -60,7 +60,7 @@ shipment = %Shippex.Shipment{
 }
 
 # Fetch rates
-rates = Shippex.Carriers.UPS.fetch_rates(shipment)
+rates = Shippex.Carrier.UPS.fetch_rates(shipment)
 
 # Accept one of the services and print the label
 {:ok, rate} = Enum.shuffle(rates) |> hd

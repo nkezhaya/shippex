@@ -46,7 +46,7 @@ defmodule AddressTest do
 
     assert valid_address.address_line_2 == "Suite 101"
 
-    {:ok, candidates} = Shippex.Carriers.UPS.validate_address(valid_address)
+    {:ok, candidates} = Shippex.Carrier.UPS.validate_address(valid_address)
     assert length(candidates) == 1
     assert hd(candidates).name == name
     assert hd(candidates).phone == phone
@@ -63,7 +63,7 @@ defmodule AddressTest do
       "zip" => "90071"
     })
 
-    {:ok, candidates} = Shippex.Carriers.UPS.validate_address(ambiguous_address)
+    {:ok, candidates} = Shippex.Carrier.UPS.validate_address(ambiguous_address)
     assert length(candidates) > 1
 
     invalid_address = Shippex.Address.to_struct(%{
@@ -73,6 +73,6 @@ defmodule AddressTest do
       "zip" => "90071"
     })
 
-    {:error, _} = Shippex.Carriers.UPS.validate_address(invalid_address)
+    {:error, _} = Shippex.Carrier.UPS.validate_address(invalid_address)
   end
 end

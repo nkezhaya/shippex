@@ -93,7 +93,7 @@ defmodule Shippex do
     end
 
     # TODO
-    rates  = Shippex.Carriers.UPS.fetch_rates(shipment)
+    rates  = Shippex.Carrier.UPS.fetch_rates(shipment)
     oks    = Enum.filter rates, &(elem(&1, 0) == :ok)
     errors = Enum.filter rates, &(elem(&1, 0) == :error)
 
@@ -106,21 +106,21 @@ defmodule Shippex do
   end
 
   def fetch_rate(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    Shippex.Carriers.UPS.fetch_rate(shipment, service)
+    Shippex.Carrier.UPS.fetch_rate(shipment, service)
   end
 
   def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    Shippex.Carriers.UPS.fetch_label(shipment, service)
+    Shippex.Carrier.UPS.fetch_label(shipment, service)
   end
 
   def cancel_shipment(%Shippex.Label{} = label) do
-    Shippex.Carriers.UPS.cancel_shipment(label.tracking_number)
+    Shippex.Carrier.UPS.cancel_shipment(label.tracking_number)
   end
   def cancel_shipment(tracking_number) when is_bitstring(tracking_number) do
-    Shippex.Carriers.UPS.cancel_shipment(tracking_number)
+    Shippex.Carrier.UPS.cancel_shipment(tracking_number)
   end
 
   def validate_address(%Shippex.Address{} = address) do
-    Shippex.Carriers.UPS.validate_address(address)
+    Shippex.Carrier.UPS.validate_address(address)
   end
 end

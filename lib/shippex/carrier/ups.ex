@@ -1,6 +1,6 @@
-defmodule Shippex.Carriers.UPS do
+defmodule Shippex.Carrier.UPS do
 
-  alias Shippex.Carriers.UPS.Client
+  alias Shippex.Carrier.UPS.Client
 
   defmacro with_response(response, do: block) do
     quote do

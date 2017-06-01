@@ -76,6 +76,8 @@ defmodule Shippex do
       File.write!("\#{label.tracking_number}.gif", Base.decode64!(label.image))
   """
 
+  @type response :: %{code: String.t, message: String.t}
+
   defmodule InvalidConfigError do
     defexception [:message]
 
@@ -99,6 +101,7 @@ defmodule Shippex do
 
       Shippex.carriers #=> [:ups]
   """
+  @spec carriers() :: [atom]
   def carriers do
     cfg = Shippex.config()
 
@@ -117,6 +120,7 @@ defmodule Shippex do
 
       Shippex.env #=> :dev
   """
+  @spec env() :: atom
   def env do
     case Application.get_env(:shippex, :env, :dev) do
       e when e in [:dev, :prod] -> e
@@ -126,8 +130,8 @@ defmodule Shippex do
 
   @doc """
   Fetches rates from `carriers` for a given `Shipment`.
-
   """
+  @spec fetch_rates(Shipment.t, [atom]) :: [{atom, Rate.t}]
   def fetch_rates(%Shippex.Shipment{} = shipment, carriers \\ :all) do
     # Convert the atom to a list if necessary.
     carriers = cond do
@@ -170,6 +174,7 @@ defmodule Shippex do
 
       Shippex.fetch_rate(shipment, service)
   """
+  @spec fetch_rate(Shipment.t, Service.t) :: {atom, Rate.t}
   def fetch_rate(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
     Shippex.Carrier.UPS.fetch_rate(shipment, service)
   end
@@ -180,6 +185,7 @@ defmodule Shippex do
 
       Shippex.fetch_label(shipment, service)
   """
+  @spec fetch_label(Shipment.t, Service.t) :: {atom, Label.t}
   def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
     Shippex.Carrier.UPS.fetch_label(shipment, service)
   end
@@ -198,6 +204,7 @@ defmodule Shippex do
           IO.inspect(message)
       end
   """
+  @spec cancel_shipment(Label.t | String.t) :: {atom, response}
   def cancel_shipment(%Shippex.Label{} = label) do
     Shippex.Carrier.UPS.cancel_shipment(label.tracking_number)
   end
@@ -236,6 +243,7 @@ defmodule Shippex do
           end
       end
   """
+  @spec validate_address(Address.t) :: {atom, response | [Address.t]}
   def validate_address(%Shippex.Address{} = address) do
     Shippex.Carrier.UPS.validate_address(address)
   end

@@ -13,6 +13,8 @@ defmodule Shippex.Service do
       ]
   """
 
+  @type t :: %__MODULE__{}
+
   @enforce_keys [:carrier, :code, :description]
   defstruct [:carrier, :code, :description]
 

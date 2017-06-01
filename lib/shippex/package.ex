@@ -10,6 +10,8 @@ defmodule Shippex.Package do
                        weight: 5.5}
   """
 
+  @type t :: %__MODULE__{}
+
   @enforce_keys [:length, :width, :height, :weight]
   defstruct [:length, :width, :height, :weight, :description]
 end

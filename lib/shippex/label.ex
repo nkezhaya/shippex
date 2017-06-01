@@ -9,6 +9,8 @@ defmodule Shippex.Label do
                      image: "data:image/gif;base64,iVBORw0K..."}
   """
 
+  @type t :: %__MODULE__{}
+
   @enforce_keys [:tracking_number]
   defstruct [:rate, :tracking_number, :format, :image]
 end

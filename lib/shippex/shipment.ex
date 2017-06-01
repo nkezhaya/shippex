@@ -6,6 +6,8 @@ defmodule Shippex.Shipment do
   user's internal identifier for the shipment.
   """
 
+  @type t :: %__MODULE__{}
+
   @enforce_keys [:from, :to, :package]
   defstruct [:id, :from, :to, :package]
 end

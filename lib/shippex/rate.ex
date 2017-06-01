@@ -5,6 +5,8 @@ defmodule Shippex.Rate do
   speed.
   """
 
+  @type t :: %__MODULE__{}
+
   @enforce_keys [:service, :price]
   defstruct [:service, :price]
 end

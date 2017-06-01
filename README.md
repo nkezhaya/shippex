@@ -66,8 +66,7 @@ rates = Shippex.Carrier.UPS.fetch_rates(shipment)
 {:ok, rate} = Enum.shuffle(rates) |> hd
 
 # Fetch the label. Includes the tracking number and a gif image of the label.
-{:ok, label} = rate
-|> Shippex.Carriers.UPS.fetch_label(shipment)
+{:ok, label} = Shippex.Carriers.UPS.fetch_label(rate, shipment)
 
 # Write the label to disk.
 File.write!("#{label.tracking_number}.gif", Base.decode64!(label.image))

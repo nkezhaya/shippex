@@ -1,4 +1,5 @@
 defmodule Shippex.Carrier.UPS do
+  @moduledoc false
 
   alias Shippex.Carrier.UPS.Client
 
@@ -338,6 +339,7 @@ defmodule Shippex.Carrier.UPS do
   end
 
   defmodule Client do
+    @moduledoc false
     use HTTPoison.Base
 
     # HTTPoison implementation

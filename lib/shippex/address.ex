@@ -34,6 +34,6 @@ defmodule Shippex.Address do
   def address_line_list(%Shippex.Address{} = address) do
     [address.address,
       address.address_line_2]
-      |> Enum.filter(fn (ln) -> not is_nil(ln) end)
+      |> Enum.reject(&is_nil/1)
   end
 end

@@ -1,4 +1,6 @@
 defmodule Shippex.Util do
+  @moduledoc false
+  
   @states [
     ["Alabama", "AL"],
     ["Alaska", "AK"],
@@ -56,7 +58,6 @@ defmodule Shippex.Util do
   def full_state_to_abbreviation(state) when is_bitstring(state) and byte_size(state) == 2 do
     state
   end
-
   def full_state_to_abbreviation(state) when is_bitstring(state) do
     state = String.downcase(state)
 

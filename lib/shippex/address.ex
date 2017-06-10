@@ -6,8 +6,8 @@ defmodule Shippex.Address do
 
   @type t :: %__MODULE__{}
 
-  @enforce_keys [:name, :phone, :address, :address_line_2, :city, :state, :zip]
-  defstruct [:name, :phone, :address, :address_line_2, :city, :state, :zip]
+  @enforce_keys [:name, :phone, :address, :address_line_2, :city, :state, :zip, :country]
+  defstruct [:name, :phone, :address, :address_line_2, :city, :state, :zip, :country]
 
   alias __MODULE__, as: Address
   alias Shippex.Util
@@ -28,6 +28,15 @@ defmodule Shippex.Address do
   """
   @spec to_struct(map()) :: t
   def to_struct(params) when is_map(params) do
+    params = for {key, val} <- params, into: %{} do
+      key = cond do
+        is_atom(key) -> Atom.to_string(key)
+        true -> key
+      end
+
+      {key, val}
+    end
+
     address = %Address{
       name: params["name"],
       phone: params["phone"],
@@ -35,7 +44,8 @@ defmodule Shippex.Address do
       address_line_2: params["address_line_2"],
       city: params["city"],
       state: Util.full_state_to_abbreviation(params["state"]),
-      zip: params["zip"]
+      zip: params["zip"],
+      country: params["country"] || "US"
     }
 
     # Check for a passed array.

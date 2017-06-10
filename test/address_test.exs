@@ -8,10 +8,12 @@ defmodule AddressTest do
       "address" => "9999 Hobby Ln",
       "city" => "Austin",
       "state" => "Texas",
-      "zip" => "78703"
+      "zip" => "78703",
+      "country" => "US"
     })
 
     assert address.state == "TX"
+    assert address.country == "US"
   end
 
   test "address handles the address formatting" do

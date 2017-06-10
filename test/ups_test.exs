@@ -1,5 +1,6 @@
 defmodule UPSTest do
   use ExUnit.Case
+
   doctest Shippex
 
   setup do
@@ -7,6 +8,17 @@ defmodule UPSTest do
   end
 
   test "rates generated, label fetched", %{shipment: shipment} do
+    rates(shipment)
+  end
+
+  test "rates generated, label fetched with metric", %{shipment: shipment} do
+    Application.put_env(:shippex, :distance_unit, :cm)
+    Application.put_env(:shippex, :weight_unit, :kg)
+
+    rates(shipment)
+  end
+
+  defp rates(shipment) do
     # Fetch rates
     rates = shipment
       |> Shippex.Carrier.UPS.fetch_rates

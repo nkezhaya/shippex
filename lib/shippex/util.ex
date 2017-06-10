@@ -55,6 +55,7 @@ defmodule Shippex.Util do
     ["Wyoming", "WY"]
   ]
 
+  @spec full_state_to_abbreviation(String.t) :: String.t
   def full_state_to_abbreviation(state) when is_bitstring(state) and byte_size(state) == 2 do
     state
   end
@@ -75,5 +76,25 @@ defmodule Shippex.Util do
       [_full, abbr] -> abbr
       _ -> nil
     end
+  end
+
+  @spec lbs_to_kgs(number()) :: float
+  def lbs_to_kgs(lbs) do
+    Float.round(lbs * 0.453592, 1)
+  end
+
+  @spec kgs_to_lbs(number()) :: float
+  def kgs_to_lbs(kgs) do
+    Float.round(kgs * 2.20462, 1)
+  end
+
+  @spec inches_to_cm(number()) :: float
+  def inches_to_cm(inches) do
+    Float.round(inches * 2.54, 1)
+  end
+
+  @spec cm_to_inches(number()) :: float
+  def cm_to_inches(cm) do
+    Float.round(cm * 0.393701, 1)
   end
 end

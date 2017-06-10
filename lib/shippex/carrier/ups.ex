@@ -286,7 +286,7 @@ defmodule Shippex.Carrier.UPS do
         City: address.city,
         StateProvinceCode: address.state,
         PostalCode: address.zip,
-        CountryCode: "US"
+        CountryCode: address.country
       }
     }
   end
@@ -310,6 +310,30 @@ defmodule Shippex.Carrier.UPS do
   end
 
   defp package_params(%Shippex.Package{} = package) do
+    [len, width, height] = case Application.get_env(:shippex, :distance_unit, :in) do
+      :in -> [package.length, package.width, package.height]
+      :cm ->
+        [package.length, package.width, package.height]
+        |> Enum.map(& Shippex.Util.cm_to_inches(&1))
+      u ->
+        raise """
+        Invalid unit of measurement specified: #{IO.inspect(u)}
+
+        Must be either :in or :cm
+        """
+    end
+
+    weight = case Application.get_env(:shippex, :weight_unit, :lbs) do
+      :lbs -> package.weight
+      :kg -> Shippex.Util.kgs_to_lbs(package.weight)
+      u ->
+        raise """
+        Invalid unit of measurement specified: #{IO.inspect(u)}
+
+        Must be either :lbs or :kg
+        """
+    end
+
     %{
       Packaging: %{
         Code: "02",
@@ -320,20 +344,14 @@ defmodule Shippex.Carrier.UPS do
         Description: "Rate"
       },
       Dimensions: %{
-        UnitOfMeasurement: %{
-          Code: "IN",
-          Description: "inches"
-        },
-        Length: "#{package.length}",
-        Width: "#{package.width}",
-        Height: "#{package.height}"
+        UnitOfMeasurement: %{Code: "IN"},
+        Length: "#{len}",
+        Width: "#{width}",
+        Height: "#{height}"
       },
       PackageWeight: %{
-        UnitOfMeasurement: %{
-          Code: "LBS",
-          Description: "pounds"
-        },
-        Weight: "#{package.weight}"
+        UnitOfMeasurement: %{Code: "LBS"},
+        Weight: "#{weight}"
       }
     }
   end

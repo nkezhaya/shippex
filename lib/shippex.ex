@@ -4,6 +4,8 @@ defmodule Shippex do
 
       config :shippex,
         env: :dev,
+        distance_unit: :in, # either :in or :cm
+        weight_unit: :lbs, # either :lbs or :kg
         carriers: [
           ups: [
             username: "MyUsername",

@@ -65,6 +65,6 @@ defmodule Shippex.Service do
   """
   def by_carrier_and_code(carrier, code) do
     services_for_carrier(carrier)
-    |> Enum.find(nil, fn(s) -> s.code == code end)
+    |> Enum.find(nil, & &1.code == code)
   end
 end

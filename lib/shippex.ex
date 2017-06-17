@@ -6,6 +6,7 @@ defmodule Shippex do
         env: :dev,
         distance_unit: :in, # either :in or :cm
         weight_unit: :lbs, # either :lbs or :kg
+        currency: :usd, # :usd, :can, :mxn, :eur
         carriers: [
           ups: [
             username: "MyUsername",
@@ -112,6 +113,25 @@ defmodule Shippex do
     usps  = if Keyword.get(cfg, :usps),   do: :usps
 
     Enum.filter [ups, fedex, usps], fn (c) -> not is_nil(c) end
+  end
+
+  @doc """
+  Returns the configured currency code. Raises an error if an invalid code was
+  used.
+
+      config :shippex, :currency, :can
+
+      Shippex.currency_code() #=> "CAN"
+  """
+  @spec currency_code() :: String.t
+  def currency_code() do
+    case Application.get_env(:shippex, :currency, :usd) do
+      code when code in [:usd, :can, :mxn] ->
+        code |> Atom.to_string |> String.upcase
+      _ ->
+        raise InvalidConfigError,
+          "Shippex currency must be either :usd, :can, or :mxn"
+    end
   end
 
   @doc """

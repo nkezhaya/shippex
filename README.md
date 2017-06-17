@@ -10,7 +10,7 @@ As of now, only UPS is supported. More carrier support will come in the future. 
 
 ```elixir
 def deps do
-  [{:shippex, "~> 0.1.0"}]
+  [{:shippex, "~> 0.3.0"}]
 end
 ```
 
@@ -42,7 +42,8 @@ destination = Shippex.Address.to_struct(%{
   address_line_2: nil,
   city: "Plano",
   state: "TX",
-  zip: "75074"
+  zip: "75074",
+  country: "US" # optional
 })
 
 package = %Shippex.Package{
@@ -50,7 +51,8 @@ package = %Shippex.Package{
   width: 8,
   height: 4,
   weight: 5,
-  description: "Headphones"
+  description: "Headphones",
+  monetary_value: 20 # optional
 }
 
 shipment = %Shippex.Shipment{
@@ -71,3 +73,22 @@ rates = Shippex.fetch_rates(shipment)
 # Write the label to disk.
 File.write!("#{label.tracking_number}.gif", Base.decode64!(label.image))
 ```
+
+## TODO:
+
+Carrier support:
+
+- [x] UPS
+- [ ] FedEx
+- [ ] USPS
+
+Country support:
+
+- [x] US
+- [x] Canada
+- [x] Mexico
+- [ ] Puerto Rico
+- [ ] Virgin Islands
+- [ ] US territories
+- [ ] European Union
+- [ ] Poland

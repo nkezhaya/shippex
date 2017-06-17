@@ -18,12 +18,55 @@ defmodule UPSTest do
     rates(shipment)
   end
 
+  test "rates generated for canada", %{shipment: shipment} do
+    destination = Shippex.Address.to_struct(%{
+      name: "Canada Name",
+      phone: "123-123-1234",
+      address: "655 Burrard St",
+      city: "Vancouver",
+      state: "BC",
+      zip: "V6C 2R7",
+      country: "CA"
+    })
+
+    shipment = %Shippex.Shipment{
+      from: shipment.from,
+      to: destination,
+      package: shipment.package
+    }
+
+    rates(shipment)
+  end
+
+  test "rates generated for mexico", %{shipment: shipment} do
+    destination = Shippex.Address.to_struct(%{
+      name: "Mexico Name",
+      phone: "123-123-1234",
+      address: "Ferrol 4",
+      city: "Ciudad de México",
+      state: "CX",
+      zip: "03100",
+      country: "MX"
+    })
+
+    shipment = %Shippex.Shipment{
+      from: shipment.from,
+      to: destination,
+      package: shipment.package
+    }
+
+    rates(shipment)
+  end
+
   defp rates(shipment) do
     # Fetch rates
-    rates = shipment
-      |> Shippex.Carrier.UPS.fetch_rates
+    rates = Shippex.Carrier.UPS.fetch_rates(shipment)
 
     assert rates
+
+    Enum.each rates, fn (rate) ->
+      {:ok, _} = rate
+    end
 
     # Accept one of the services and print the label
     {:ok, rate} = Enum.shuffle(rates) |> hd

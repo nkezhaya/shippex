@@ -8,6 +8,14 @@ defmodule UtilTest do
     assert Util.full_state_to_abbreviation("Texas") == "TX"
     assert Util.full_state_to_abbreviation("teXaS") == "TX"
     assert Util.full_state_to_abbreviation("TX") == "TX"
+    assert Util.full_state_to_abbreviation("TX") == "TX"
+    assert Util.full_state_to_abbreviation("AlberTa") == "AB"
+    assert Util.full_state_to_abbreviation("Veracruz") == "VE"
+    assert Util.full_state_to_abbreviation("Yucatán") == "YU"
+    assert Util.full_state_to_abbreviation("Yucatan") == "YU"
+    assert Util.full_state_to_abbreviation("YucatAN") == "YU"
+
+    assert is_nil(Util.full_state_to_abbreviation("Not a State"))
   end
 
   test "conversion helper" do

@@ -35,7 +35,8 @@ defmodule Helper do
       width: 8,
       height: 4,
       weight: 5,
-      description: "Headphones"
+      description: "Headphones",
+      monetary_value: 20
     }
   end
 end

@@ -34,6 +34,11 @@ defmodule Shippex.Address do
         true -> key
       end
 
+      val = cond do
+        is_bitstring(val) -> String.trim(val)
+        true -> val
+      end
+
       {key, val}
     end
 
@@ -44,7 +49,7 @@ defmodule Shippex.Address do
       address_line_2: params["address_line_2"],
       city: params["city"],
       state: Util.full_state_to_abbreviation(params["state"]),
-      zip: params["zip"],
+      zip: String.replace(params["zip"], ~r/\s+/, ""),
       country: params["country"] || "US"
     }
 

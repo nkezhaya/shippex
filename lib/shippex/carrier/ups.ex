@@ -28,7 +28,9 @@ defmodule Shippex.Carrier.UPS do
   end
 
   def fetch_rates(%Shippex.Shipment{} = shipment) do
-    services = Shippex.Service.services_for_carrier(:ups)
+    services = Shippex.Service.services_for_carrier(:ups,
+      shipment.from.country,
+      shipment.to.country)
 
     rates = Enum.map services, fn (service) ->
       fetch_rate(shipment, service)
@@ -162,7 +164,7 @@ defmodule Shippex.Carrier.UPS do
           PoliticalDivision2: address.city,
           PoliticalDivision1: address.state,
           PostcodePrimaryLow: address.zip,
-          CountryCode: "US"
+          CountryCode: address.country
         }
       }
     }
@@ -190,7 +192,8 @@ defmodule Shippex.Carrier.UPS do
             "address_line_2" => address.address_line_2,
             "city" => candidate["PoliticalDivision2"],
             "state" => candidate["PoliticalDivision1"],
-            "zip" => candidate["PostcodePrimaryLow"]
+            "zip" => candidate["PostcodePrimaryLow"],
+            "country" => candidate["CountryCode"]
           })
         end
 
@@ -256,31 +259,42 @@ defmodule Shippex.Carrier.UPS do
   end
 
   defp shipment_params(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    %{
+    from = shipment.from
+    to = shipment.to
+
+    params = %{
       Description: shipment.package.description,
 
       Shipper: shipper_address_params(),
-      ShipFrom: address_params(shipment.from),
-      ShipTo: address_params(shipment.to),
+      ShipFrom: address_params(from),
+      ShipTo: address_params(to),
 
-      Package: package_params(shipment.package),
+      Package: package_params(shipment),
       Service: service_params(service)
     }
+
+    if not is_nil(shipment.package.monetary_value) do
+      %{
+        InvoiceLineTotal: %{
+          CurrencyCode: Shippex.currency_code(),
+          MonetaryValue: to_string(shipment.package.monetary_value)
+        }
+      }
+    end |> case do
+      nil -> params
+      merge -> Map.merge(params, merge)
+    end
   end
 
   defp service_params(%Shippex.Service{} = service) do
-    %{
-      Code: service.code,
-      Description: service.description
-    }
+    %{Code: service.code, Description: service.description}
   end
 
   defp address_params(%Shippex.Address{} = address) do
     %{
       Name: address.name,
-      Phone: %{
-        Number: address.phone
-      },
+      AttentionName: address.name,
+      Phone: %{Number: address.phone},
       Address: %{
         AddressLine: Shippex.Address.address_line_list(address),
         City: address.city,
@@ -298,10 +312,11 @@ defmodule Shippex.Carrier.UPS do
       "name" => config.shipper.name,
       "phone" => config.shipper.phone,
       "address" => config.shipper.address,
-      "address_line_2" => Map.get(config.shipper, :address_line_2),
+      "address_line_2" => config.shipper[:address_line_2],
       "city" => config.shipper.city,
       "state" => config.shipper.state,
-      "zip" => config.shipper.zip
+      "zip" => config.shipper.zip,
+      "country" => config.shipper[:country]
     })
 
     address
@@ -309,7 +324,9 @@ defmodule Shippex.Carrier.UPS do
     |> Map.put(:ShipperNumber, config.shipper.account_number)
   end
 
-  defp package_params(%Shippex.Package{} = package) do
+  defp package_params(%Shippex.Shipment{} = shipment) do
+    package = shipment.package
+
     [len, width, height] = case Application.get_env(:shippex, :distance_unit, :in) do
       :in -> [package.length, package.width, package.height]
       :cm ->
@@ -335,14 +352,8 @@ defmodule Shippex.Carrier.UPS do
     end
 
     %{
-      Packaging: %{
-        Code: "02",
-        Description: "Rate"
-      },
-      PackagingType: %{
-        Code: "02",
-        Description: "Rate"
-      },
+      Packaging: %{Code: "02", Description: "Rate"},
+      PackagingType: %{Code: "02", Description: "Rate"},
       Dimensions: %{
         UnitOfMeasurement: %{Code: "IN"},
         Length: "#{len}",

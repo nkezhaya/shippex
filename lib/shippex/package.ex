@@ -2,16 +2,19 @@ defmodule Shippex.Package do
   @moduledoc """
   Defines the struct for storing a `Package`, which is then passed along with
   an origin and destination address for shipping estimates. A `description` is
-  optional, as it may or may not be used with various carriers.
+  optional, as it may or may not be used with various carriers. The
+  `monetary_value` *might* be required depending on the origin/destination
+  countries of the shipment.
 
       %Shippex.Package{length: 8
                        width: 8,
                        height: 8,
-                       weight: 5.5}
+                       weight: 5.5,
+                       monetary_value: 100}
   """
 
   @type t :: %__MODULE__{}
 
   @enforce_keys [:length, :width, :height, :weight]
-  defstruct [:length, :width, :height, :weight, :description]
+  defstruct [:length, :width, :height, :weight, :description, :monetary_value]
 end

@@ -275,7 +275,7 @@ defmodule Shippex do
           nil ->
             {:error, %{code: "0", description: "State does not belong to country."}}
           _ ->
-            {:ok, address}
+            {:ok, [address]}
         end
     end
   end

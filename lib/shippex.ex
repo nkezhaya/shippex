@@ -267,6 +267,16 @@ defmodule Shippex do
   """
   @spec validate_address(Address.t) :: {atom, response | [Address.t]}
   def validate_address(%Shippex.Address{} = address) do
-    Shippex.Carrier.UPS.validate_address(address)
+    case address.country do
+      "US" ->
+        Shippex.Carrier.UPS.validate_address(address)
+      country ->
+        case Shippex.Util.states(country)[address.state] do
+          nil ->
+            {:error, %{code: "0", description: "State does not belong to country."}}
+          _ ->
+            {:ok, address}
+        end
+    end
   end
 end

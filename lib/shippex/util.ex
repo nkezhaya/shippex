@@ -132,6 +132,16 @@ defmodule Shippex.Util do
     |> String.replace(~r/[^A-z\s]/u, "")
   end
 
+  @spec states(String.t) :: %{String.t => String.t}
+  def states(country \\ "US")
+  def states(nil), do: %{}
+  def states(country) do
+    case @states[country] do
+      states when is_map(states) -> states
+      _ -> %{}
+    end
+  end
+
   @spec lbs_to_kgs(number()) :: float
   def lbs_to_kgs(lbs) do
     Float.round(lbs * 0.453592, 1)

@@ -89,5 +89,18 @@ defmodule AddressTest do
     })
 
     {:error, _} = Shippex.validate_address(invalid_address)
+
+    invalid_address = Shippex.Address.to_struct(%{
+      "name" => name,
+      "phone" => phone,
+      "address" => "404 S Figueroa St",
+      "address_line_2" => "Suite 101",
+      "city" => "Los Angeles",
+      "state" => "BX",
+      "zip" => "90071",
+      "country" => "MX"
+    })
+
+    {:error, _} = Shippex.validate_address(invalid_address)
   end
 end

@@ -2,7 +2,7 @@ ExUnit.start()
 
 defmodule Helper do
   def valid_shipment do
-    origin = Shippex.Address.to_struct(%{
+    origin = Shippex.Address.address(%{
       name: "Earl G",
       phone: "123-123-1234",
       address: "9999 Hobby Lane",
@@ -12,7 +12,7 @@ defmodule Helper do
       zip: "78703"
     })
 
-    destination = Shippex.Address.to_struct(%{
+    destination = Shippex.Address.address(%{
       name: "Bar Baz",
       phone: "123-123-1234",
       address: "404 S Figueroa St",

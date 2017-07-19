@@ -19,7 +19,7 @@ defmodule Shippex.UPS.RateTest do
   end
 
   test "rates generated for canada", %{shipment: shipment} do
-    destination = Shippex.Address.to_struct(%{
+    destination = Shippex.Address.address(%{
       name: "Canada Name",
       phone: "123-123-1234",
       address: "655 Burrard St",
@@ -39,7 +39,7 @@ defmodule Shippex.UPS.RateTest do
   end
 
   test "rates generated for mexico", %{shipment: shipment} do
-    destination = Shippex.Address.to_struct(%{
+    destination = Shippex.Address.address(%{
       name: "Mexico Name",
       phone: "123-123-1234",
       address: "Ferrol 4",

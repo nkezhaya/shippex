@@ -26,7 +26,7 @@ defmodule Shippex do
 
   ## Create origin/destination addresses
 
-      origin = Shippex.Address.to_struct(%{
+      origin = Shippex.Address.address(%{
         name: "Earl G",
         phone: "123-123-1234",
         address: "9999 Hobby Lane",
@@ -36,7 +36,7 @@ defmodule Shippex do
         zip: "78703"
       })
 
-      destination = Shippex.Address.to_struct(%{
+      destination = Shippex.Address.address(%{
         name: "Bar Baz",
         phone: "123-123-1234",
         address: "1234 Foo Blvd",
@@ -245,9 +245,9 @@ defmodule Shippex do
   perfectly will still be in a `list` where `length(candidates) == 1`.
 
   Note that the `candidates` returned will automatically pass through
-  `Shippex.Address.to_struct()` for casting.
+  `Shippex.Address.address()` for casting.
 
-      address = Shippex.Address.to_struct(%{
+      address = Shippex.Address.address(%{
         name: "Earl G",
         phone: "123-123-1234",
         address: "9999 Hobby Lane",

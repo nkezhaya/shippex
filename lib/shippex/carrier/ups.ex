@@ -185,7 +185,7 @@ defmodule Shippex.Carrier.UPS do
 
         candidates = Enum.map candidates, fn (candidate) ->
           candidate = candidate["AddressKeyFormat"]
-          Shippex.Address.to_struct(%{
+          Shippex.Address.address(%{
             "name" => address.name,
             "phone" => address.phone,
             "address" => candidate["AddressLine"],
@@ -308,7 +308,7 @@ defmodule Shippex.Carrier.UPS do
   defp shipper_address_params() do
     config = config()
 
-    address = Shippex.Address.to_struct(%{
+    address = Shippex.Address.address(%{
       "name" => config.shipper.name,
       "phone" => config.shipper.phone,
       "address" => config.shipper.address,

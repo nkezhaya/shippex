@@ -1,7 +1,7 @@
 defmodule Shippex.Address do
   @moduledoc """
   Represents an address that can be passed to other `Shippex` functions. Do
-  *not* initialize this struct directly. Instead, use `to_struct/1`.
+  *not* initialize this struct directly. Instead, use `address/1`.
   """
 
   @type t :: %__MODULE__{}
@@ -16,7 +16,7 @@ defmodule Shippex.Address do
   Initializes an `Address` struct from the given `params`, and performs minor
   validations that do not require any service requests.
 
-      Shippex.Address.to_struct(%{
+      Shippex.Address.address(%{
         name: "Earl G",
         phone: "123-123-1234",
         address: "9999 Hobby Lane",
@@ -26,8 +26,8 @@ defmodule Shippex.Address do
         zip: "78703"
       })
   """
-  @spec to_struct(map()) :: t
-  def to_struct(params) when is_map(params) do
+  @spec address(map()) :: t
+  def address(params) when is_map(params) do
     params = for {key, val} <- params, into: %{} do
       key = cond do
         is_atom(key) -> Atom.to_string(key)

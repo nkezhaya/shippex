@@ -9,7 +9,7 @@ defmodule Shippex.USPS.RateTest do
 
   describe "addresses" do
     test "validate address" do
-      valid_address = Shippex.Address.to_struct(%{
+      valid_address = Shippex.Address.address(%{
         "name" => "Earl G",
         "phone" => "123-456-7890",
         "address" => "404 S Figueroa St",

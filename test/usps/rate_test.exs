@@ -27,7 +27,10 @@ defmodule Shippex.USPS.RateTest do
     test "rates generated", %{shipment: shipment} do
       package = %{shipment.package | container: :variable}
       shipment = %{shipment | package: package}
-      IO.inspect Shippex.Carrier.USPS.fetch_rate(shipment, :all)
+      rates = Shippex.Carrier.USPS.fetch_rate(shipment, "priority")
+      assert is_list(rates) and length(rates) > 0
+      rates = Shippex.Carrier.USPS.fetch_rate(shipment, "all")
+      assert is_list(rates) and length(rates) > 0
     end
   end
 end

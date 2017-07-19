@@ -7,6 +7,27 @@ defmodule Shippex.Carrier.USPS do
 
   @default_container :variable
   @large_containers ~w(rectangular nonrectangular variable)a
+
+  defmacro with_response(response, do: block) do
+    quote do
+      case unquote(response) do
+        {:ok, %{body: body}} ->
+          case xpath(body, ~x"//Error//text()"s) do
+            "" ->
+              var!(body) = body
+              unquote(block)
+            error ->
+              code = xpath(body, ~x"//Error//Number//text()"s)
+              message = xpath(body, ~x"//Error//Description//text()"s)
+              {:error, %{code: code, message: message}}
+          end
+
+        {:error, _} ->
+          {:error, %{code: 1, message: "The USPS API is down."}}
+      end
+    end
+  end
+
   def fetch_rates(%Shippex.Shipment{} = shipment) do
     fetch_rate(shipment, :all)
   end
@@ -57,27 +78,14 @@ defmodule Shippex.Carrier.USPS do
       {:RateV4Request, %{USERID: config().username},
         [{:Revision, nil, 2}, package_params]}
 
-    IO.puts(XmlBuilder.generate(request))
-    case Client.post("", %{API: "RateV4", XML: request}) do
-      {:ok, rates} ->
-        body = rates.body
-
-        case xpath(body, ~x"//Error//text()"s) do
-          "" ->
-            body
-            |> xpath(
-              ~x"//RateV4Response//Package//Postage"l,
-              name: ~x"./MailService//text()"s |> transform_by(&strip_html/1),
-              code: ~x"@CLASSID"s,
-              rate: ~x"./Rate//text()"s |> transform_by(&Decimal.new/1)
-            )
-          _ ->
-            code = xpath(body, ~x"//Error//Number//text()"s)
-            message = xpath(body, ~x"//Error//Description//text()"s)
-            {:error, %{code: code, message: message}}
-        end
-
-      {:error, _} -> {:error, ""}
+    with_response Client.post("", %{API: "RateV4", XML: request}) do
+      body
+      |> xpath(
+        ~x"//RateV4Response//Package//Postage"l,
+        name: ~x"./MailService//text()"s |> transform_by(&strip_html/1),
+        code: ~x"@CLASSID"s,
+        rate: ~x"./Rate//text()"s |> transform_by(&Decimal.new/1)
+      )
     end
   end
 
@@ -93,7 +101,7 @@ defmodule Shippex.Carrier.USPS do
   def cancel_shipment(tracking_number) when is_bitstring(tracking_number) do
   end
 
-  def validate_address(%Shippex.Address{} = address) do
+  def validate_address(%Shippex.Address{country: "US"} = address) do
     address_params =
       {:Address, %{ID: "0"},
         [{:FirmName, nil, nil},
@@ -105,9 +113,28 @@ defmodule Shippex.Carrier.USPS do
          {:Zip4, nil, ""}]}
 
     request =
-      {:AddressValidateRequest, %{USERID: config().username}, [address_params]}
+      {:AddressValidateRequest, %{USERID: config().username},
+        [{:Revision, nil, "1"}, address_params]}
 
-    Client.post("", %{API: "Verify", XML: request})
+    with_response Client.post("", %{API: "Verify", XML: request}) do
+      candidates =
+        body
+        |> xpath(
+          ~x"//AddressValidateResponse//Address"l,
+          address: ~x"./Address2//text()"s, # USPS swaps address lines 1 & 2
+          address_line_2: ~x"./Address1//text()"s,
+          city: ~x"./City//text()"s,
+          state: ~x"./State//text()"s,
+          zip: ~x"./Zip5//text()"s,
+        )
+        |> Enum.map(fn (candidate) ->
+          candidate
+          |> Map.merge(Map.take(address, [:name, :phone]))
+          |> Shippex.Address.address
+        end)
+
+      {:ok, candidates}
+    end
   end
 
   defp strip_html(string) do

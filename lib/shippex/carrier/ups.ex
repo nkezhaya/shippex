@@ -20,9 +20,6 @@ defmodule Shippex.Carrier.UPS do
 
         {:error, _} ->
           {:error, %{code: 1, message: "The UPS API is down."}}
-
-        _ ->
-          {:error, %{code: 0, message: "Unknown error."}}
       end
     end
   end

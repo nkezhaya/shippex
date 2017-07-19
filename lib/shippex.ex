@@ -247,7 +247,8 @@ defmodule Shippex do
   perfectly will still be in a `list` where `length(candidates) == 1`.
 
   Note that the `candidates` returned will automatically pass through
-  `Shippex.Address.address()` for casting.
+  `Shippex.Address.address()` for casting. Also, if `:usps` is used as the
+  validation provider, the number of candidates will always be 1.
 
       address = Shippex.Address.address(%{
         name: "Earl G",

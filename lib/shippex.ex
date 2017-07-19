@@ -155,32 +155,25 @@ defmodule Shippex do
   @doc """
   Fetches rates from `carriers` for a given `Shipment`.
   """
-  @spec fetch_rates(Shipment.t, [atom]) :: [{atom, Rate.t}]
-  def fetch_rates(%Shippex.Shipment{} = shipment, carriers \\ :all) do
+  @spec fetch_rates(Shipment.t, [Carrier.t] | nil) :: [{atom, Rate.t}]
+  def fetch_rates(%Shippex.Shipment{} = shipment, carriers \\ nil) do
     # Convert the atom to a list if necessary.
     carriers = cond do
-      is_nil(carriers)  -> [:all]
+      is_nil(carriers)  -> Shippex.carriers()
       is_atom(carriers) -> [carriers]
       is_list(carriers) -> carriers
 
       true ->
         raise """
-        #{inspect carriers} is an invalid carrier or list of carriers. Try using an atom. For example:
+        #{inspect carriers} is an invalid carrier or list of carriers.
+        Try using an atom. For example:
 
-          Shippex.fetch_rates(shipment, :ups)
+            Shippex.fetch_rates(shipment, :ups)
         """
     end
+    |> Enum.map(&Shippex.Carrier.carrier_module/1)
 
-    # Validate each carrier.
-    available_carriers = Shippex.carriers()
-    Enum.each carriers, fn (carrier) ->
-      unless Enum.any?(available_carriers, fn (c) -> c == carrier end) do
-        raise "#{inspect carrier} not found in #{inspect available_carriers}"
-      end
-    end
-
-    # TODO
-    rates  = Carrier.UPS.fetch_rates(shipment)
+    rates  = Enum.reduce carriers, [], & &1.fetch_rates(shipment) ++ &2
     oks    = Enum.filter rates, &(elem(&1, 0) == :ok)
     errors = Enum.filter rates, &(elem(&1, 0) == :error)
 
@@ -199,8 +192,10 @@ defmodule Shippex do
       Shippex.fetch_rate(shipment, service)
   """
   @spec fetch_rate(Shipment.t, Service.t) :: {atom, Rate.t}
-  def fetch_rate(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    Carrier.UPS.fetch_rate(shipment, service)
+  def fetch_rate(%Shippex.Shipment{} = shipment,
+                 %Shippex.Service{carrier: carrier} = service) do
+
+    Carrier.carrier_module(carrier).fetch_rate(shipment, service)
   end
 
   @doc """
@@ -210,8 +205,10 @@ defmodule Shippex do
       Shippex.fetch_label(shipment, service)
   """
   @spec fetch_label(Shipment.t, Service.t) :: {atom, Label.t}
-  def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    Carrier.UPS.fetch_label(shipment, service)
+  def fetch_label(%Shippex.Shipment{} = shipment,
+                  %Shippex.Service{carrier: carrier} = service) do
+
+    Carrier.carrier_module(carrier).fetch_label(shipment, service)
   end
 
   @doc """

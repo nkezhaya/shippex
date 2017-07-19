@@ -6,6 +6,9 @@ defmodule Shippex.ShippexTest do
     Application.put_env(:shippex, :env, :prod)
     assert Shippex.env == :prod
 
+    Application.put_env(:shippex, :env, :foo)
+    assert_raise Shippex.InvalidConfigError, &Shippex.env/0
+
     Application.put_env(:shippex, :env, :dev)
     assert Shippex.env == :dev
   end
@@ -22,5 +25,14 @@ defmodule Shippex.ShippexTest do
 
     Application.put_env(:shippex, :currency, :usd)
     assert Shippex.currency_code == "USD"
+  end
+
+  test "fetch carrier module" do
+    assert Shippex.Carrier.carrier_module(:ups) == Shippex.Carrier.UPS
+    assert Shippex.Carrier.carrier_module(:usps) == Shippex.Carrier.USPS
+
+    assert_raise RuntimeError, fn ->
+      Shippex.Carrier.carrier_module(:invalid_carrier)
+    end
   end
 end

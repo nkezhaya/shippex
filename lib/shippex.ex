@@ -216,9 +216,10 @@ defmodule Shippex do
   Cancels the shipment associated with `label`, if possible. The result is
   returned in a tuple.
 
-  You may pass in either the label or tracking number.
+  You may pass in either the label or tracking number. A carrier must be
+  specified.
 
-      case Shippex.cancel_shipment(label) do
+      case Shippex.cancel_shipment(:ups, label) do
         {:ok, result} ->
           IO.inspect(result) #=> %{code: "1", message: "Voided successfully."}
         {:error, %{code: code, message: message}} ->
@@ -226,12 +227,14 @@ defmodule Shippex do
           IO.inspect(message)
       end
   """
-  @spec cancel_shipment(Label.t | String.t) :: {atom, response}
-  def cancel_shipment(%Shippex.Label{} = label) do
-    Shippex.Carrier.UPS.cancel_shipment(label.tracking_number)
-  end
-  def cancel_shipment(tracking_number) when is_bitstring(tracking_number) do
-    Shippex.Carrier.UPS.cancel_shipment(tracking_number)
+  @spec cancel_shipment(Carrier.t, Label.t | String.t) :: {atom, response}
+  def cancel_shipment(carrier, label_or_tracking_number) do
+    tracking_number = case label_or_tracking_number do
+      %Shippex.Label{tracking_number: t} -> t
+      t when is_bitstring(t) -> t
+    end
+
+    Shippex.Carrier.carrier_module(carrier).cancel_shipment(tracking_number)
   end
 
   @doc """

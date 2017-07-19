@@ -79,13 +79,15 @@ defmodule Shippex do
       File.write!("\#{label.tracking_number}.gif", Base.decode64!(label.image))
   """
 
+  alias Shippex.Carrier
+
   @type response :: %{code: String.t, message: String.t}
 
   defmodule InvalidConfigError do
     defexception [:message]
 
     def exception(message) do
-      "Invalid config: #{inspect message}"
+      %InvalidConfigError{message: "Invalid config: #{inspect message}"}
     end
   end
 
@@ -104,7 +106,7 @@ defmodule Shippex do
 
       Shippex.carriers #=> [:ups]
   """
-  @spec carriers() :: [atom]
+  @spec carriers() :: [Carrier.t]
   def carriers do
     cfg = Shippex.config()
 
@@ -112,7 +114,7 @@ defmodule Shippex do
     fedex = if Keyword.get(cfg, :fedex),  do: :fedex
     usps  = if Keyword.get(cfg, :usps),   do: :usps
 
-    Enum.filter [ups, fedex, usps], fn (c) -> not is_nil(c) end
+    Enum.reject [ups, fedex, usps], &is_nil/1
   end
 
   @doc """
@@ -178,7 +180,7 @@ defmodule Shippex do
     end
 
     # TODO
-    rates  = Shippex.Carrier.UPS.fetch_rates(shipment)
+    rates  = Carrier.UPS.fetch_rates(shipment)
     oks    = Enum.filter rates, &(elem(&1, 0) == :ok)
     errors = Enum.filter rates, &(elem(&1, 0) == :error)
 
@@ -198,7 +200,7 @@ defmodule Shippex do
   """
   @spec fetch_rate(Shipment.t, Service.t) :: {atom, Rate.t}
   def fetch_rate(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    Shippex.Carrier.UPS.fetch_rate(shipment, service)
+    Carrier.UPS.fetch_rate(shipment, service)
   end
 
   @doc """
@@ -209,7 +211,7 @@ defmodule Shippex do
   """
   @spec fetch_label(Shipment.t, Service.t) :: {atom, Label.t}
   def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    Shippex.Carrier.UPS.fetch_label(shipment, service)
+    Carrier.UPS.fetch_label(shipment, service)
   end
 
   @doc """
@@ -234,7 +236,7 @@ defmodule Shippex do
       t when is_bitstring(t) -> t
     end
 
-    Shippex.Carrier.carrier_module(carrier).cancel_shipment(tracking_number)
+    Carrier.carrier_module(carrier).cancel_shipment(tracking_number)
   end
 
   @doc """
@@ -260,19 +262,17 @@ defmodule Shippex do
       case Shippex.validate_address(address) do
         {:error, %{code: code, message: message}} ->
           # Present the error.
-        {:ok, candidates} ->
-          if length(candidates) == 1 do
-            # Use the address
-          else
-            # Present candidates to user for selection
-          end
+        {:ok, candidates} when length(candidates) == 1 ->
+          # Use the address
+        {:ok, candidates} when length(candidates) > 1 ->
+          # Present candidates to user for selection
       end
   """
-  @spec validate_address(Address.t) :: {atom, response | [Address.t]}
-  def validate_address(%Shippex.Address{} = address) do
+  @spec validate_address(Carrier.t, Address.t) :: {atom, response | [Address.t]}
+  def validate_address(carrier \\ :usps, %Shippex.Address{} = address) do
     case address.country do
       "US" ->
-        Shippex.Carrier.UPS.validate_address(address)
+        Carrier.carrier_module(carrier).validate_address(address)
       country ->
         case Shippex.Util.states(country)[address.state] do
           nil ->

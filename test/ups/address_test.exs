@@ -1,4 +1,4 @@
-defmodule AddressTest do
+defmodule Shippex.UPS.AddressTest do
   use ExUnit.Case
   doctest Shippex
 

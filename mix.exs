@@ -25,21 +25,20 @@ defmodule Shippex.Mixfile do
   end
 
   defp package do
-    [
-      name: :shippex,
-      files: ["lib", "mix.exs", "README.md", "LICENSE"],
-      maintainers: ["Nick Kezhaya"],
-      licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/whitepaperclip/shippex"}
-    ]
+    [name: :shippex,
+     files: ["lib", "mix.exs", "README.md", "LICENSE"],
+     maintainers: ["Nick Kezhaya"],
+     licenses: ["MIT"],
+     links: %{"GitHub" => "https://github.com/whitepaperclip/shippex"}]
   end
 
   defp deps do
-    [
-      {:ex_doc, ">= 0.0.0", only: :doc},
-      {:httpoison, ">= 0.0.0"},
-      {:poison, ">= 0.0.0"},
-      {:decimal, "~> 1.3"}
-    ]
+    [{:ex_doc, ">= 0.0.0", only: :doc},
+     {:httpoison, ">= 0.0.0"},
+     {:poison, ">= 0.0.0"},
+     {:sweet_xml, ">= 0.0.0"},
+     {:xml_builder, "~> 0.1.1"},
+     {:html_entities, ">= 0.0.0"},
+     {:decimal, "~> 1.3"}]
   end
 end

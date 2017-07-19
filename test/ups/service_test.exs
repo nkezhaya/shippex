@@ -1,4 +1,4 @@
-defmodule ServiceTest do
+defmodule Shippex.UPS.ServiceTest do
   use ExUnit.Case
   doctest Shippex
 

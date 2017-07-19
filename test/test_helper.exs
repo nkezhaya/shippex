@@ -15,11 +15,11 @@ defmodule Helper do
     destination = Shippex.Address.to_struct(%{
       name: "Bar Baz",
       phone: "123-123-1234",
-      address: "1234 Foo Blvd",
+      address: "404 S Figueroa St",
       address_line_2: nil,
-      city: "Plano",
-      state: "TX",
-      zip: "75074"
+      city: "Los Angeles",
+      state: "CA",
+      zip: "90071"
     })
 
     %Shippex.Shipment{

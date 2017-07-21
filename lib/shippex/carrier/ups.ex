@@ -1,5 +1,6 @@
 defmodule Shippex.Carrier.UPS do
   @moduledoc false
+  @behaviour Shippex.Carrier
 
   alias Shippex.Carrier.UPS.Client
 
@@ -110,9 +111,6 @@ defmodule Shippex.Carrier.UPS do
         _ -> raise "Invalid response: #{response}"
       end
     end
-  end
-  def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Rate{} = rate) do
-    fetch_label(shipment, rate.service)
   end
 
   def cancel_shipment(%Shippex.Label{} = label) do

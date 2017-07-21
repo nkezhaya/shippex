@@ -28,11 +28,11 @@ defmodule Shippex.ShippexTest do
   end
 
   test "fetch carrier module" do
-    assert Shippex.Carrier.carrier_module(:ups) == Shippex.Carrier.UPS
-    assert Shippex.Carrier.carrier_module(:usps) == Shippex.Carrier.USPS
+    assert Shippex.Carrier.module(:ups) == Shippex.Carrier.UPS
+    assert Shippex.Carrier.module(:usps) == Shippex.Carrier.USPS
 
     assert_raise RuntimeError, fn ->
-      Shippex.Carrier.carrier_module(:invalid_carrier)
+      Shippex.Carrier.module(:invalid_carrier)
     end
   end
 end

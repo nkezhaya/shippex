@@ -171,7 +171,7 @@ defmodule Shippex do
             Shippex.fetch_rates(shipment, :ups)
         """
     end
-    |> Enum.map(&Shippex.Carrier.carrier_module/1)
+    |> Enum.map(&Shippex.Carrier.module/1)
 
     rates  = Enum.reduce carriers, [], & &1.fetch_rates(shipment) ++ &2
     oks    = Enum.filter rates, &(elem(&1, 0) == :ok)
@@ -195,7 +195,7 @@ defmodule Shippex do
   def fetch_rate(%Shippex.Shipment{} = shipment,
                  %Shippex.Service{carrier: carrier} = service) do
 
-    Carrier.carrier_module(carrier).fetch_rate(shipment, service)
+    Carrier.module(carrier).fetch_rate(shipment, service)
   end
 
   @doc """
@@ -208,7 +208,7 @@ defmodule Shippex do
   def fetch_label(%Shippex.Shipment{} = shipment,
                   %Shippex.Service{carrier: carrier} = service) do
 
-    Carrier.carrier_module(carrier).fetch_label(shipment, service)
+    Carrier.module(carrier).fetch_label(shipment, service)
   end
 
   @doc """
@@ -233,7 +233,7 @@ defmodule Shippex do
       t when is_bitstring(t) -> t
     end
 
-    Carrier.carrier_module(carrier).cancel_shipment(tracking_number)
+    Carrier.module(carrier).cancel_shipment(tracking_number)
   end
 
   @doc """
@@ -270,7 +270,7 @@ defmodule Shippex do
   def validate_address(carrier \\ :usps, %Shippex.Address{} = address) do
     case address.country do
       "US" ->
-        Carrier.carrier_module(carrier).validate_address(address)
+        Carrier.module(carrier).validate_address(address)
       country ->
         case Shippex.Util.states(country)[address.state] do
           nil ->

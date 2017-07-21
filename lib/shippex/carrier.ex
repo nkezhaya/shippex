@@ -1,10 +1,24 @@
 defmodule Shippex.Carrier do
-  @moduledoc false
+  @moduledoc """
+  Defines a behaviour for implementing a new Carrier module. Includes a helper
+  function for fetching the Carrier module.
+  """
+
+  @callback fetch_rates(Shipment.t) :: [{atom, Rate.t}]
+  @callback fetch_rate(Shipment.t, Service.t) :: [{atom, Rate.t}] | {atom, Rate.t}
+  @callback fetch_label(Shipment.t, Service.t) :: {atom, Label.t}
 
   @type t :: atom
 
-  @spec carrier_module(atom | String.t) :: module()
-  def carrier_module(carrier) when is_atom(carrier) do
+  @doc """
+  Fetches a Carrier module by its atom/string representation.
+
+      Carrier.module(:ups) # Carrier.UPS
+      Carrier.module("UPS") # Carrier.UPS
+      Carrier.module("ups") # Carrier.UPS
+  """
+  @spec module(atom | String.t) :: module()
+  def module(carrier) when is_atom(carrier) do
     module = case carrier do
       :ups -> Shippex.Carrier.UPS
       :usps -> Shippex.Carrier.USPS
@@ -19,11 +33,10 @@ defmodule Shippex.Carrier do
         "#{inspect carrier} not found in carriers: #{inspect available_carriers}"
     end
   end
-
-  def carrier_module(string) when is_bitstring(string) do
+  def module(string) when is_bitstring(string) do
     string
     |> String.downcase
     |> String.to_atom
-    |> carrier_module
+    |> module
   end
 end

@@ -14,5 +14,18 @@ defmodule Shippex.USPS.RateTest do
     assert is_list(rates) and length(rates) > 0
     rates = Shippex.Carrier.USPS.fetch_rate(shipment, "all")
     assert is_list(rates) and length(rates) > 0
+
+    rate =
+      rates
+      |> Enum.filter(fn {code, _} -> code == :ok end)
+      |> Enum.map(fn {_, rate} -> rate end)
+      |> Enum.reject(& &1.service.code == "PRIORITY MAIL EXPRESS")
+      |> Enum.shuffle
+      |> hd
+
+    {:ok, label} = Shippex.Carrier.USPS.fetch_label(shipment, rate.service)
+    assert label
+    assert label.tracking_number
+    assert label.image
   end
 end

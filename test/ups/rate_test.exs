@@ -72,7 +72,7 @@ defmodule Shippex.UPS.RateTest do
     {:ok, rate} = Enum.shuffle(rates) |> hd
 
     {:ok, label} = shipment
-      |> Shippex.Carrier.UPS.fetch_label(rate)
+      |> Shippex.Carrier.UPS.fetch_label(rate.service)
 
     assert label
   end

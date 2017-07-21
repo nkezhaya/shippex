@@ -2,7 +2,7 @@
 
 Shippex is an abstraction of commonly used features in shipping with various carriers. It provides a (hopefully) pleasant API to work with carrier-provided web interfaces for fetching rates and printing shipping labels.
 
-As of now, only UPS is supported. More carrier support will come in the future. Units of measurement are currently hardcoded to inches and miles.
+As of now, only UPS and USPS are supported. More carrier support will come in the future. Units of measurement are mostly hardcoded to inches and miles.
 
 ## Installation
 
@@ -10,7 +10,7 @@ As of now, only UPS is supported. More carrier support will come in the future. 
 
 ```elixir
 def deps do
-  [{:shippex, "~> 0.3.0"}]
+  [{:shippex, "~> 0.4.0"}]
 end
 ```
 
@@ -25,7 +25,7 @@ end
 ## Fetching rates
 
 ```elixir
-origin = Shippex.Address.to_struct(%{
+origin = Shippex.Address.address(%{
   name: "Earl G",
   phone: "123-123-1234",
   address: "9999 Hobby Lane",
@@ -35,7 +35,7 @@ origin = Shippex.Address.to_struct(%{
   zip: "78703"
 })
 
-destination = Shippex.Address.to_struct(%{
+destination = Shippex.Address.address(%{
   name: "Bar Baz",
   phone: "123-123-1234",
   address: "1234 Foo Blvd",
@@ -71,7 +71,8 @@ rates = Shippex.fetch_rates(shipment)
 {:ok, label} = Shippex.fetch_label(rate, shipment)
 
 # Write the label to disk.
-File.write!("#{label.tracking_number}.gif", Base.decode64!(label.image))
+File.write!("#{label.tracking_number}.#{label.format}",
+            Base.decode64!(label.image))
 ```
 
 ## TODO:
@@ -79,8 +80,8 @@ File.write!("#{label.tracking_number}.gif", Base.decode64!(label.image))
 Carrier support:
 
 - [x] UPS
+- [x] USPS
 - [ ] FedEx
-- [ ] USPS
 
 Country support:
 

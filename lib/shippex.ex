@@ -21,6 +21,12 @@ defmodule Shippex do
               state: "TX",
               zip: "78999"
             }
+          ],
+          usps: [
+            username: "MyUsername",
+            password: "MyPassword",
+            include_library_mail: true
+            include_media_mail: true
           ]
         ]
 

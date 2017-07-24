@@ -3,6 +3,7 @@ defmodule Shippex.Carrier.UPS do
   @behaviour Shippex.Carrier
 
   alias Shippex.Carrier.UPS.Client
+  alias Shippex.Util
 
   defmacro with_response(response, do: block) do
     quote do
@@ -46,8 +47,6 @@ defmodule Shippex.Carrier.UPS do
   end
 
   def fetch_rate(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    alias Decimal, as: D
-
     params = Map.new
       |> Map.merge(security_params())
       |> Map.merge(rate_request_params(shipment, service))
@@ -59,10 +58,9 @@ defmodule Shippex.Carrier.UPS do
 
       case body["Response"]["ResponseStatus"] do
         %{"Code" => "1"} ->
-          price = body["RatedShipment"]["TotalCharges"]["MonetaryValue"]
-            |> D.new
-            |> D.mult(D.new(100))
-            |> D.round
+          price =
+            body["RatedShipment"]["TotalCharges"]["MonetaryValue"]
+            |> Util.price_to_cents
 
           rate = %Shippex.Rate{service: service, price: price}
 
@@ -75,8 +73,6 @@ defmodule Shippex.Carrier.UPS do
   end
 
   def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    alias Decimal, as: D
-
     params = Map.new
       |> Map.merge(security_params())
       |> Map.merge(shipment_request_params(shipment, service))
@@ -90,10 +86,9 @@ defmodule Shippex.Carrier.UPS do
         %{"Code" => "1"} ->
 
           results = body["ShipmentResults"]
-          price = results["ShipmentCharges"]["TotalCharges"]["MonetaryValue"]
-            |> D.new
-            |> D.mult(D.new(100))
-            |> D.round
+          price =
+            results["ShipmentCharges"]["TotalCharges"]["MonetaryValue"]
+            |> Util.price_to_cents
 
           rate = %Shippex.Rate{service: service, price: price}
 

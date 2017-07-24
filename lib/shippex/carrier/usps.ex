@@ -5,6 +5,7 @@ defmodule Shippex.Carrier.USPS do
   import SweetXml
   alias Shippex.Carrier.USPS.Client
   alias Shippex.Package
+  alias Shippex.Util
 
   @default_container :variable
   @large_containers ~w(rectangular nonrectangular variable)a
@@ -52,19 +53,27 @@ defmodule Shippex.Carrier.USPS do
       {:RateV4Request, %{USERID: config().username},
         [{:Revision, nil, 2}, package_params]}
 
+
     with_response Client.post("ShippingAPI.dll", %{API: "RateV4", XML: request}) do
       body
       |> xpath(
         ~x"//RateV4Response//Package//Postage"l,
         name: ~x"./MailService//text()"s |> transform_by(&strip_html/1),
         service: ~x"./MailService//text()"s |> transform_by(&service_to_code/1),
-        rate: ~x"./Rate//text()"s |> transform_by(&Decimal.new/1)
+        rate: ~x"./Rate//text()"s |> transform_by(&Util.price_to_cents/1)
       )
-      |> Enum.map(fn(%{name: description, service: service, rate: rate}) ->
+      |> Enum.map(fn(%{name: description, service: service, rate: cents}) ->
         rate = %Shippex.Rate{service: %{service | description: description},
-                             price: Decimal.mult(rate, Decimal.new(100))}
+                             price: cents}
 
         {:ok, rate}
+      end)
+      |> Enum.filter(fn {:ok, rate} ->
+        case rate.service.code do
+          "LIBRARY MAIL" -> config().include_library_mail
+          "MEDIA MAIL" -> config().include_media_mail
+          _ -> true
+        end
       end)
     end
   end
@@ -106,7 +115,8 @@ defmodule Shippex.Carrier.USPS do
           image: ~x"//DeliveryConfirmationLabel//text()"s
         )
 
-      price = Decimal.new(data.rate) |> Decimal.mult(Decimal.new(100))
+      price = Util.price_to_cents(data.rate)
+
       rate = %Shippex.Rate{service: service, price: price}
       image = String.replace(data.image, "\n", "")
       label = %Shippex.Label{rate: rate,
@@ -257,10 +267,18 @@ defmodule Shippex.Carrier.USPS do
            Keyword.get(cfg, :username, {:error, :not_found, :username}),
 
          pw <-
-           Keyword.get(cfg, :password, {:error, :not_found, :password}) do
+           Keyword.get(cfg, :password, {:error, :not_found, :password}),
+
+         include_library_mail <-
+           Keyword.get(cfg, :include_library_mail, true),
+
+         include_media_mail <-
+           Keyword.get(cfg, :include_media_mail, true) do
 
          %{username: un,
-           password: pw}
+           password: pw,
+           include_library_mail: include_library_mail,
+           include_media_mail: include_media_mail}
     else
       {:error, :not_found, token} -> raise Shippex.InvalidConfigError,
         message: "USPS config key missing: #{token}"

@@ -29,4 +29,13 @@ defmodule Shippex.UtilTest do
     assert Util.inches_to_cm(0) == 0.0
     assert Util.cm_to_inches(0) == 0.0
   end
+
+  test "price helper" do
+    assert Decimal.equal?(Util.price_to_cents(nil), Decimal.new(0)) == true
+    assert Decimal.equal?(Util.price_to_cents(0), Decimal.new(0)) == true
+    assert Decimal.equal?(Util.price_to_cents(28.00), Decimal.new(2800)) == true
+    assert Decimal.equal?(Util.price_to_cents("28.00"), Decimal.new(2800)) == true
+    assert Decimal.equal?(Util.price_to_cents("28"), Decimal.new(2800)) == true
+    assert Decimal.equal?(Util.price_to_cents(28), Decimal.new(2800)) == true
+  end
 end

@@ -4,6 +4,8 @@ Shippex is an abstraction of commonly used features in shipping with various car
 
 As of now, only UPS and USPS are supported. More carrier support will come in the future. Units of measurement are mostly hardcoded to inches and miles.
 
+Docs: [https://hexdocs.pm/shippex/Shippex.html](https://hexdocs.pm/shippex/Shippex.html)
+
 ## Installation
 
 1. Add `shippex` to your list of dependencies in `mix.exs`:

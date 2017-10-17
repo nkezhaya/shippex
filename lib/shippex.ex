@@ -21,12 +21,18 @@ defmodule Shippex do
               state: "TX",
               zip: "78999"
             }
+          ],
+          usps: [
+            username: "MyUsername",
+            password: "MyPassword",
+            include_library_mail: true
+            include_media_mail: true
           ]
         ]
 
   ## Create origin/destination addresses
 
-      origin = Shippex.Address.to_struct(%{
+      origin = Shippex.Address.address(%{
         name: "Earl G",
         phone: "123-123-1234",
         address: "9999 Hobby Lane",
@@ -36,7 +42,7 @@ defmodule Shippex do
         zip: "78703"
       })
 
-      destination = Shippex.Address.to_struct(%{
+      destination = Shippex.Address.address(%{
         name: "Bar Baz",
         phone: "123-123-1234",
         address: "1234 Foo Blvd",
@@ -79,13 +85,15 @@ defmodule Shippex do
       File.write!("\#{label.tracking_number}.gif", Base.decode64!(label.image))
   """
 
+  alias Shippex.Carrier
+
   @type response :: %{code: String.t, message: String.t}
 
   defmodule InvalidConfigError do
     defexception [:message]
 
     def exception(message) do
-      "Invalid config: #{inspect message}"
+      %InvalidConfigError{message: "Invalid config: #{inspect message}"}
     end
   end
 
@@ -104,7 +112,7 @@ defmodule Shippex do
 
       Shippex.carriers #=> [:ups]
   """
-  @spec carriers() :: [atom]
+  @spec carriers() :: [Carrier.t]
   def carriers do
     cfg = Shippex.config()
 
@@ -112,7 +120,7 @@ defmodule Shippex do
     fedex = if Keyword.get(cfg, :fedex),  do: :fedex
     usps  = if Keyword.get(cfg, :usps),   do: :usps
 
-    Enum.filter [ups, fedex, usps], fn (c) -> not is_nil(c) end
+    Enum.reject [ups, fedex, usps], &is_nil/1
   end
 
   @doc """
@@ -153,32 +161,25 @@ defmodule Shippex do
   @doc """
   Fetches rates from `carriers` for a given `Shipment`.
   """
-  @spec fetch_rates(Shipment.t, [atom]) :: [{atom, Rate.t}]
-  def fetch_rates(%Shippex.Shipment{} = shipment, carriers \\ :all) do
+  @spec fetch_rates(Shipment.t, [Carrier.t] | nil) :: [{atom, Rate.t}]
+  def fetch_rates(%Shippex.Shipment{} = shipment, carriers \\ nil) do
     # Convert the atom to a list if necessary.
     carriers = cond do
-      is_nil(carriers)  -> [:all]
+      is_nil(carriers)  -> Shippex.carriers()
       is_atom(carriers) -> [carriers]
       is_list(carriers) -> carriers
 
       true ->
         raise """
-        #{inspect carriers} is an invalid carrier or list of carriers. Try using an atom. For example:
+        #{inspect carriers} is an invalid carrier or list of carriers.
+        Try using an atom. For example:
 
-          Shippex.fetch_rates(shipment, :ups)
+            Shippex.fetch_rates(shipment, :ups)
         """
     end
+    |> Enum.map(&Shippex.Carrier.module/1)
 
-    # Validate each carrier.
-    available_carriers = Shippex.carriers()
-    Enum.each carriers, fn (carrier) ->
-      unless Enum.any?(available_carriers, fn (c) -> c == carrier end) do
-        raise "#{inspect carrier} not found in #{inspect available_carriers}"
-      end
-    end
-
-    # TODO
-    rates  = Shippex.Carrier.UPS.fetch_rates(shipment)
+    rates  = Enum.reduce carriers, [], & &1.fetch_rates(shipment) ++ &2
     oks    = Enum.filter rates, &(elem(&1, 0) == :ok)
     errors = Enum.filter rates, &(elem(&1, 0) == :error)
 
@@ -197,8 +198,10 @@ defmodule Shippex do
       Shippex.fetch_rate(shipment, service)
   """
   @spec fetch_rate(Shipment.t, Service.t) :: {atom, Rate.t}
-  def fetch_rate(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    Shippex.Carrier.UPS.fetch_rate(shipment, service)
+  def fetch_rate(%Shippex.Shipment{} = shipment,
+                 %Shippex.Service{carrier: carrier} = service) do
+
+    Carrier.module(carrier).fetch_rate(shipment, service)
   end
 
   @doc """
@@ -208,17 +211,20 @@ defmodule Shippex do
       Shippex.fetch_label(shipment, service)
   """
   @spec fetch_label(Shipment.t, Service.t) :: {atom, Label.t}
-  def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    Shippex.Carrier.UPS.fetch_label(shipment, service)
+  def fetch_label(%Shippex.Shipment{} = shipment,
+                  %Shippex.Service{carrier: carrier} = service) do
+
+    Carrier.module(carrier).fetch_label(shipment, service)
   end
 
   @doc """
   Cancels the shipment associated with `label`, if possible. The result is
   returned in a tuple.
 
-  You may pass in either the label or tracking number.
+  You may pass in either the label or tracking number. A carrier must be
+  specified.
 
-      case Shippex.cancel_shipment(label) do
+      case Shippex.cancel_shipment(:ups, label) do
         {:ok, result} ->
           IO.inspect(result) #=> %{code: "1", message: "Voided successfully."}
         {:error, %{code: code, message: message}} ->
@@ -226,12 +232,14 @@ defmodule Shippex do
           IO.inspect(message)
       end
   """
-  @spec cancel_shipment(Label.t | String.t) :: {atom, response}
-  def cancel_shipment(%Shippex.Label{} = label) do
-    Shippex.Carrier.UPS.cancel_shipment(label.tracking_number)
-  end
-  def cancel_shipment(tracking_number) when is_bitstring(tracking_number) do
-    Shippex.Carrier.UPS.cancel_shipment(tracking_number)
+  @spec cancel_shipment(Carrier.t, Label.t | String.t) :: {atom, response}
+  def cancel_shipment(carrier, label_or_tracking_number) do
+    tracking_number = case label_or_tracking_number do
+      %Shippex.Label{tracking_number: t} -> t
+      t when is_bitstring(t) -> t
+    end
+
+    Carrier.module(carrier).cancel_shipment(tracking_number)
   end
 
   @doc """
@@ -242,9 +250,10 @@ defmodule Shippex do
   perfectly will still be in a `list` where `length(candidates) == 1`.
 
   Note that the `candidates` returned will automatically pass through
-  `Shippex.Address.to_struct()` for casting.
+  `Shippex.Address.address()` for casting. Also, if `:usps` is used as the
+  validation provider, the number of candidates will always be 1.
 
-      address = Shippex.Address.to_struct(%{
+      address = Shippex.Address.address(%{
         name: "Earl G",
         phone: "123-123-1234",
         address: "9999 Hobby Lane",
@@ -257,19 +266,17 @@ defmodule Shippex do
       case Shippex.validate_address(address) do
         {:error, %{code: code, message: message}} ->
           # Present the error.
-        {:ok, candidates} ->
-          if length(candidates) == 1 do
-            # Use the address
-          else
-            # Present candidates to user for selection
-          end
+        {:ok, candidates} when length(candidates) == 1 ->
+          # Use the address
+        {:ok, candidates} when length(candidates) > 1 ->
+          # Present candidates to user for selection
       end
   """
-  @spec validate_address(Address.t) :: {atom, response | [Address.t]}
-  def validate_address(%Shippex.Address{} = address) do
+  @spec validate_address(Carrier.t, Address.t) :: {atom, response | [Address.t]}
+  def validate_address(carrier \\ :usps, %Shippex.Address{} = address) do
     case address.country do
       "US" ->
-        Shippex.Carrier.UPS.validate_address(address)
+        Carrier.module(carrier).validate_address(address)
       country ->
         case Shippex.Util.states(country)[address.state] do
           nil ->

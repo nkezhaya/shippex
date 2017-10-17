@@ -1,7 +1,9 @@
 defmodule Shippex.Carrier.UPS do
   @moduledoc false
+  @behaviour Shippex.Carrier
 
   alias Shippex.Carrier.UPS.Client
+  alias Shippex.Util
 
   defmacro with_response(response, do: block) do
     quote do
@@ -20,9 +22,6 @@ defmodule Shippex.Carrier.UPS do
 
         {:error, _} ->
           {:error, %{code: 1, message: "The UPS API is down."}}
-
-        _ ->
-          {:error, %{code: 0, message: "Unknown error."}}
       end
     end
   end
@@ -48,8 +47,6 @@ defmodule Shippex.Carrier.UPS do
   end
 
   def fetch_rate(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    alias Decimal, as: D
-
     params = Map.new
       |> Map.merge(security_params())
       |> Map.merge(rate_request_params(shipment, service))
@@ -61,10 +58,9 @@ defmodule Shippex.Carrier.UPS do
 
       case body["Response"]["ResponseStatus"] do
         %{"Code" => "1"} ->
-          price = body["RatedShipment"]["TotalCharges"]["MonetaryValue"]
-            |> D.new
-            |> D.mult(D.new(100))
-            |> D.round
+          price =
+            body["RatedShipment"]["TotalCharges"]["MonetaryValue"]
+            |> Util.price_to_cents
 
           rate = %Shippex.Rate{service: service, price: price}
 
@@ -77,8 +73,6 @@ defmodule Shippex.Carrier.UPS do
   end
 
   def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    alias Decimal, as: D
-
     params = Map.new
       |> Map.merge(security_params())
       |> Map.merge(shipment_request_params(shipment, service))
@@ -92,10 +86,9 @@ defmodule Shippex.Carrier.UPS do
         %{"Code" => "1"} ->
 
           results = body["ShipmentResults"]
-          price = results["ShipmentCharges"]["TotalCharges"]["MonetaryValue"]
-            |> D.new
-            |> D.mult(D.new(100))
-            |> D.round
+          price =
+            results["ShipmentCharges"]["TotalCharges"]["MonetaryValue"]
+            |> Util.price_to_cents
 
           rate = %Shippex.Rate{service: service, price: price}
 
@@ -113,9 +106,6 @@ defmodule Shippex.Carrier.UPS do
         _ -> raise "Invalid response: #{response}"
       end
     end
-  end
-  def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Rate{} = rate) do
-    fetch_label(shipment, rate.service)
   end
 
   def cancel_shipment(%Shippex.Label{} = label) do
@@ -185,7 +175,7 @@ defmodule Shippex.Carrier.UPS do
 
         candidates = Enum.map candidates, fn (candidate) ->
           candidate = candidate["AddressKeyFormat"]
-          Shippex.Address.to_struct(%{
+          Shippex.Address.address(%{
             "name" => address.name,
             "phone" => address.phone,
             "address" => candidate["AddressLine"],
@@ -308,7 +298,7 @@ defmodule Shippex.Carrier.UPS do
   defp shipper_address_params() do
     config = config()
 
-    address = Shippex.Address.to_struct(%{
+    address = Shippex.Address.address(%{
       "name" => config.shipper.name,
       "phone" => config.shipper.phone,
       "address" => config.shipper.address,

@@ -1,4 +1,4 @@
-defmodule UPSTest do
+defmodule Shippex.UPS.RateTest do
   use ExUnit.Case
 
   doctest Shippex
@@ -19,7 +19,7 @@ defmodule UPSTest do
   end
 
   test "rates generated for canada", %{shipment: shipment} do
-    destination = Shippex.Address.to_struct(%{
+    destination = Shippex.Address.address(%{
       name: "Canada Name",
       phone: "123-123-1234",
       address: "655 Burrard St",
@@ -39,7 +39,7 @@ defmodule UPSTest do
   end
 
   test "rates generated for mexico", %{shipment: shipment} do
-    destination = Shippex.Address.to_struct(%{
+    destination = Shippex.Address.address(%{
       name: "Mexico Name",
       phone: "123-123-1234",
       address: "Ferrol 4",
@@ -72,7 +72,7 @@ defmodule UPSTest do
     {:ok, rate} = Enum.shuffle(rates) |> hd
 
     {:ok, label} = shipment
-      |> Shippex.Carrier.UPS.fetch_label(rate)
+      |> Shippex.Carrier.UPS.fetch_label(rate.service)
 
     assert label
   end

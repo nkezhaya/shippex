@@ -48,6 +48,14 @@ defmodule Shippex.Service do
     do: intl_services()
   def services_for_carrier(:ups, oc, dc),
     do: raise "Invalid/unsupported country: #{inspect oc} or #{inspect dc}"
+  def services_for_carrier(:usps, "US", "US") do
+    [%S{carrier: :usps, code: "PRIORITY MAIL EXPRESS", description: "Priority Mail Express"},
+     %S{carrier: :usps, code: "PRIORITY", description: "Priority Mail"},
+     %S{carrier: :usps, code: "FIRST CLASS", description: "First-Class Mail Parcel"},
+     %S{carrier: :usps, code: "RETAIL GROUND", description: "USPS Retail Ground"},
+     %S{carrier: :usps, code: "MEDIA MAIL", description: "Media Mail Parcel"},
+     %S{carrier: :usps, code: "LIBRARY MAIL", description: "Library Mail Parcel"}]
+  end
   def services_for_carrier(carrier, oc, dc) when is_bitstring(carrier) do
     carrier
     |> String.downcase

@@ -53,7 +53,6 @@ defmodule Shippex.Carrier.USPS do
       {:RateV4Request, %{USERID: config().username},
         [{:Revision, nil, 2}, package_params]}
 
-
     with_response Client.post("ShippingAPI.dll", %{API: "RateV4", XML: request}) do
       body
       |> xpath(

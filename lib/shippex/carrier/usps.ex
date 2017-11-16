@@ -120,7 +120,7 @@ defmodule Shippex.Carrier.USPS do
       image = String.replace(data.image, "\n", "")
       label = %Shippex.Label{rate: rate,
                              tracking_number: data.tracking_number,
-                             format: "tif",
+                             format: :tiff,
                              image: image}
 
       {:ok, label}

@@ -95,7 +95,7 @@ defmodule Shippex.Carrier.UPS do
           package_response = results["PackageResults"]
           label = %Shippex.Label{rate: rate,
                                  tracking_number: package_response["TrackingNumber"],
-                                 format: "gif",
+                                 format: :gif,
                                  image: package_response["ShippingLabel"]["GraphicImage"]}
 
           {:ok, label}

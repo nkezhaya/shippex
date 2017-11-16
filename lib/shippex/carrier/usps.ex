@@ -102,7 +102,7 @@ defmodule Shippex.Carrier.USPS do
          address_params(shipment.to, prefix: "To", firm: "Firm", name: true),
          {:WeightInOunces, nil, shipment.package.weight},
          {:ServiceType, nil, service.code},
-         {:ImageType, nil, "TIF"}]}
+         {:ImageType, nil, "PDF"}]}
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: request}) do
       data =
@@ -120,7 +120,7 @@ defmodule Shippex.Carrier.USPS do
       image = String.replace(data.image, "\n", "")
       label = %Shippex.Label{rate: rate,
                              tracking_number: data.tracking_number,
-                             format: :tiff,
+                             format: :pdf,
                              image: image}
 
       {:ok, label}

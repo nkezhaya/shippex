@@ -201,7 +201,12 @@ defmodule Shippex do
   def fetch_rate(%Shippex.Shipment{} = shipment,
                  %Shippex.Service{carrier: carrier} = service) do
 
-    Carrier.module(carrier).fetch_rate(shipment, service)
+    case Carrier.module(carrier).fetch_rate(shipment, service) do
+      list when is_list(list) and length(list) == 1 ->
+        hd(list)
+      {_, _} = rate ->
+        rate
+    end
   end
 
   @doc """

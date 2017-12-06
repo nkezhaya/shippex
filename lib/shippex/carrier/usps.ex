@@ -102,7 +102,8 @@ defmodule Shippex.Carrier.USPS do
          address_params(shipment.to, prefix: "To", firm: "Firm", name: true),
          {:WeightInOunces, nil, shipment.package.weight},
          {:ServiceType, nil, service.code},
-         {:ImageType, nil, "PDF"}]}
+         {:ImageType, nil, "PDF"},
+         ground_only_param(service)]}
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: request}) do
       data =
@@ -214,6 +215,10 @@ defmodule Shippex.Carrier.USPS do
      {:Height, nil, package.height},
      {:Girth, nil, package.girth},
      {:Machinable, nil, "False"}]
+  end
+
+  defp ground_only_param(service) do
+    {:GroundOnly, nil, service.code == "RETAIL GROUND"}
   end
 
   defp strip_html(string) do

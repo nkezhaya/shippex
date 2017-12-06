@@ -27,4 +27,11 @@ defmodule Shippex.USPS.RateTest do
     assert label.tracking_number
     assert label.image
   end
+
+  test "ground rates generated", %{shipment: shipment} do
+    package = %{shipment.package | container: :variable}
+    shipment = %{shipment | package: package}
+    rates = Shippex.Carrier.USPS.fetch_rate(shipment, "RETAIL GROUND")
+    assert is_list(rates) and length(rates) > 0
+  end
 end

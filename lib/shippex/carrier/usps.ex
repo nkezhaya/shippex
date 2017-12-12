@@ -47,7 +47,7 @@ defmodule Shippex.Carrier.USPS do
          {:ZipOrigination, nil, shipment.from.zip},
          {:ZipDestination, nil, shipment.to.zip},
          {:Pounds, nil, "0"},
-         {:Ounces, nil, shipment.package.weight}] ++ container_params(shipment)}
+         {:Ounces, nil, shipment.package.weight * 16}] ++ container_params(shipment)}
 
     request =
       {:RateV4Request, %{USERID: config().username},

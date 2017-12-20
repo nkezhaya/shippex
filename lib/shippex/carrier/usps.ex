@@ -4,8 +4,7 @@ defmodule Shippex.Carrier.USPS do
 
   import SweetXml
   alias Shippex.Carrier.USPS.Client
-  alias Shippex.Package
-  alias Shippex.Util
+  alias Shippex.{Package, Shipment, Util}
 
   @default_container :variable
   @large_containers ~w(rectangular nonrectangular variable)a
@@ -41,13 +40,20 @@ defmodule Shippex.Carrier.USPS do
       s when is_bitstring(s) -> s
     end
 
+    if Shipment.international?(shipment) do
+      international_rate_request(shipment)
+    else
+      domestic_rate_request(shipment, service)
+    end
+  end
+  defp domestic_rate_request(shipment, service) do
     package_params =
       {:Package, %{ID: "0"},
         [{:Service, nil, service},
          {:ZipOrigination, nil, shipment.from.zip},
          {:ZipDestination, nil, shipment.to.zip},
-         {:Pounds, nil, "0"},
-         {:Ounces, nil, shipment.package.weight * 16}] ++ container_params(shipment)}
+         {:Pounds, nil, shipment.package.weight},
+         {:Ounces, nil, "0"}] ++ container_params(shipment)}
 
     request =
       {:RateV4Request, %{USERID: config().username},
@@ -76,8 +82,43 @@ defmodule Shippex.Carrier.USPS do
       end)
     end
   end
+  defp international_rate_request(shipment) do
+    package_params =
+      {:Package, %{ID: "0"},
+        [{:Pounds, nil, shipment.package.weight},
+         {:Ounces, nil, "0"},
+         {:Machinable, nil, "False"},
+         {:MailType, nil, international_mail_type(shipment.package)},
+         {:ValueOfContents, nil, shipment.package.monetary_value},
+         {:Country, nil, Util.abbreviation_to_country_name(shipment.to.country)}] ++
+        container_params(shipment) ++
+        [{:OriginZip, nil, shipment.from.zip}]}
+
+    request =
+      {:IntlRateV2Request, %{USERID: config().username},
+        [{:Revision, nil, 2}, package_params]}
+
+    with_response Client.post("ShippingAPI.dll", %{API: "IntlRateV2", XML: request}) do
+      body
+      |> xpath(
+        ~x"//IntlRateV2Response//Package//Service"l,
+        name: ~x"./SvcDescription//text()"s,
+        service: ~x"./SvcDescription//text()"s |> transform_by(&service_to_code/1),
+        rate: ~x"./Postage//text()"s |> transform_by(&Util.price_to_cents/1)
+      )
+      |> Enum.map(fn(%{name: description, service: service, rate: cents}) ->
+        rate = %Shippex.Rate{service: %{service | description: description},
+                             price: cents}
+
+        {:ok, rate}
+      end)
+    end
+  end
+
   defp service_to_code(description) do
+    IO.inspect(description)
     code = cond do
+      description =~ ~r/priority mail international/i -> "PRIORITY MAIL INTERNATIONAL"
       description =~ ~r/priority mail express/i -> "PRIORITY MAIL EXPRESS"
       description =~ ~r/priority/i -> "PRIORITY"
       description =~ ~r/first[-\s]*class/i -> "FIRST CLASS"
@@ -87,6 +128,17 @@ defmodule Shippex.Carrier.USPS do
     end
 
     Shippex.Service.by_carrier_and_code(:usps, code)
+  end
+
+  defp international_mail_type(%Shippex.Package{container: nil}), do: "ALL"
+  defp international_mail_type(%Shippex.Package{container: container}) do
+    container = "#{container}"
+    cond do
+      container =~ ~r/envelope/i -> "ENVELOPE"
+      container =~ ~r/flat[-\s]*rate/i -> "FLATRATE"
+      container =~ ~r/rectangular|variable/i -> "PACKAGE"
+      true -> "ALL"
+    end
   end
 
   def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
@@ -189,7 +241,7 @@ defmodule Shippex.Carrier.USPS do
        {prefix <> "Zip4", nil, ""}]
   end
 
-  defp container_params(%Shippex.Shipment{package: package}) do
+  defp container_params(%Shippex.Shipment{package: package} = shipment) do
     container =
       case Package.usps_containers[package.container] do
         nil -> Package.usps_containers[@default_container]
@@ -208,13 +260,18 @@ defmodule Shippex.Carrier.USPS do
         "REGULAR"
       end
 
+    machinable = if Shippex.Shipment.international?(shipment) do
+      []
+    else
+      [{:Machinable, nil, "False"}]
+    end
+
     [{:Container, nil, container},
      {:Size, nil, size},
      {:Width, nil, package.width},
      {:Length, nil, package.length},
      {:Height, nil, package.height},
-     {:Girth, nil, package.girth},
-     {:Machinable, nil, "False"}]
+     {:Girth, nil, package.girth}] ++ machinable
   end
 
   defp ground_only_param(service) do

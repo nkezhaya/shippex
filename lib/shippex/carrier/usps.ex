@@ -47,13 +47,26 @@ defmodule Shippex.Carrier.USPS do
     end
   end
   defp domestic_rate_request(shipment, service) do
+    # Convert weight to ounces
+    package = shipment.package
+    weight = 16 * case Application.get_env(:shippex, :weight_unit, :lbs) do
+      :lbs -> package.weight
+      :kg -> Shippex.Util.kgs_to_lbs(package.weight)
+      u ->
+        raise """
+        Invalid unit of measurement specified: #{IO.inspect(u)}
+
+        Must be either :lbs or :kg
+        """
+    end
+
     package_params =
       {:Package, %{ID: "0"},
         [{:Service, nil, service},
          {:ZipOrigination, nil, shipment.from.zip},
          {:ZipDestination, nil, shipment.to.zip},
-         {:Pounds, nil, shipment.package.weight},
-         {:Ounces, nil, "0"}] ++ container_params(shipment)}
+         {:Pounds, nil, "0"},
+         {:Ounces, nil, weight}] ++ container_params(shipment)}
 
     request =
       {:RateV4Request, %{USERID: config().username},

@@ -33,7 +33,7 @@ defmodule Shippex.Service do
      %S{carrier: :ups, code: "03", description: "UPS Ground"}]
   end
   def services_for_carrier(:ups, "US", _oc),
-    do: intl_services() ++ [%S{carrier: :ups, code: "65", description: "UPS Worldwide Saver"}]
+    do: ups_intl_services() ++ [%S{carrier: :ups, code: "65", description: "UPS Worldwide Saver"}]
   def services_for_carrier(:ups, "CA", "CA") do
     [%S{carrier: :ups, code: "11", description: "UPS Standard"},
      %S{carrier: :ups, code: "02", description: "UPS Expedited"},
@@ -41,11 +41,11 @@ defmodule Shippex.Service do
      %S{carrier: :ups, code: "01", description: "UPS Express"}]
   end
   def services_for_carrier(:ups, "CA", _dc),
-    do: intl_services()
+    do: ups_intl_services()
   def services_for_carrier(:ups, "MX", "MX"),
-    do: intl_services()
+    do: ups_intl_services()
   def services_for_carrier(:ups, "MX", _dc),
-    do: intl_services()
+    do: ups_intl_services()
   def services_for_carrier(:ups, oc, dc),
     do: raise "Invalid/unsupported country: #{inspect oc} or #{inspect dc}"
   def services_for_carrier(:usps, "US", "US") do
@@ -66,7 +66,7 @@ defmodule Shippex.Service do
   def services_for_carrier(carrier, _oc, _dc) do
     raise "Invalid carrier: #{inspect carrier}"
   end
-  defp intl_services do
+  defp ups_intl_services do
     [%S{carrier: :ups, code: "11", description: "UPS Standard"},
      %S{carrier: :ups, code: "08", description: "UPS Worldwide Expedited"},
      %S{carrier: :ups, code: "07", description: "UPS Worldwide Express"}]
@@ -89,8 +89,12 @@ defmodule Shippex.Service do
       iex> Shippex.Service.by_carrier_and_code(:ups, "999999999")
       nil
   """
-  def by_carrier_and_code(carrier, code, ori_country \\ "US", dst_country \\ "US") do
-    services_for_carrier(carrier, ori_country, dst_country)
+  def by_carrier_and_code(:ups, code) do
+    (services_for_carrier(:ups) ++ ups_intl_services())
+    |> Enum.find(nil, & &1.code == code)
+  end
+  def by_carrier_and_code(carrier, code) do
+    services_for_carrier(carrier)
     |> Enum.find(nil, & &1.code == code)
   end
 end

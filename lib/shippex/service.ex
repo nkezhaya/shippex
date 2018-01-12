@@ -89,8 +89,8 @@ defmodule Shippex.Service do
       iex> Shippex.Service.by_carrier_and_code(:ups, "999999999")
       nil
   """
-  def by_carrier_and_code(carrier, code) do
-    services_for_carrier(carrier)
+  def by_carrier_and_code(carrier, code, ori_country \\ "US", dst_country \\ "US") do
+    services_for_carrier(carrier, ori_country, dst_country)
     |> Enum.find(nil, & &1.code == code)
   end
 end

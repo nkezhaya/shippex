@@ -51,7 +51,5 @@ defmodule Shippex.USPS.RateTest do
     package = %{shipment.package | container: :variable}
     shipment = %{shipment | package: package}
     rates = Shippex.Carrier.USPS.fetch_rate(shipment, "ALL")
-
-    IO.inspect(rates)
   end
 end

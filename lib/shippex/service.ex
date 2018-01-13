@@ -89,6 +89,12 @@ defmodule Shippex.Service do
       iex> Shippex.Service.by_carrier_and_code(:ups, "999999999")
       nil
   """
+  def by_carrier_and_code(carrier, code) when is_bitstring(carrier) do
+    carrier
+    |> String.downcase
+    |> String.to_atom
+    |> by_carrier_and_code(code)
+  end
   def by_carrier_and_code(:ups, code) do
     (services_for_carrier(:ups) ++ ups_intl_services())
     |> Enum.find(nil, & &1.code == code)

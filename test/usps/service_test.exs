@@ -1,6 +1,5 @@
 defmodule Shippex.USPS.ServiceTest do
   use ExUnit.Case
-  doctest Shippex
 
   alias Shippex.Service
 

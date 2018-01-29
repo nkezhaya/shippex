@@ -1,6 +1,5 @@
 defmodule Shippex.USPS.AddressTest do
   use ExUnit.Case
-  doctest Shippex
 
   test "validate address" do
     name = "Earl G"

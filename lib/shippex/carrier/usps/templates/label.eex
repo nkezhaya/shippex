@@ -1,0 +1,38 @@
+<eVSRequest USERID="<%= config().username %>">
+  <%= render_address address: @shipment.from, prefix: "From" %>
+  <%= render_address address: @shipment.to, prefix: "To" %>
+
+  <% package = @shipment.package %>
+  <WeightInOunces><%= weight_in_ounces(@shipment) %></WeightInOunces>
+  <ServiceType>Express</ServiceType>
+  <Container><%= container(@shipment) %></Container>
+  <Width><%= package.width %></Width>
+  <Length><%= package.length %></Length>
+  <Height><%= package.height %></Height>
+
+  <%= if @shipment.international? do %>
+  <Machinable>False</Machinable>
+  <% end %>
+
+  <ProcessingCategory></ProcessingCategory>
+  <PriceOptions></PriceOptions>
+  <InsuredAmount></InsuredAmount>
+  <AddressServiceRequested>true</AddressServiceRequested>
+
+  <ExpressMailOptions>
+    <DeliveryOption></DeliveryOption>
+    <WaiverOfSignature></WaiverOfSignature>
+  </ExpressMailOptions>
+
+  <%= if date = @shipment.ship_date do %>
+    <ShipDate>
+      <%= Date.to_iso8601(date) |> String.split("-") |> Enum.reverse |> Enum.join("/") %>
+    </ShipDate>
+  <% end %>
+
+  <%= if @shipment.id do %>
+    <CustomerRefNo><%= @shipment.id %></CustomerRefNo>
+  <% end %>
+
+  <ImageType>TIF</ImageType>
+</eVSRequest>

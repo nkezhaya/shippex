@@ -6,8 +6,8 @@ defmodule Shippex.Address do
 
   @type t :: %__MODULE__{}
 
-  @enforce_keys [:name, :phone, :address, :address_line_2, :city, :state, :zip, :country]
-  defstruct [:name, :phone, :address, :address_line_2, :city, :state, :zip, :country]
+  @enforce_keys [:name, :company_name, :phone, :address, :address_line_2, :city, :state, :zip, :country]
+  defstruct [:name, :company_name, :phone, :address, :address_line_2, :city, :state, :zip, :country]
 
   alias __MODULE__, as: Address
   alias Shippex.Util
@@ -44,6 +44,7 @@ defmodule Shippex.Address do
 
     address = %Address{
       name: params["name"],
+      company_name: params["company_name"],
       phone: params["phone"],
       address: params["address"],
       address_line_2: params["address_line_2"],

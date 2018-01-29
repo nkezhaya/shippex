@@ -1,6 +1,5 @@
 defmodule Shippex.AddressTest do
   use ExUnit.Case
-  doctest Shippex
 
   test "address shortens the full state" do
     address = Shippex.Address.address(%{

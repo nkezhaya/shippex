@@ -1,0 +1,13 @@
+<RateV4Request USERID="<%= config().username %>">
+  <Revision>2</Revision>
+
+  <Package ID="0">
+    <Service><%= @service %></Service>
+    <ZipOrigination><%= @shipment.from.zip %></ZipOrigination>
+    <ZipDestination><%= @shipment.to.zip %></ZipDestination>
+    <Pounds>0</Pounds>
+    <Ounces><%= weight_in_ounces(@shipment) %></Ounces>
+
+    <%= render_package shipment: @shipment, size: size(@shipment) %>
+  </Package>
+</RateV4Request>

@@ -1,0 +1,9 @@
+<% package = @shipment.package %>
+<Container><%= container(@shipment) %></Container>
+<%= if @size do %>
+  <Size><%= @size %></Size>
+<% end %>
+<Width><%= package.width %></Width>
+<Length><%= package.length %></Length>
+<Height><%= package.height %></Height>
+<Machinable>False</Machinable>

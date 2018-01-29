@@ -2,12 +2,18 @@ defmodule Shippex.Carrier.USPS do
   @moduledoc false
   @behaviour Shippex.Carrier
 
+  require EEx
   import SweetXml
   alias Shippex.Carrier.USPS.Client
   alias Shippex.{Package, Shipment, Util}
 
   @default_container :variable
   @large_containers ~w(rectangular nonrectangular variable)a
+
+  for f <- ~w(address label package rate)a do
+    EEx.function_from_file :defp, :"render_#{f}",
+      __DIR__ <> "/usps/templates/#{f}.eex", [:assigns]
+  end
 
   defmacro with_response(response, do: block) do
     quote do
@@ -40,7 +46,7 @@ defmodule Shippex.Carrier.USPS do
       s when is_bitstring(s) -> s
     end
 
-    if Shipment.international?(shipment) do
+    if shipment.international? do
       international_rate_request(shipment)
     else
       domestic_rate_request(shipment, service)
@@ -49,30 +55,10 @@ defmodule Shippex.Carrier.USPS do
   defp domestic_rate_request(shipment, service) do
     # Convert weight to ounces
     package = shipment.package
-    weight = 16 * case Application.get_env(:shippex, :weight_unit, :lbs) do
-      :lbs -> package.weight
-      :kg -> Shippex.Util.kgs_to_lbs(package.weight)
-      u ->
-        raise """
-        Invalid unit of measurement specified: #{IO.inspect(u)}
 
-        Must be either :lbs or :kg
-        """
-    end
+    rate = render_rate shipment: shipment, service: service
 
-    package_params =
-      {:Package, %{ID: "0"},
-        [{:Service, nil, service},
-         {:ZipOrigination, nil, shipment.from.zip},
-         {:ZipDestination, nil, shipment.to.zip},
-         {:Pounds, nil, "0"},
-         {:Ounces, nil, weight}] ++ container_params(shipment)}
-
-    request =
-      {:RateV4Request, %{USERID: config().username},
-        [{:Revision, nil, 2}, package_params]}
-
-    with_response Client.post("ShippingAPI.dll", %{API: "RateV4", XML: request}) do
+    with_response Client.post("ShippingAPI.dll", %{API: "RateV4", XML: rate}) do
       body
       |> xpath(
         ~x"//RateV4Response//Package//Postage"l,
@@ -104,7 +90,7 @@ defmodule Shippex.Carrier.USPS do
          {:MailType, nil, international_mail_type(shipment.package)},
          {:ValueOfContents, nil, shipment.package.monetary_value},
          {:Country, nil, Util.abbreviation_to_country_name(shipment.to.country)}] ++
-        container_params(shipment) ++
+        container(shipment) ++
         [{:OriginZip, nil, shipment.from.zip}]}
 
     request =
@@ -128,8 +114,20 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
+  defp weight_in_ounces(%Shipment{package: %Package{weight: weight}}) do
+    16 * case Application.get_env(:shippex, :weight_unit, :lbs) do
+      :lbs -> weight
+      :kg -> Shippex.Util.kgs_to_lbs(weight)
+      u ->
+        raise """
+        Invalid unit of measurement specified: #{IO.inspect(u)}
+
+        Must be either :lbs or :kg
+        """
+    end
+  end
+
   defp service_to_code(description) do
-    IO.inspect(description)
     code = cond do
       description =~ ~r/priority mail international/i -> "PRIORITY MAIL INTERNATIONAL"
       description =~ ~r/priority mail express/i -> "PRIORITY MAIL EXPRESS"
@@ -155,29 +153,16 @@ defmodule Shippex.Carrier.USPS do
   end
 
   def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    [root, api] = case Shippex.env do
-      :dev  -> ["DelivConfirmCertifyV4.0Request",  "DelivConfirmCertifyV4"]
-      :prod -> ["DeliveryConfirmationV4.0Request", "DeliveryConfirmationV4"]
-    end
+    request = render_label shipment: shipment, service: service
 
-    request =
-      {root, %{USERID: config().username},
-        [{:Revision, nil, 2},
-         address_params(shipment.from, prefix: "From", firm: "Firm", name: true),
-         address_params(shipment.to, prefix: "To", firm: "Firm", name: true),
-         {:WeightInOunces, nil, shipment.package.weight},
-         {:ServiceType, nil, service.code},
-         {:ImageType, nil, "PDF"},
-         ground_only_param(service)]}
-
-    with_response Client.post("ShippingAPI.dll", %{API: api, XML: request}) do
+    with_response Client.post("ShippingAPI.dll", %{API: "eVS", XML: request}) do
       data =
         body
         |> xpath(
-          ~x"//#{String.replace(root, "Request", "Response")}",
+          ~x"//eVSResponse",
           rate: ~x"//Postage//text()"s,
-          tracking_number: ~x"//DeliveryConfirmationNumber//text()"s,
-          image: ~x"//DeliveryConfirmationLabel//text()"s
+          tracking_number: ~x"//BarcodeNumber//text()"s,
+          image: ~x"//LabelImage//text()"s
         )
 
       price = Util.price_to_cents(data.rate)
@@ -186,7 +171,7 @@ defmodule Shippex.Carrier.USPS do
       image = String.replace(data.image, "\n", "")
       label = %Shippex.Label{rate: rate,
                              tracking_number: data.tracking_number,
-                             format: :pdf,
+                             format: :tiff,
                              image: image}
 
       {:ok, label}
@@ -203,7 +188,7 @@ defmodule Shippex.Carrier.USPS do
     request =
       {:AddressValidateRequest, %{USERID: config().username},
         [{:Revision, nil, "1"},
-         {:Address, %{ID: "0"}, address_params(address, firm: "FirmName")}]}
+         {:Address, %{ID: "0"}, render_address(address: address, firm: "FirmName")}]}
 
     with_response Client.post("", %{API: "Verify", XML: request}) do
       candidates =
@@ -214,7 +199,7 @@ defmodule Shippex.Carrier.USPS do
           address_line_2: ~x"./Address1//text()"s,
           city: ~x"./City//text()"s,
           state: ~x"./State//text()"s,
-          zip: ~x"./Zip5//text()"s,
+          zip: ~x"./Zip5//text()"s
         )
         |> Enum.map(fn (candidate) ->
           candidate
@@ -226,112 +211,29 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
-  defp address_params(%Shippex.Address{} = address, opts) do
-    tree = []
-    prefix = Keyword.get(opts, :prefix, "")
-
-    tree = if Keyword.get(opts, :name, false) do
-      tree ++ [{prefix <> "Name", nil, address.name}]
-    else
-      tree
+  defp container(%Shipment{package: package}) do
+    case Package.usps_containers[package.container] do
+      nil -> Package.usps_containers[@default_container]
+      container -> container
     end
-
-    tree = case Keyword.get(opts, :firm, false) do
-      firm when is_boolean(firm) ->
-        tree ++ [{prefix <> "Firm", nil, ""}]
-      firm when is_bitstring(firm) ->
-        tree ++ [{prefix <> firm, nil, ""}]
-      _ ->
-        tree
-    end
-
-    tree ++
-      [{prefix <> "Address1", nil, address.address_line_2 || ""},
-       {prefix <> "Address2", nil, address.address},
-       {prefix <> "City", nil, address.city},
-       {prefix <> "State", nil, address.state},
-       {prefix <> "Zip5", nil, address.zip},
-       {prefix <> "Zip4", nil, ""}]
+    |> String.upcase
   end
 
-  defp container_params(%Shippex.Shipment{package: package} = shipment) do
-    container =
-      case Package.usps_containers[package.container] do
-        nil -> Package.usps_containers[@default_container]
-        container -> container
-      end
-      |> String.upcase
-
-    size =
-      if package.container in @large_containers do
-        package
-        |> Map.take([:length, :width, :height])
-        |> Map.values
-        |> Enum.any?(& &1 > 12)
-        |> if(do: "LARGE", else: "REGULAR")
-      else
-        "REGULAR"
-      end
-
-    machinable = if Shippex.Shipment.international?(shipment) do
-      []
-    else
-      [{:Machinable, nil, "False"}]
+  defp size(%Shipment{package: package}) do
+    is_large? = if package.container in @large_containers do
+      package
+      |> Map.take(~w(large width height)a)
+      |> Map.values
+      |> Enum.any?(& &1 > 12)
     end
 
-    [{:Container, nil, container},
-     {:Size, nil, size},
-     {:Width, nil, package.width},
-     {:Length, nil, package.length},
-     {:Height, nil, package.height},
-     {:Girth, nil, package.girth}] ++ machinable
-  end
-
-  defp ground_only_param(service) do
-    {:GroundOnly, nil, service.code == "RETAIL GROUND"}
+    if is_large?, do: "LARGE", else: "REGULAR"
   end
 
   defp strip_html(string) do
     string
     |> HtmlEntities.decode
     |> String.replace(~r/<\/?\w+>.*<\/\w+>/, "")
-  end
-
-  defmodule Client do
-    @moduledoc false
-    use HTTPoison.Base
-
-    # HTTPoison implementation
-    def process_url("") do
-      case Shippex.env do
-        :dev -> "ShippingAPITest.dll"
-        :prod -> "ShippingAPI.dll"
-      end
-      |> process_url
-    end
-    def process_url(endpoint) do
-      base_url() <> "/" <> endpoint
-    end
-
-    def process_request_body(params) do
-      params = Enum.map params, fn
-        {:XML, xml} when is_tuple(xml) -> {:XML, generate(xml)}
-        {k, v} when is_atom(k) -> {k, v}
-        {k, v} when is_bitstring(k) -> {String.to_atom(k), v}
-      end
-
-      {:form, params}
-    end
-
-    defp base_url do
-      "https://secure.shippingapis.com"
-    end
-
-    defp generate(object) do
-      object
-      |> XmlBuilder.generate
-      |> String.replace(~r/[\t\n]+/, "")
-    end
   end
 
   defp config do

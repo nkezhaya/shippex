@@ -1,0 +1,12 @@
+<%# Prefix is either "From" or "To" %>
+<%# Address1 is actually line 2 %>
+<%# Zip4 can be blank %>
+<<%= @prefix %>Name><%= @address.name %></<%= @prefix %>Name>
+<<%= @prefix %>Firm><%= @address.company_name %></<%= @prefix %>Firm>
+<<%= @prefix %>Address1><%= @address.address_line_2 %></<%= @prefix %>Address1>
+<<%= @prefix %>Address2><%= @address.address %></<%= @prefix %>Address2>
+<<%= @prefix %>City><%= @address.city %></<%= @prefix %>City>
+<<%= @prefix %>State><%= @address.state %></<%= @prefix %>State>
+<<%= @prefix %>Zip5><%= @address.zip %></<%= @prefix %>Zip5>
+<<%= @prefix %>Zip4></<%= @prefix %>Zip4>
+<<%= @prefix %>Phone><%= String.replace(@address.phone, ~r/\D+/, "") %></<%= @prefix %>Phone>

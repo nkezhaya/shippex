@@ -21,7 +21,8 @@ defmodule Shippex.USPS.RateTest do
 
   test "intl rates generated", %{shipment: shipment} do
     destination = Shippex.Address.address(%{
-      name: "Some Person",
+      first_name: "Some",
+      last_name: "Person",
       phone: "778-123-1234",
       address: "4575 Clancy Loranger Way",
       city: "Vancouver",

@@ -1,12 +1,30 @@
 <%# Prefix is either "From" or "To" %>
 <%# Address1 is actually line 2 %>
 <%# Zip4 can be blank %>
-<<%= @prefix %>Name><%= @address.name %></<%= @prefix %>Name>
-<<%= @prefix %>Firm><%= @address.company_name %></<%= @prefix %>Firm>
-<<%= @prefix %>Address1><%= @address.address_line_2 %></<%= @prefix %>Address1>
-<<%= @prefix %>Address2><%= @address.address %></<%= @prefix %>Address2>
-<<%= @prefix %>City><%= @address.city %></<%= @prefix %>City>
-<<%= @prefix %>State><%= @address.state %></<%= @prefix %>State>
-<<%= @prefix %>Zip5><%= @address.zip %></<%= @prefix %>Zip5>
-<<%= @prefix %>Zip4></<%= @prefix %>Zip4>
-<<%= @prefix %>Phone><%= String.replace(@address.phone, ~r/\D+/, "") %></<%= @prefix %>Phone>
+<% prefix = String.capitalize("#{@address}") %>
+<% address = Map.get(@shipment, @address) %>
+
+<%= if @shipment.international? do %>
+  <<%= prefix %>FirstName><%= address.first_name %></<%= prefix %>FirstName>
+  <<%= prefix %>LastName><%= address.last_name %></<%= prefix %>LastName>
+<% else %>
+  <<%= prefix %>Name><%= address.first_name %> <%= address.last_name %></<%= prefix %>Name>
+<% end %>
+
+<<%= prefix %>Firm><%= address.company_name %></<%= prefix %>Firm>
+<<%= prefix %>Address1><%= address.address_line_2 %></<%= prefix %>Address1>
+<<%= prefix %>Address2><%= address.address %></<%= prefix %>Address2>
+<<%= prefix %>City><%= address.city %></<%= prefix %>City>
+
+<%= if @shipment.international? and @address == :to do %>
+  <<%= prefix %>Province><%= address.state %></<%= prefix %>Province>
+  <<%= prefix %>Country><%= Util.abbreviation_to_country_name(address.country) %></<%= prefix %>Country>
+  <<%= prefix %>PostalCode><%= address.zip %></<%= prefix %>PostalCode>
+  <<%= prefix %>POBoxFlag>N</<%= prefix %>POBoxFlag>
+  <<%= prefix %>Phone><%= address.phone %></<%= prefix %>Phone>
+<% else %>
+  <<%= prefix %>State><%= address.state %></<%= prefix %>State>
+  <<%= prefix %>Zip5><%= address.zip %></<%= prefix %>Zip5>
+  <<%= prefix %>Zip4></<%= prefix %>Zip4>
+  <<%= prefix %>Phone><%= String.replace(address.phone, ~r/\D+/, "") %></<%= prefix %>Phone>
+<% end %>

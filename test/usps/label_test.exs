@@ -19,12 +19,35 @@ defmodule Shippex.USPS.LabelTest do
       |> Enum.shuffle
       |> hd
 
-    {:ok, label} = Shippex.Carrier.USPS.fetch_label(shipment, rate.service)
+    {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
+  end
 
-    assert label
-    assert label.tracking_number
-    assert label.image
+  test "rates generated for canada" do
+    shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination("CA"), Helper.package())
 
-    File.write("foo.tiff", :base64.decode(label.image))
+    rates = Shippex.Carrier.USPS.fetch_rate(shipment, :all)
+
+    rate =
+      rates
+      |> Enum.filter(fn {code, _} -> code == :ok end)
+      |> Enum.map(fn {_, rate} -> rate end)
+      |> Enum.shuffle
+      |> hd
+
+    {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
+  end
+
+  test "rates generated for mexico" do
+    shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination("MX"), Helper.package())
+    rates = Shippex.Carrier.USPS.fetch_rate(shipment, :all)
+
+    rate =
+      rates
+      |> Enum.filter(fn {code, _} -> code == :ok end)
+      |> Enum.map(fn {_, rate} -> rate end)
+      |> Enum.shuffle
+      |> hd
+
+    {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
   end
 end

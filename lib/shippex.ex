@@ -24,9 +24,7 @@ defmodule Shippex do
           ],
           usps: [
             username: "MyUsername",
-            password: "MyPassword",
-            include_library_mail: true
-            include_media_mail: true
+            password: "MyPassword"
           ]
         ]
 
@@ -85,7 +83,7 @@ defmodule Shippex do
       File.write!("\#{label.tracking_number}.gif", Base.decode64!(label.image))
   """
 
-  alias Shippex.Carrier
+  alias Shippex.{Carrier, Label, Service, Shipment, Transaction}
 
   @type response :: %{code: String.t, message: String.t}
 
@@ -162,7 +160,7 @@ defmodule Shippex do
   Fetches rates from `carriers` for a given `Shipment`.
   """
   @spec fetch_rates(Shipment.t, [Carrier.t] | nil) :: [{atom, Rate.t}]
-  def fetch_rates(%Shippex.Shipment{} = shipment, carriers \\ nil) do
+  def fetch_rates(%Shipment{} = shipment, carriers \\ nil) do
     # Convert the atom to a list if necessary.
     carriers = cond do
       is_nil(carriers)  -> Shippex.carriers()
@@ -198,8 +196,8 @@ defmodule Shippex do
       Shippex.fetch_rate(shipment, service)
   """
   @spec fetch_rate(Shipment.t, Service.t) :: {atom, Rate.t}
-  def fetch_rate(%Shippex.Shipment{} = shipment,
-                 %Shippex.Service{carrier: carrier} = service) do
+  def fetch_rate(%Shipment{} = shipment,
+                 %Service{carrier: carrier} = service) do
 
     case Carrier.module(carrier).fetch_rate(shipment, service) do
       list when is_list(list) and length(list) == 1 ->
@@ -216,20 +214,21 @@ defmodule Shippex do
       Shippex.fetch_label(shipment, service)
   """
   @spec fetch_label(Shipment.t, Service.t) :: {atom, Label.t}
-  def fetch_label(%Shippex.Shipment{} = shipment,
-                  %Shippex.Service{carrier: carrier} = service) do
+  def fetch_label(%Shipment{} = shipment,
+                  %Service{carrier: carrier} = service) do
 
     Carrier.module(carrier).fetch_label(shipment, service)
   end
 
   @doc """
-  Cancels the shipment associated with `label`, if possible. The result is
+  Cancels the transaction associated with `label`, if possible. The result is
   returned in a tuple.
 
-  You may pass in either the label or tracking number. A carrier must be
-  specified.
+  You may pass in either the transaction, or if the full transaction struct
+  isn't available, you may pass in the carrier, shipment, and tracking number
+  instead.
 
-      case Shippex.cancel_shipment(:ups, label) do
+      case Shippex.cancel_shipment(transaction) do
         {:ok, result} ->
           IO.inspect(result) #=> %{code: "1", message: "Voided successfully."}
         {:error, %{code: code, message: message}} ->
@@ -237,14 +236,13 @@ defmodule Shippex do
           IO.inspect(message)
       end
   """
-  @spec cancel_shipment(Carrier.t, Label.t | String.t) :: {atom, response}
-  def cancel_shipment(carrier, label_or_tracking_number) do
-    tracking_number = case label_or_tracking_number do
-      %Shippex.Label{tracking_number: t} -> t
-      t when is_bitstring(t) -> t
-    end
-
-    Carrier.module(carrier).cancel_shipment(tracking_number)
+  @spec cancel_transaction(Transaction.t) :: {atom, response}
+  @spec cancel_transaction(Carrier.t, Shipment.t, String.t) :: {atom, response}
+  def cancel_transaction(%Transaction{} = transaction) do
+    Carrier.module(transaction.carrier).cancel_shipment(transaction)
+  end
+  def cancel_transaction(carrier, %Shipment{} = shipment, tracking_number) do
+    Carrier.module(carrier).cancel_shipment(shipment, tracking_number)
   end
 
   @doc """

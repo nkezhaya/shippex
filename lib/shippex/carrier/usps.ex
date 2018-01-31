@@ -7,10 +7,10 @@ defmodule Shippex.Carrier.USPS do
   alias Shippex.Carrier.USPS.Client
   alias Shippex.{Package, Shipment, Util}
 
-  @default_container :variable
+  @default_container :rectangular
   @large_containers ~w(rectangular nonrectangular variable)a
 
-  for f <- ~w(address label package rate)a do
+  for f <- ~w(address cancel label package rate)a do
     EEx.function_from_file :defp, :"render_#{f}",
       __DIR__ <> "/usps/templates/#{f}.eex", [:assigns]
   end
@@ -46,71 +46,100 @@ defmodule Shippex.Carrier.USPS do
       s when is_bitstring(s) -> s
     end
 
-    if shipment.international? do
-      international_rate_request(shipment)
+    api = if shipment.international? do
+      "IntlRateV2"
     else
-      domestic_rate_request(shipment, service)
+      "RateV4"
     end
-  end
-  defp domestic_rate_request(shipment, service) do
-    # Convert weight to ounces
-    package = shipment.package
 
     rate = render_rate shipment: shipment, service: service
 
-    with_response Client.post("ShippingAPI.dll", %{API: "RateV4", XML: rate}) do
-      body
-      |> xpath(
-        ~x"//RateV4Response//Package//Postage"l,
-        name: ~x"./MailService//text()"s |> transform_by(&strip_html/1),
-        service: ~x"./MailService//text()"s |> transform_by(&service_to_code/1),
-        rate: ~x"./Rate//text()"s |> transform_by(&Util.price_to_cents/1)
-      )
+    with_response Client.post("ShippingAPI.dll", %{API: api, XML: rate}) do
+      if shipment.international? do
+        xpath(body,
+          ~x"//IntlRateV2Response//Package//Service"l,
+          name: ~x"./SvcDescription//text()"s |> transform_by(&strip_html/1),
+          service: ~x"./SvcDescription//text()"s |> transform_by(&service_to_code/1),
+          rate: ~x"./Postage//text()"s |> transform_by(&Util.price_to_cents/1)
+        )
+      else
+        xpath(body,
+          ~x"//RateV4Response//Package//Postage"l,
+          name: ~x"./MailService//text()"s |> transform_by(&strip_html/1),
+          service: ~x"./MailService//text()"s |> transform_by(&service_to_code/1),
+          rate: ~x"./Rate//text()"s |> transform_by(&Util.price_to_cents/1)
+        )
+      end
       |> Enum.map(fn(%{name: description, service: service, rate: cents}) ->
         rate = %Shippex.Rate{service: %{service | description: description},
                              price: cents}
 
         {:ok, rate}
-      end)
-      |> Enum.filter(fn {:ok, rate} ->
-        case rate.service.code do
-          "LIBRARY MAIL" -> config().include_library_mail
-          "MEDIA MAIL" -> config().include_media_mail
-          _ -> true
-        end
       end)
     end
   end
-  defp international_rate_request(shipment) do
-    package_params =
-      {:Package, %{ID: "0"},
-        [{:Pounds, nil, shipment.package.weight},
-         {:Ounces, nil, "0"},
-         {:Machinable, nil, "False"},
-         {:MailType, nil, international_mail_type(shipment.package)},
-         {:ValueOfContents, nil, shipment.package.monetary_value},
-         {:Country, nil, Util.abbreviation_to_country_name(shipment.to.country)}] ++
-        container(shipment) ++
-        [{:OriginZip, nil, shipment.from.zip}]}
 
-    request =
-      {:IntlRateV2Request, %{USERID: config().username},
-        [{:Revision, nil, 2}, package_params]}
+  def create_transaction(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
+    request = render_label shipment: shipment, service: service
 
-    with_response Client.post("ShippingAPI.dll", %{API: "IntlRateV2", XML: request}) do
-      body
-      |> xpath(
-        ~x"//IntlRateV2Response//Package//Service"l,
-        name: ~x"./SvcDescription//text()"s,
-        service: ~x"./SvcDescription//text()"s |> transform_by(&service_to_code/1),
-        rate: ~x"./Postage//text()"s |> transform_by(&Util.price_to_cents/1)
-      )
-      |> Enum.map(fn(%{name: description, service: service, rate: cents}) ->
-        rate = %Shippex.Rate{service: %{service | description: description},
-                             price: cents}
+    api = if shipment.international? do
+      "eVSPriorityMailIntl"
+    else
+      "eVS"
+    end
 
-        {:ok, rate}
-      end)
+    with_response Client.post("ShippingAPI.dll", %{API: api, XML: request}) do
+      data =
+        body
+        |> xpath(
+          ~x"//eVSResponse",
+          rate: ~x"//Postage//text()"s,
+          tracking_number: ~x"//BarcodeNumber//text()"s,
+          image: ~x"//LabelImage//text()"s
+        )
+
+      price = Util.price_to_cents(data.rate)
+
+      rate = %Shippex.Rate{service: service, price: price}
+      image = String.replace(data.image, "\n", "")
+      label = %Shippex.Label{tracking_number: data.tracking_number,
+                             format: :tiff,
+                             image: image}
+
+      Shippex.Transaction.transaction(shipment, rate, label)
+
+      {:ok, label}
+    end
+  end
+
+  def cancel_transaction(%Shippex.Transaction{} = transaction) do
+    cancel_transaction(transaction.shipment, transaction.label.tracking_number)
+  end
+  def cancel_transaction(%Shippex.Shipment{} = shipment, tracking_number) do
+    root = if shipment.international? do
+      "eVSI"
+    else
+      "eVS"
+    end
+
+    api = root <> "CancelLabel"
+
+    request = render_cancel root: root, tracking_number: tracking_number
+
+    with_response Client.post("ShippingAPI.dll", %{API: api, XML: request}) do
+      data =
+        xpath(body, ~x"#{root}CancelResponse",
+          status: ~x"//Status//text()"s,
+          reason: ~x"//Reason//text()"s
+        )
+
+      status = if data.status =~ ~r/not cancel/i do
+        :error
+      else
+        :ok
+      end
+
+      {status, data.reason}
     end
   end
 
@@ -136,6 +165,7 @@ defmodule Shippex.Carrier.USPS do
       description =~ ~r/retail ground/i -> "RETAIL GROUND"
       description =~ ~r/media mail/i -> "MEDIA MAIL"
       description =~ ~r/library mail/i -> "LIBRARY MAIL"
+      description =~ ~r/gxg/i -> "GXG"
     end
 
     Shippex.Service.by_carrier_and_code(:usps, code)
@@ -150,38 +180,6 @@ defmodule Shippex.Carrier.USPS do
       container =~ ~r/rectangular|variable/i -> "PACKAGE"
       true -> "ALL"
     end
-  end
-
-  def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    request = render_label shipment: shipment, service: service
-
-    with_response Client.post("ShippingAPI.dll", %{API: "eVS", XML: request}) do
-      data =
-        body
-        |> xpath(
-          ~x"//eVSResponse",
-          rate: ~x"//Postage//text()"s,
-          tracking_number: ~x"//BarcodeNumber//text()"s,
-          image: ~x"//LabelImage//text()"s
-        )
-
-      price = Util.price_to_cents(data.rate)
-
-      rate = %Shippex.Rate{service: service, price: price}
-      image = String.replace(data.image, "\n", "")
-      label = %Shippex.Label{rate: rate,
-                             tracking_number: data.tracking_number,
-                             format: :tiff,
-                             image: image}
-
-      {:ok, label}
-    end
-  end
-
-  def cancel_shipment(%Shippex.Label{} = label) do
-    cancel_shipment(label.tracking_number)
-  end
-  def cancel_shipment(tracking_number) when is_bitstring(tracking_number) do
   end
 
   def validate_address(%Shippex.Address{country: "US"} = address) do
@@ -243,18 +241,9 @@ defmodule Shippex.Carrier.USPS do
            Keyword.get(cfg, :username, {:error, :not_found, :username}),
 
          pw <-
-           Keyword.get(cfg, :password, {:error, :not_found, :password}),
+           Keyword.get(cfg, :password, {:error, :not_found, :password}) do
 
-         include_library_mail <-
-           Keyword.get(cfg, :include_library_mail, true),
-
-         include_media_mail <-
-           Keyword.get(cfg, :include_media_mail, true) do
-
-         %{username: un,
-           password: pw,
-           include_library_mail: include_library_mail,
-           include_media_mail: include_media_mail}
+      %{username: un, password: pw}
     else
       {:error, :not_found, token} -> raise Shippex.InvalidConfigError,
         message: "USPS config key missing: #{token}"

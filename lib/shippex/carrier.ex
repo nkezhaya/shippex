@@ -4,24 +4,31 @@ defmodule Shippex.Carrier do
   function for fetching the Carrier module.
   """
 
+  alias Shippex.Carrier
+
   @callback fetch_rates(Shipment.t) :: [{atom, Rate.t}]
   @callback fetch_rate(Shipment.t, Service.t) :: [{atom, Rate.t}] | {atom, Rate.t}
-  @callback fetch_label(Shipment.t, Service.t) :: {atom, Label.t}
+  @callback create_transaction(Shipment.t, Service.t) :: {atom, Transaction.t | map}
+  @callback cancel_transaction(Transaction.t) :: {atom, String.t}
+  @callback cancel_transaction(Shipment.t, String.t) :: {atom, String.t}
 
   @type t :: atom
 
   @doc """
   Fetches a Carrier module by its atom/string representation.
 
-      Carrier.module(:ups) # Carrier.UPS
-      Carrier.module("UPS") # Carrier.UPS
-      Carrier.module("ups") # Carrier.UPS
+      iex> Carrier.module(:ups)
+      Carrier.UPS
+      iex> Carrier.module("UPS")
+      Carrier.UPS
+      iex> Carrier.module("ups")
+      Carrier.UPS
   """
   @spec module(atom | String.t) :: module()
   def module(carrier) when is_atom(carrier) do
     module = case carrier do
-      :ups -> Shippex.Carrier.UPS
-      :usps -> Shippex.Carrier.USPS
+      :ups -> Carrier.UPS
+      :usps -> Carrier.USPS
       c -> raise "#{c} is not a supported carrier at this time."
     end
 

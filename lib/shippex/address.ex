@@ -6,8 +6,8 @@ defmodule Shippex.Address do
 
   @type t :: %__MODULE__{}
 
-  @enforce_keys [:name, :company_name, :phone, :address, :address_line_2, :city, :state, :zip, :country]
-  defstruct [:name, :company_name, :phone, :address, :address_line_2, :city, :state, :zip, :country]
+  @enforce_keys [:first_name, :last_name, :company_name, :phone, :address, :address_line_2, :city, :state, :zip, :country]
+  defstruct [:first_name, :last_name, :company_name, :phone, :address, :address_line_2, :city, :state, :zip, :country]
 
   alias __MODULE__, as: Address
   alias Shippex.Util
@@ -17,7 +17,8 @@ defmodule Shippex.Address do
   validations that do not require any service requests.
 
       Shippex.Address.address(%{
-        name: "Earl G",
+        first_name: "Earl",
+        last_name: "Grey",
         phone: "123-123-1234",
         address: "9999 Hobby Lane",
         address_line_2: nil,
@@ -43,7 +44,8 @@ defmodule Shippex.Address do
     end
 
     address = %Address{
-      name: params["name"],
+      first_name: params["first_name"],
+      last_name: params["last_name"],
       company_name: params["company_name"],
       phone: params["phone"],
       address: params["address"],

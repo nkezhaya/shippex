@@ -1,38 +1,73 @@
-<eVSRequest USERID="<%= config().username %>">
-  <%= render_address address: @shipment.from, prefix: "From" %>
-  <%= render_address address: @shipment.to, prefix: "To" %>
+<%= if @shipment.international? do %>
+  <eVSPriorityMailIntlRequest USERID="<%= config().username %>">
+    <Revision>2</Revision>
+    <%= render_address shipment: @shipment, address: :from %>
+    <%= render_address shipment: @shipment, address: :to %>
 
-  <% package = @shipment.package %>
-  <WeightInOunces><%= weight_in_ounces(@shipment) %></WeightInOunces>
-  <ServiceType>Express</ServiceType>
-  <Container><%= container(@shipment) %></Container>
-  <Width><%= package.width %></Width>
-  <Length><%= package.length %></Length>
-  <Height><%= package.height %></Height>
+    <Container><%= container(@shipment) %></Container>
 
-  <%= if @shipment.international? do %>
-  <Machinable>False</Machinable>
-  <% end %>
+    <ShippingContents>
+      <ItemDetail>
+        <Description><%= @shipment.package.description %></Description>
+        <Quantity>1</Quantity>
+        <Value><%= @shipment.package.monetary_value %></Value>
+        <NetPounds>0</NetPounds>
+        <NetOunces><%= weight_in_ounces(@shipment) %></NetOunces>
+        <HSTariffNumber></HSTariffNumber>
+        <CountryOfOrigin>United States</CountryOfOrigin>
+      </ItemDetail>
+    </ShippingContents>
 
-  <ProcessingCategory></ProcessingCategory>
-  <PriceOptions></PriceOptions>
-  <InsuredAmount></InsuredAmount>
-  <AddressServiceRequested>true</AddressServiceRequested>
+    <GrossPounds>0</GrossPounds>
+    <GrossOunces><%= weight_in_ounces(@shipment) %></GrossOunces>
+    <ContentType>MERCHANDISE</ContentType>
+    <Agreement>Y</Agreement>
+    <ImageType>TIF</ImageType>
+    <Size><%= size(@shipment) %></Size>
+    <Length><%= @shipment.package.length %></Length>
+    <Width><%= @shipment.package.width %></Width>
+    <Height><%= @shipment.package.height %></Height>
+    <Girth></Girth>
+    <DestinationRateIndicator>N</DestinationRateIndicator>
+    <%= if date = @shipment.ship_date do %>
+      <LabelDate>
+        <%= Date.to_iso8601(date) |> String.split("-") |> Enum.reverse |> Enum.join("/") %>
+      </LabelDate>
+    <% end %>
+  </eVSPriorityMailIntlRequest>
+<% else %>
+  <eVSRequest USERID="<%= config().username %>">
+    <%= render_address shipment: @shipment, address: :from %>
+    <%= render_address shipment: @shipment, address: :to %>
 
-  <ExpressMailOptions>
-    <DeliveryOption></DeliveryOption>
-    <WaiverOfSignature></WaiverOfSignature>
-  </ExpressMailOptions>
+    <% package = @shipment.package %>
+    <WeightInOunces><%= weight_in_ounces(@shipment) %></WeightInOunces>
+    <ServiceType>Express</ServiceType>
+    <Container><%= container(@shipment) %></Container>
+    <Width><%= package.width %></Width>
+    <Length><%= package.length %></Length>
+    <Height><%= package.height %></Height>
 
-  <%= if date = @shipment.ship_date do %>
-    <ShipDate>
-      <%= Date.to_iso8601(date) |> String.split("-") |> Enum.reverse |> Enum.join("/") %>
-    </ShipDate>
-  <% end %>
+    <ProcessingCategory></ProcessingCategory>
+    <PriceOptions></PriceOptions>
+    <InsuredAmount></InsuredAmount>
+    <AddressServiceRequested>true</AddressServiceRequested>
 
-  <%= if @shipment.id do %>
-    <CustomerRefNo><%= @shipment.id %></CustomerRefNo>
-  <% end %>
+    <ExpressMailOptions>
+      <DeliveryOption></DeliveryOption>
+      <WaiverOfSignature></WaiverOfSignature>
+    </ExpressMailOptions>
 
-  <ImageType>TIF</ImageType>
-</eVSRequest>
+    <%= if date = @shipment.ship_date do %>
+      <ShipDate>
+        <%= Date.to_iso8601(date) |> String.split("-") |> Enum.reverse |> Enum.join("/") %>
+      </ShipDate>
+    <% end %>
+
+    <%= if @shipment.id do %>
+      <CustomerRefNo><%= @shipment.id %></CustomerRefNo>
+    <% end %>
+
+    <ImageType>TIF</ImageType>
+  </eVSRequest>
+<% end %>

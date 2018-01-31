@@ -1,13 +1,32 @@
-<RateV4Request USERID="<%= config().username %>">
-  <Revision>2</Revision>
+<%= if @shipment.international? do %>
+  <IntlRateV2Request USERID="<%= config().username %>">
+    <Revision>2</Revision>
 
-  <Package ID="0">
-    <Service><%= @service %></Service>
-    <ZipOrigination><%= @shipment.from.zip %></ZipOrigination>
-    <ZipDestination><%= @shipment.to.zip %></ZipDestination>
-    <Pounds>0</Pounds>
-    <Ounces><%= weight_in_ounces(@shipment) %></Ounces>
+    <Package ID="0">
+      <Pounds>0</Pounds>
+      <Ounces><%= weight_in_ounces(@shipment) %></Ounces>
+      <Machinable>False</Machinable>
+      <MailType><%= international_mail_type(@shipment.package) %></MailType>
+      <ValueOfContents><%= @shipment.package.monetary_value %></ValueOfContents>
+      <Country><%= Util.abbreviation_to_country_name(@shipment.to.country) %></Country>
 
-    <%= render_package shipment: @shipment, size: size(@shipment) %>
-  </Package>
-</RateV4Request>
+      <%= render_package shipment: @shipment %>
+
+      <OriginZip><%= @shipment.from.zip %></OriginZip>
+    </Package>
+  </IntlRateV2Request>
+<% else %>
+  <RateV4Request USERID="<%= config().username %>">
+    <Revision>2</Revision>
+
+    <Package ID="0">
+      <Service><%= @service %></Service>
+      <ZipOrigination><%= @shipment.from.zip %></ZipOrigination>
+      <ZipDestination><%= @shipment.to.zip %></ZipDestination>
+      <Pounds>0</Pounds>
+      <Ounces><%= weight_in_ounces(@shipment) %></Ounces>
+
+      <%= render_package shipment: @shipment %>
+    </Package>
+  </RateV4Request>
+<% end %>

@@ -72,7 +72,7 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
-  def fetch_label(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
+  def create_transaction(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
     params = Map.new
       |> Map.merge(security_params())
       |> Map.merge(shipment_request_params(shipment, service))
@@ -93,13 +93,13 @@ defmodule Shippex.Carrier.UPS do
           rate = %Shippex.Rate{service: service, price: price}
 
           package_response = results["PackageResults"]
-          label = %Shippex.Label{rate: rate,
-                                 tracking_number: package_response["TrackingNumber"],
+          label = %Shippex.Label{tracking_number: package_response["TrackingNumber"],
                                  format: :gif,
                                  image: package_response["ShippingLabel"]["GraphicImage"]}
 
-          {:ok, label}
+          transaction = Shippex.Transaction.transaction(shipment, rate, label)
 
+          {:ok, transaction}
         %{"Code" => code, "Description" => description} ->
           {:error, %{code: code, message: description, service: service}}
 
@@ -108,10 +108,10 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
-  def cancel_shipment(%Shippex.Label{} = label) do
-    cancel_shipment(label.tracking_number)
+  def cancel_transaction(%Shippex.Transaction{} = transaction) do
+    cancel_transaction(transaction.label.tracking_number)
   end
-  def cancel_shipment(tracking_number) when is_bitstring(tracking_number) do
+  def cancel_transaction(_shipment, tracking_number) do
     void_params = %{
       VoidShipmentRequest: %{
         Request: %{},

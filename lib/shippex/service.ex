@@ -49,7 +49,8 @@ defmodule Shippex.Service do
   def services_for_carrier(:ups, oc, dc),
     do: raise "Invalid/unsupported country: #{inspect oc} or #{inspect dc}"
   def services_for_carrier(:usps, "US", "US") do
-    [%S{carrier: :usps, code: "PRIORITY MAIL INTERNATIONAL", description: "Priority Mail International"},
+    [%S{carrier: :usps, code: "GXG", description: "GXG"},
+     %S{carrier: :usps, code: "PRIORITY MAIL INTERNATIONAL", description: "Priority Mail International"},
      %S{carrier: :usps, code: "PRIORITY MAIL EXPRESS", description: "Priority Mail Express"},
      %S{carrier: :usps, code: "PRIORITY", description: "Priority Mail"},
      %S{carrier: :usps, code: "FIRST CLASS", description: "First-Class Mail Parcel"},

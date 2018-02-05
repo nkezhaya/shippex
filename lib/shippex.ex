@@ -96,7 +96,7 @@ defmodule Shippex do
   end
 
   @doc false
-  def config do
+  def config() do
     case Application.get_env(:shippex, :carriers, :not_found) do
       :not_found -> raise InvalidConfigError, "Shippex config not found"
 
@@ -111,7 +111,7 @@ defmodule Shippex do
       Shippex.carriers #=> [:ups]
   """
   @spec carriers() :: [Carrier.t]
-  def carriers do
+  def carriers() do
     cfg = Shippex.config()
 
     ups   = if Keyword.get(cfg, :ups),    do: :ups
@@ -149,7 +149,7 @@ defmodule Shippex do
       Shippex.env #=> :dev
   """
   @spec env() :: atom
-  def env do
+  def env() do
     case Application.get_env(:shippex, :env, :dev) do
       e when e in [:dev, :prod] -> e
       _ -> raise InvalidConfigError, "Shippex env must be either :dev or :prod"
@@ -207,11 +207,11 @@ defmodule Shippex do
   Fetches the label for `shipment` for a specific `Service`. The `service`
   module contains the `Carrier` and selected delivery speed.
 
-      Shippex.fetch_label(shipment, service)
+      Shippex.create_transaction(shipment, service)
   """
-  @spec fetch_label(Shipment.t, Service.t) :: {atom, Label.t}
-  def fetch_label(%Shipment{} = shipment, %Service{carrier: carrier} = service) do
-    Carrier.module(carrier).fetch_label(shipment, service)
+  @spec create_transaction(Shipment.t, Service.t) :: {atom, Label.t}
+  def create_transaction(%Shipment{} = shipment, %Service{carrier: carrier} = service) do
+    Carrier.module(carrier).create_transaction(shipment, service)
   end
 
   @doc """

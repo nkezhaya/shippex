@@ -269,8 +269,9 @@ defmodule Shippex do
           # Present candidates to user for selection
       end
   """
-  @spec validate_address(Carrier.t, Address.t) :: {atom, response | [Address.t]}
-  def validate_address(carrier \\ :usps, %Shippex.Address{} = address) do
+  @spec validate_address(Address.t, Keyword.t) :: {atom, response | [Address.t]}
+  def validate_address(%Shippex.Address{} = address, opts \\ []) do
+    carrier = Keyword.get(opts, :carrier, :usps)
     case address.country do
       "US" ->
         Carrier.module(carrier).validate_address(address)

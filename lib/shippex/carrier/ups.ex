@@ -174,7 +174,10 @@ defmodule Shippex.Carrier.UPS do
         candidates = Enum.map candidates, fn (candidate) ->
           candidate = candidate["AddressKeyFormat"]
           Shippex.Address.address(%{
+            "first_name" => address.first_name,
+            "last_name" => address.last_name,
             "name" => address.name,
+            "company_name" => address.company_name,
             "phone" => address.phone,
             "address" => candidate["AddressLine"],
             "address_line_2" => address.address_line_2,

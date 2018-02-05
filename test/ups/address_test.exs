@@ -18,7 +18,7 @@ defmodule Shippex.UPS.AddressTest do
 
     assert valid_address.address_line_2 == "Suite 101"
 
-    {:ok, candidates} = Shippex.validate_address(:ups, valid_address)
+    {:ok, candidates} = Shippex.validate_address(valid_address, carrier: :ups)
     assert length(candidates) == 1
     assert hd(candidates).name == name
     assert hd(candidates).phone == phone
@@ -35,7 +35,7 @@ defmodule Shippex.UPS.AddressTest do
       "zip" => "90071"
     })
 
-    {:ok, candidates} = Shippex.validate_address(:ups, ambiguous_address)
+    {:ok, candidates} = Shippex.validate_address(ambiguous_address, carrier: :ups)
     assert length(candidates) > 1
 
     invalid_address = Shippex.Address.address(%{
@@ -45,7 +45,7 @@ defmodule Shippex.UPS.AddressTest do
       "zip" => "90071"
     })
 
-    {:error, _} = Shippex.validate_address(:ups, invalid_address)
+    {:error, _} = Shippex.validate_address(invalid_address, carrier: :ups)
 
     invalid_address = Shippex.Address.address(%{
       "name" => name,
@@ -58,7 +58,7 @@ defmodule Shippex.UPS.AddressTest do
       "country" => "US"
     })
 
-    {:error, _} = Shippex.validate_address(:ups, invalid_address)
+    {:error, _} = Shippex.validate_address(invalid_address, carrier: :ups)
 
     invalid_address = Shippex.Address.address(%{
       "name" => name,
@@ -71,6 +71,6 @@ defmodule Shippex.UPS.AddressTest do
       "country" => "MX"
     })
 
-    {:error, _} = Shippex.validate_address(:ups, invalid_address)
+    {:error, _} = Shippex.validate_address(invalid_address, carrier: :ups)
   end
 end

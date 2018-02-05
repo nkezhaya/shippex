@@ -8,7 +8,7 @@ defmodule Shippex.USPS.CancelTest do
   test "cancel domestic transaction" do
     shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination(), Helper.package())
 
-    rates = Shippex.Carrier.USPS.fetch_rate(shipment, :all)
+    rates = Shippex.Carrier.USPS.fetch_rates(shipment)
 
     rate =
       rates
@@ -22,7 +22,7 @@ defmodule Shippex.USPS.CancelTest do
 
   test "cancel international transaction" do
     shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination("MX"), Helper.package())
-    rates = Shippex.Carrier.USPS.fetch_rate(shipment, :all)
+    rates = Shippex.Carrier.USPS.fetch_rates(shipment)
 
     rate =
       rates

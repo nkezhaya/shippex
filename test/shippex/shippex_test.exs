@@ -26,13 +26,4 @@ defmodule Shippex.ShippexTest do
     Application.put_env(:shippex, :currency, :usd)
     assert Shippex.currency_code == "USD"
   end
-
-  test "fetch carrier module" do
-    assert Shippex.Carrier.module(:ups) == Shippex.Carrier.UPS
-    assert Shippex.Carrier.module(:usps) == Shippex.Carrier.USPS
-
-    assert_raise RuntimeError, fn ->
-      Shippex.Carrier.module(:invalid_carrier)
-    end
-  end
 end

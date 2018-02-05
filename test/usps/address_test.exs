@@ -14,7 +14,7 @@ defmodule Shippex.USPS.AddressTest do
       "zip" => "90071"
     })
 
-    {:ok, candidates} = Shippex.validate_address(:usps, valid_address)
+    {:ok, candidates} = Shippex.validate_address(valid_address, carrier: :usps)
     assert length(candidates) == 1
     assert hd(candidates).name == name
     assert hd(candidates).phone == phone
@@ -42,7 +42,7 @@ defmodule Shippex.USPS.AddressTest do
 
     assert valid_address.address_line_2 == "Suite 101"
 
-    {:ok, candidates} = Shippex.validate_address(:usps, valid_address)
+    {:ok, candidates} = Shippex.validate_address(valid_address, carrier: :usps)
     assert length(candidates) == 1
     assert hd(candidates).name == name
     assert hd(candidates).phone == phone
@@ -62,6 +62,6 @@ defmodule Shippex.USPS.AddressTest do
       "zip" => "90071"
     })
 
-    {:error, _} = Shippex.validate_address(:usps, invalid_address)
+    {:error, _} = Shippex.validate_address(invalid_address, carrier: :usps)
   end
 end

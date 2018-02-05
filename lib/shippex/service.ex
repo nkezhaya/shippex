@@ -96,7 +96,7 @@ defmodule Shippex.Service do
     |> Enum.reject(&is_nil/1)
   end
   defp services_for_carrier_to_country(:usps, "US") do
-    ~w(usps_media usps_library usps_first_class usps_retail_ground usps_priority usps_priority_express)a
+    ~w(usps_media usps_library usps_first_class usps_retail_ground usps_parcel_select usps_priority usps_priority_express)a
   end
   defp services_for_carrier_to_country(:usps, _country) do
     ~w(usps_first_class usps_priority usps_priority_express usps_gxg)a
@@ -127,6 +127,7 @@ defmodule Shippex.Service do
   def service_code(:usps_library), do: "LIBRARY MAIL"
   def service_code(:usps_first_class), do: "FIRST CLASS"
   def service_code(:usps_retail_ground), do: "RETAIL GROUND"
+  def service_code(:usps_parcel_select), do: "PARCEL SELECT GROUND"
   def service_code(:usps_priority), do: "PRIORITY"
   def service_code(:usps_priority_express), do: "PRIORITY MAIL EXPRESS"
   def service_code(:usps_priority_international), do: "PRIORITY MAIL INTERNATIONAL"

@@ -5,17 +5,15 @@ defmodule Shippex.USPS.LabelTest do
     [shipment: Helper.valid_shipment]
   end
 
-  test "label generated", %{shipment: shipment} do
-    package = %{shipment.package | container: :variable}
-    shipment = %{shipment | package: package}
-    rates = Shippex.Carrier.USPS.fetch_rate(shipment, "priority")
-    assert is_list(rates) and length(rates) > 0
+  test "label generated" do
+    shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination(), Helper.package())
+
+    rates = Shippex.Carrier.USPS.fetch_rate(shipment, :all)
 
     rate =
       rates
       |> Enum.filter(fn {code, _} -> code == :ok end)
       |> Enum.map(fn {_, rate} -> rate end)
-      |> Enum.reject(& &1.service.code == "PRIORITY MAIL EXPRESS")
       |> Enum.shuffle
       |> hd
 

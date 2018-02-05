@@ -10,7 +10,7 @@ defmodule Shippex.Carrier.USPS do
   @default_container :rectangular
   @large_containers ~w(rectangular nonrectangular variable)a
 
-  for f <- ~w(address cancel label package rate)a do
+  for f <- ~w(address cancel label rate)a do
     EEx.function_from_file :defp, :"render_#{f}",
       __DIR__ <> "/usps/templates/#{f}.eex", [:assigns]
   end
@@ -80,7 +80,7 @@ defmodule Shippex.Carrier.USPS do
   end
 
   def create_transaction(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
-    request = render_label shipment: shipment, service: service
+    request = render_label shipment: shipment, service: service.code
 
     api = if shipment.international? do
       "eVSPriorityMailIntl"
@@ -92,7 +92,7 @@ defmodule Shippex.Carrier.USPS do
       data =
         body
         |> xpath(
-          ~x"//eVSResponse",
+          ~x"//#{api}Response",
           rate: ~x"//Postage//text()"s,
           tracking_number: ~x"//BarcodeNumber//text()"s,
           image: ~x"//LabelImage//text()"s
@@ -157,18 +157,25 @@ defmodule Shippex.Carrier.USPS do
   end
 
   defp service_to_code(description) do
-    code = cond do
-      description =~ ~r/priority mail international/i -> "PRIORITY MAIL INTERNATIONAL"
-      description =~ ~r/priority mail express/i -> "PRIORITY MAIL EXPRESS"
-      description =~ ~r/priority/i -> "PRIORITY"
-      description =~ ~r/first[-\s]*class/i -> "FIRST CLASS"
-      description =~ ~r/retail ground/i -> "RETAIL GROUND"
-      description =~ ~r/media mail/i -> "MEDIA MAIL"
-      description =~ ~r/library mail/i -> "LIBRARY MAIL"
-      description =~ ~r/gxg/i -> "GXG"
+    cond do
+      description =~ ~r/priority mail international/i ->
+        :usps_priority_mail_international
+      description =~ ~r/priority mail express/i ->
+        :usps_priority_mail_express
+      description =~ ~r/priority/i ->
+        :usps_priority
+      description =~ ~r/first[-\s]*class/i ->
+        :usps_first_class
+      description =~ ~r/retail ground/i ->
+        :usps_retail_ground
+      description =~ ~r/media mail/i ->
+        :usps_media
+      description =~ ~r/library mail/i ->
+        :usps_library
+      description =~ ~r/gxg/i ->
+        :usps_gxg
     end
-
-    Shippex.Service.by_carrier_and_code(:usps, code)
+    |> Shippex.Service.get()
   end
 
   defp international_mail_type(%Shippex.Package{container: nil}), do: "ALL"
@@ -235,21 +242,16 @@ defmodule Shippex.Carrier.USPS do
   end
 
   defp config do
-    with cfg when is_list(cfg) <- Keyword.get(Shippex.config, :usps, {:error, :not_found}),
-
-         un <-
-           Keyword.get(cfg, :username, {:error, :not_found, :username}),
-
-         pw <-
-           Keyword.get(cfg, :password, {:error, :not_found, :password}) do
-
+    with cfg when is_list(cfg) <- Keyword.get(Shippex.config(), :usps, {:error, :not_found}),
+         un <- Keyword.get(cfg, :username, {:error, :not_found, :username}),
+         pw <- Keyword.get(cfg, :password, {:error, :not_found, :password}) do
       %{username: un, password: pw}
     else
-      {:error, :not_found, token} -> raise Shippex.InvalidConfigError,
-        message: "USPS config key missing: #{token}"
+      {:error, :not_found, token} ->
+        raise Shippex.InvalidConfigError, message: "USPS config key missing: #{token}"
 
-      {:error, :not_found} -> raise Shippex.InvalidConfigError,
-        message: "USPS config is either invalid or not found."
+      {:error, :not_found} ->
+        raise Shippex.InvalidConfigError, message: "USPS config is either invalid or not found."
     end
   end
 end

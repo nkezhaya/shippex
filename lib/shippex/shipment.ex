@@ -23,10 +23,18 @@ defmodule Shippex.Shipment do
     intl = from.country != to.country
     ship_date = Keyword.get(opts, :ship_date)
 
+    if from.country != "US" do
+      raise "Shippex does not yet support shipments originating outside of the US."
+    end
+
     if not(is_nil(ship_date) or match?(%Date{}, ship_date)) do
       raise "Invalid ship date: #{ship_date}"
     end
 
-    %Shipment{from: from, to: to, package: package, ship_date: ship_date, international?: intl}
+    %Shipment{from: from,
+              to: to,
+              package: package,
+              ship_date: ship_date,
+              international?: intl}
   end
 end

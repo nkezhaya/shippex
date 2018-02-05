@@ -27,9 +27,7 @@ defmodule Shippex.Carrier.UPS do
   end
 
   def fetch_rates(%Shippex.Shipment{} = shipment) do
-    services = Shippex.Service.services_for_carrier(:ups,
-      shipment.from.country,
-      shipment.to.country)
+    services = Shippex.Service.services_for_carrier(:ups, shipment)
 
     rates = Enum.map services, fn (service) ->
       fetch_rate(shipment, service)
@@ -277,7 +275,8 @@ defmodule Shippex.Carrier.UPS do
   end
 
   defp service_params(%Shippex.Service{} = service) do
-    %{Code: service.code, Description: service.description}
+    code = Shippex.Service.service_code(service)
+    %{Code: code, Description: service.description}
   end
 
   defp address_params(%Shippex.Address{} = address) do

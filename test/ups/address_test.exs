@@ -1,6 +1,5 @@
 defmodule Shippex.UPS.AddressTest do
   use ExUnit.Case
-  doctest Shippex
 
   test "validate address" do
     # UPS only validates CA/NY addresses in testing.

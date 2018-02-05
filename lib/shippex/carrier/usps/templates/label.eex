@@ -42,7 +42,7 @@
 
     <% package = @shipment.package %>
     <WeightInOunces><%= weight_in_ounces(@shipment) %></WeightInOunces>
-    <ServiceType>Express</ServiceType>
+    <ServiceType><%= @service %></ServiceType>
     <Container><%= container(@shipment) %></Container>
     <Width><%= package.width %></Width>
     <Length><%= package.length %></Length>
@@ -52,11 +52,6 @@
     <PriceOptions></PriceOptions>
     <InsuredAmount></InsuredAmount>
     <AddressServiceRequested>true</AddressServiceRequested>
-
-    <ExpressMailOptions>
-      <DeliveryOption></DeliveryOption>
-      <WaiverOfSignature></WaiverOfSignature>
-    </ExpressMailOptions>
 
     <%= if date = @shipment.ship_date do %>
       <ShipDate>

@@ -1,8 +1,6 @@
 defmodule Shippex.UPS.RateTest do
   use ExUnit.Case
 
-  doctest Shippex
-
   setup do
     [shipment: Helper.valid_shipment]
   end
@@ -29,11 +27,7 @@ defmodule Shippex.UPS.RateTest do
       country: "CA"
     })
 
-    shipment = %Shippex.Shipment{
-      from: shipment.from,
-      to: destination,
-      package: shipment.package
-    }
+    shipment = Shippex.Shipment.shipment(shipment.from, destination, shipment.package)
 
     rates(shipment)
   end
@@ -49,11 +43,7 @@ defmodule Shippex.UPS.RateTest do
       country: "MX"
     })
 
-    shipment = %Shippex.Shipment{
-      from: shipment.from,
-      to: destination,
-      package: shipment.package
-    }
+    shipment = Shippex.Shipment.shipment(shipment.from, destination, shipment.package)
 
     rates(shipment)
   end
@@ -69,10 +59,9 @@ defmodule Shippex.UPS.RateTest do
     end
 
     # Accept one of the services and print the label
-    {:ok, rate} = Enum.shuffle(rates) |> hd
+    {:ok, rate} = rates |> Enum.shuffle |> hd
 
-    {:ok, label} = shipment
-      |> Shippex.Carrier.UPS.fetch_label(rate.service)
+    {:ok, label} = Shippex.Carrier.UPS.create_transaction(shipment, rate.service)
 
     assert label
   end

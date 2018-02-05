@@ -37,7 +37,6 @@ defmodule Shippex.Mixfile do
      {:httpoison, ">= 0.0.0"},
      {:poison, ">= 0.0.0"},
      {:sweet_xml, ">= 0.0.0"},
-     {:xml_builder, "~> 0.1.1"},
      {:html_entities, ">= 0.0.0"},
      {:decimal, "~> 1.3"}]
   end

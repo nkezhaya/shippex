@@ -10,7 +10,17 @@
       <ValueOfContents><%= @shipment.package.monetary_value %></ValueOfContents>
       <Country><%= Util.abbreviation_to_country_name(@shipment.to.country) %></Country>
 
-      <%= render_package shipment: @shipment %>
+      <%= if @service == "ALL" do %>
+        <Container>VARIABLE</Container>
+      <% else %>
+        <Container><%= container(@shipment) %></Container>
+      <% end %>
+
+      <Size><%= size(@shipment) %></Size>
+      <Width><%= @shipment.package.width %></Width>
+      <Length><%= @shipment.package.length %></Length>
+      <Height><%= @shipment.package.height %></Height>
+      <Girth></Girth>
 
       <OriginZip><%= @shipment.from.zip %></OriginZip>
     </Package>
@@ -26,7 +36,17 @@
       <Pounds>0</Pounds>
       <Ounces><%= weight_in_ounces(@shipment) %></Ounces>
 
-      <%= render_package shipment: @shipment %>
+      <%= if @service == "ALL" do %>
+        <Container>VARIABLE</Container>
+      <% else %>
+        <Container><%= container(@shipment) %></Container>
+      <% end %>
+      <Size><%= size(@shipment) %></Size>
+      <Width><%= @shipment.package.width %></Width>
+      <Length><%= @shipment.package.length %></Length>
+      <Height><%= @shipment.package.height %></Height>
+      <Girth></Girth>
+      <Machinable>False</Machinable>
     </Package>
   </RateV4Request>
 <% end %>

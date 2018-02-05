@@ -196,14 +196,10 @@ defmodule Shippex do
       Shippex.fetch_rate(shipment, service)
   """
   @spec fetch_rate(Shipment.t, Service.t) :: {atom, Rate.t}
-  def fetch_rate(%Shipment{} = shipment,
-                 %Service{carrier: carrier} = service) do
-
+  def fetch_rate(%Shipment{} = shipment, %Service{carrier: carrier} = service) do
     case Carrier.module(carrier).fetch_rate(shipment, service) do
-      list when is_list(list) and length(list) == 1 ->
-        hd(list)
-      {_, _} = rate ->
-        rate
+      [rate] -> rate
+      {_, _} = rate -> rate
     end
   end
 
@@ -214,9 +210,7 @@ defmodule Shippex do
       Shippex.fetch_label(shipment, service)
   """
   @spec fetch_label(Shipment.t, Service.t) :: {atom, Label.t}
-  def fetch_label(%Shipment{} = shipment,
-                  %Service{carrier: carrier} = service) do
-
+  def fetch_label(%Shipment{} = shipment, %Service{carrier: carrier} = service) do
     Carrier.module(carrier).fetch_label(shipment, service)
   end
 
@@ -239,10 +233,10 @@ defmodule Shippex do
   @spec cancel_transaction(Transaction.t) :: {atom, response}
   @spec cancel_transaction(Carrier.t, Shipment.t, String.t) :: {atom, response}
   def cancel_transaction(%Transaction{} = transaction) do
-    Carrier.module(transaction.carrier).cancel_shipment(transaction)
+    Carrier.module(transaction.carrier).cancel_transaction(transaction)
   end
   def cancel_transaction(carrier, %Shipment{} = shipment, tracking_number) do
-    Carrier.module(carrier).cancel_shipment(shipment, tracking_number)
+    Carrier.module(carrier).cancel_transaction(shipment, tracking_number)
   end
 
   @doc """

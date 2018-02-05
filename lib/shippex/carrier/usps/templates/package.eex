@@ -1,7 +1,0 @@
-<% package = @shipment.package %>
-<Container><%= container(@shipment) %></Container>
-<Size><%= size(@shipment) %></Size>
-<Width><%= package.width %></Width>
-<Length><%= package.length %></Length>
-<Height><%= package.height %></Height>
-<Girth></Girth>

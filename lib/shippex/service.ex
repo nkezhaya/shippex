@@ -70,6 +70,8 @@ defmodule Shippex.Service do
     do: %S{id: :usps_first_class, carrier: :usps, description: "First-Class Mail Parcel"}
   def get(:usps_retail_ground),
     do: %S{id: :usps_retail_ground, carrier: :usps, description: "USPS Retail Ground"}
+  def get(:usps_parcel_select),
+    do: %S{id: :usps_parcel_select, carrier: :usps, description: "Parcel Select Ground"}
   def get(:usps_priority),
     do: %S{id: :usps_priority, carrier: :usps, description: "Priority Mail"}
   def get(:usps_priority_express),

@@ -111,9 +111,9 @@ defmodule Shippex.Carrier.USPS do
                      format: :tiff,
                      image: image}
 
-      Shippex.Transaction.transaction(shipment, rate, label)
+      transaction = Shippex.Transaction.transaction(shipment, rate, label)
 
-      {:ok, label}
+      {:ok, transaction}
     end
   end
 
@@ -127,13 +127,13 @@ defmodule Shippex.Carrier.USPS do
       "eVS"
     end
 
-    api = root <> "CancelLabel"
+    api = root <> "Cancel"
 
     request = render_cancel root: root, tracking_number: tracking_number
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: request}) do
       data =
-        xpath(body, ~x"#{root}CancelResponse",
+        xpath(body, ~x"//#{root}CancelResponse",
           status: ~x"//Status//text()"s,
           reason: ~x"//Reason//text()"s
         )

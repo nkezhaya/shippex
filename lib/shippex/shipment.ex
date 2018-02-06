@@ -18,7 +18,7 @@ defmodule Shippex.Shipment do
   @doc """
   Builds a `Shipment`.
   """
-  @spec shipment(Address.t, Address.t, Package.t, Keyword.t) :: t
+  @spec shipment(Address.t(), Address.t(), Package.t(), Keyword.t()) :: t
   def shipment(%Address{} = from, %Address{} = to, %Package{} = package, opts \\ []) do
     intl = from.country != to.country
     ship_date = Keyword.get(opts, :ship_date)
@@ -27,14 +27,10 @@ defmodule Shippex.Shipment do
       raise "Shippex does not yet support shipments originating outside of the US."
     end
 
-    if not(is_nil(ship_date) or match?(%Date{}, ship_date)) do
+    if not (is_nil(ship_date) or match?(%Date{}, ship_date)) do
       raise "Invalid ship date: #{ship_date}"
     end
 
-    %Shipment{from: from,
-              to: to,
-              package: package,
-              ship_date: ship_date,
-              international?: intl}
+    %Shipment{from: from, to: to, package: package, ship_date: ship_date, international?: intl}
   end
 end

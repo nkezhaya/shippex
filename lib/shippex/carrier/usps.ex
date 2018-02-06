@@ -11,8 +11,9 @@ defmodule Shippex.Carrier.USPS do
   @large_containers ~w(rectangular nonrectangular variable)a
 
   for f <- ~w(address cancel label rate validate_address)a do
-    EEx.function_from_file :defp, :"render_#{f}",
-      __DIR__ <> "/usps/templates/#{f}.eex", [:assigns]
+    EEx.function_from_file(:defp, :"render_#{f}", __DIR__ <> "/usps/templates/#{f}.eex", [
+      :assigns
+    ])
   end
 
   defmacro with_response(response, do: block) do
@@ -23,6 +24,7 @@ defmodule Shippex.Carrier.USPS do
             "" ->
               var!(body) = body
               unquote(block)
+
             error ->
               code = xpath(body, ~x"//Error//Number//text()"s)
               message = xpath(body, ~x"//Error//Description//text()"s)
@@ -40,30 +42,34 @@ defmodule Shippex.Carrier.USPS do
   end
 
   def fetch_rate(%Shipment{} = shipment, service) do
-    service = case service do
-      %Shippex.Service{} = service -> Service.service_code(service)
-      :all -> "ALL"
-      s when is_bitstring(s) -> s
-    end
+    service =
+      case service do
+        %Shippex.Service{} = service -> Service.service_code(service)
+        :all -> "ALL"
+        s when is_bitstring(s) -> s
+      end
 
-    api = if shipment.international? do
-      "IntlRateV2"
-    else
-      "RateV4"
-    end
+    api =
+      if shipment.international? do
+        "IntlRateV2"
+      else
+        "RateV4"
+      end
 
-    rate = render_rate shipment: shipment, service: service
+    rate = render_rate(shipment: shipment, service: service)
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: rate}) do
       if shipment.international? do
-        xpath(body,
+        xpath(
+          body,
           ~x"//IntlRateV2Response//Package//Service"l,
           name: ~x"./SvcDescription//text()"s,
           service: ~x"./SvcDescription//text()"s,
           rate: ~x"./Postage//text()"s
         )
       else
-        xpath(body,
+        xpath(
+          body,
           ~x"//RateV4Response//Package//Postage"l,
           name: ~x"./MailService//text()"s,
           service: ~x"./MailService//text()"s,
@@ -71,13 +77,14 @@ defmodule Shippex.Carrier.USPS do
         )
       end
       |> Enum.map(fn %{name: name, service: service, rate: rate} ->
-        %{name: strip_html(name),
+        %{
+          name: strip_html(name),
           service: description_to_service(service),
-          rate: Util.price_to_cents(rate)}
+          rate: Util.price_to_cents(rate)
+        }
       end)
       |> Enum.map(fn %{name: description, service: service, rate: cents} ->
-        rate = %Shippex.Rate{service: %{service | description: description},
-                             price: cents}
+        rate = %Shippex.Rate{service: %{service | description: description}, price: cents}
 
         {:ok, rate}
       end)
@@ -85,13 +92,14 @@ defmodule Shippex.Carrier.USPS do
   end
 
   def create_transaction(%Shipment{} = shipment, %Service{} = service) do
-    request = render_label shipment: shipment, service: Service.service_code(service)
+    request = render_label(shipment: shipment, service: Service.service_code(service))
 
-    api = if shipment.international? do
-      "eVSPriorityMailIntl"
-    else
-      "eVS"
-    end
+    api =
+      if shipment.international? do
+        "eVSPriorityMailIntl"
+      else
+        "eVS"
+      end
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: request}) do
       data =
@@ -107,9 +115,7 @@ defmodule Shippex.Carrier.USPS do
 
       rate = %Shippex.Rate{service: service, price: price}
       image = String.replace(data.image, "\n", "")
-      label = %Label{tracking_number: data.tracking_number,
-                     format: :tiff,
-                     image: image}
+      label = %Label{tracking_number: data.tracking_number, format: :tiff, image: image}
 
       transaction = Shippex.Transaction.transaction(shipment, rate, label)
 
@@ -120,63 +126,80 @@ defmodule Shippex.Carrier.USPS do
   def cancel_transaction(%Shippex.Transaction{} = transaction) do
     cancel_transaction(transaction.shipment, transaction.label.tracking_number)
   end
+
   def cancel_transaction(%Shippex.Shipment{} = shipment, tracking_number) do
-    root = if shipment.international? do
-      "eVSI"
-    else
-      "eVS"
-    end
+    root =
+      if shipment.international? do
+        "eVSI"
+      else
+        "eVS"
+      end
 
     api = root <> "Cancel"
 
-    request = render_cancel root: root, tracking_number: tracking_number
+    request = render_cancel(root: root, tracking_number: tracking_number)
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: request}) do
       data =
-        xpath(body, ~x"//#{root}CancelResponse",
+        xpath(
+          body,
+          ~x"//#{root}CancelResponse",
           status: ~x"//Status//text()"s,
           reason: ~x"//Reason//text()"s
         )
 
-      status = if data.status =~ ~r/not cancel/i do
-        :error
-      else
-        :ok
-      end
+      status =
+        if data.status =~ ~r/not cancel/i do
+          :error
+        else
+          :ok
+        end
 
       {status, data.reason}
     end
   end
 
   defp weight_in_ounces(%Shipment{package: %Package{weight: weight}}) do
-    16 * case Application.get_env(:shippex, :weight_unit, :lbs) do
-      :lbs -> weight
-      :kg -> Util.kgs_to_lbs(weight)
-      u ->
-        raise """
-        Invalid unit of measurement specified: #{IO.inspect(u)}
+    16 *
+      case Application.get_env(:shippex, :weight_unit, :lbs) do
+        :lbs ->
+          weight
 
-        Must be either :lbs or :kg
-        """
-    end
+        :kg ->
+          Util.kgs_to_lbs(weight)
+
+        u ->
+          raise """
+          Invalid unit of measurement specified: #{IO.inspect(u)}
+
+          Must be either :lbs or :kg
+          """
+      end
   end
 
   defp description_to_service(description) do
     cond do
       description =~ ~r/priority mail international/i ->
         :usps_priority_international
+
       description =~ ~r/priority mail express/i ->
         :usps_priority_express
+
       description =~ ~r/priority/i ->
         :usps_priority
+
       description =~ ~r/first[-\s]*class/i ->
         :usps_first_class
+
       description =~ ~r/retail ground/i ->
         :usps_retail_ground
+
       description =~ ~r/media mail/i ->
         :usps_media
+
       description =~ ~r/library mail/i ->
         :usps_library
+
       description =~ ~r/gxg/i ->
         :usps_gxg
     end
@@ -184,8 +207,10 @@ defmodule Shippex.Carrier.USPS do
   end
 
   defp international_mail_type(%Package{container: nil}), do: "ALL"
+
   defp international_mail_type(%Package{container: container}) do
     container = "#{container}"
+
     cond do
       container =~ ~r/envelope/i -> "ENVELOPE"
       container =~ ~r/flat[-\s]*rate/i -> "FLATRATE"
@@ -195,23 +220,24 @@ defmodule Shippex.Carrier.USPS do
   end
 
   def validate_address(%Shippex.Address{country: "US"} = address) do
-    request = render_validate_address address: address
+    request = render_validate_address(address: address)
 
     with_response Client.post("", %{API: "Verify", XML: request}) do
       candidates =
         body
         |> xpath(
           ~x"//AddressValidateResponse//Address"l,
-          address: ~x"./Address2//text()"s, # USPS swaps address lines 1 & 2
+          # USPS swaps address lines 1 & 2
+          address: ~x"./Address2//text()"s,
           address_line_2: ~x"./Address1//text()"s,
           city: ~x"./City//text()"s,
           state: ~x"./State//text()"s,
           zip: ~x"./Zip5//text()"s
         )
-        |> Enum.map(fn (candidate) ->
+        |> Enum.map(fn candidate ->
           candidate
           |> Map.merge(Map.take(address, ~w(first_name last_name name company_name phone)a))
-          |> Shippex.Address.address
+          |> Shippex.Address.address()
         end)
 
       {:ok, candidates}
@@ -219,27 +245,28 @@ defmodule Shippex.Carrier.USPS do
   end
 
   defp container(%Shipment{package: package}) do
-    case Package.usps_containers[package.container] do
-      nil -> Package.usps_containers[@default_container]
+    case Package.usps_containers()[package.container] do
+      nil -> Package.usps_containers()[@default_container]
       container -> container
     end
-    |> String.upcase
+    |> String.upcase()
   end
 
   defp size(%Shipment{package: package}) do
-    is_large? = if package.container in @large_containers do
-      package
-      |> Map.take(~w(large width height)a)
-      |> Map.values
-      |> Enum.any?(& &1 > 12)
-    end
+    is_large? =
+      if package.container in @large_containers do
+        package
+        |> Map.take(~w(large width height)a)
+        |> Map.values()
+        |> Enum.any?(&(&1 > 12))
+      end
 
     if is_large?, do: "LARGE", else: "REGULAR"
   end
 
   defp strip_html(string) do
     string
-    |> HtmlEntities.decode
+    |> HtmlEntities.decode()
     |> String.replace(~r/<\/?\w+>.*<\/\w+>/, "")
   end
 

@@ -6,8 +6,31 @@ defmodule Shippex.Address do
 
   @type t :: %__MODULE__{}
 
-  @enforce_keys [:first_name, :last_name, :name, :phone, :address, :address_line_2, :city, :state, :zip, :country]
-  defstruct [:first_name, :last_name, :name, :company_name, :phone, :address, :address_line_2, :city, :state, :zip, :country]
+  @enforce_keys [
+    :first_name,
+    :last_name,
+    :name,
+    :phone,
+    :address,
+    :address_line_2,
+    :city,
+    :state,
+    :zip,
+    :country
+  ]
+  defstruct [
+    :first_name,
+    :last_name,
+    :name,
+    :company_name,
+    :phone,
+    :address,
+    :address_line_2,
+    :city,
+    :state,
+    :zip,
+    :country
+  ]
 
   alias __MODULE__, as: Address
   alias Shippex.Util
@@ -35,32 +58,38 @@ defmodule Shippex.Address do
   """
   @spec address(map()) :: t | none
   def address(params) when is_map(params) do
-    params = for {key, val} <- params, into: %{} do
-      key = cond do
-        is_atom(key) -> Atom.to_string(key)
-        true -> key
+    params =
+      for {key, val} <- params, into: %{} do
+        key =
+          cond do
+            is_atom(key) -> Atom.to_string(key)
+            true -> key
+          end
+
+        val =
+          cond do
+            is_bitstring(val) -> String.trim(val)
+            true -> val
+          end
+
+        {key, val}
       end
 
-      val = cond do
-        is_bitstring(val) -> String.trim(val)
-        true -> val
+    {first_name, last_name, name} =
+      cond do
+        not (is_nil(params["first_name"]) or is_nil(params["last_name"])) ->
+          name = params["first_name"] <> " " <> params["last_name"]
+          {params["first_name"], params["last_name"], name}
+
+        not is_nil(params["name"]) ->
+          names = String.split(params["name"])
+          first_name = hd(names)
+          last_name = Enum.join(tl(names), " ")
+          {first_name, last_name, params["name"]}
+
+        true ->
+          {nil, nil, nil}
       end
-
-      {key, val}
-    end
-
-    {first_name, last_name, name} = cond do
-      not(is_nil(params["first_name"]) or is_nil(params["last_name"])) ->
-        name = params["first_name"] <> " " <> params["last_name"]
-        {params["first_name"], params["last_name"], name}
-      not is_nil(params["name"]) ->
-        names = String.split(params["name"])
-        first_name = hd names
-        last_name = Enum.join(tl(names), " ")
-        {first_name, last_name, params["name"]}
-      true ->
-        {nil, nil, nil}
-    end
 
     address = %Address{
       name: name,
@@ -77,16 +106,19 @@ defmodule Shippex.Address do
     }
 
     # Check for a passed array.
-    address = case params["address"] do
-      [line1] -> Map.put(address, :address, line1)
+    address =
+      case params["address"] do
+        [line1] ->
+          Map.put(address, :address, line1)
 
-      [line1, line2 | _] ->
-        address
-        |> Map.put(:address, line1)
-        |> Map.put(:address_line_2, line2)
+        [line1, line2 | _] ->
+          address
+          |> Map.put(:address, line1)
+          |> Map.put(:address_line_2, line2)
 
-      _ -> address
-    end
+        _ ->
+          address
+      end
 
     address
   end
@@ -95,10 +127,9 @@ defmodule Shippex.Address do
   Returns the list of non-`nil` address lines. If no `address_line_2` is
   present, it returns a list of a single `String`.
   """
-  @spec address_line_list(t) :: [String.t]
+  @spec address_line_list(t) :: [String.t()]
   def address_line_list(%Shippex.Address{} = address) do
-    [address.address,
-      address.address_line_2]
-      |> Enum.reject(&is_nil/1)
+    [address.address, address.address_line_2]
+    |> Enum.reject(&is_nil/1)
   end
 end

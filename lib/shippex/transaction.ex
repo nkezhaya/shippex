@@ -7,7 +7,7 @@ defmodule Shippex.Transaction do
   @enforce_keys [:shipment, :rate, :label, :carrier]
   defstruct [:shipment, :rate, :label, :carrier]
 
-  @spec transaction(Shipment.t, Rate.t, Label.t) :: Transaction.t
+  @spec transaction(Shipment.t(), Rate.t(), Label.t()) :: Transaction.t()
   def transaction(shipment, rate, label) do
     carrier = rate.service.carrier
     %Transaction{shipment: shipment, rate: rate, label: label, carrier: carrier}

@@ -372,18 +372,20 @@ defmodule Shippex.Util do
       iex> Util.full_state_to_abbreviation("Not a state.")
       nil
   """
-  @spec full_state_to_abbreviation(String.t) :: nil | String.t
+  @spec full_state_to_abbreviation(String.t()) :: nil | String.t()
   def full_state_to_abbreviation(state)
-    when is_bitstring(state) and byte_size(state) == 2, do: state
+      when is_bitstring(state) and byte_size(state) == 2,
+      do: state
+
   def full_state_to_abbreviation(state) when is_bitstring(state) do
     state = filter_for_comparison(state)
 
     @states
-    |> Map.values
+    |> Map.values()
     |> Enum.find_value(fn states ->
-      Enum.find states, fn {_abbr, full} ->
+      Enum.find(states, fn {_abbr, full} ->
         filter_for_comparison(full) == state
-      end
+      end)
     end)
     |> case do
       {abbr, _full} -> abbr
@@ -391,9 +393,10 @@ defmodule Shippex.Util do
     end
   end
 
-  @spec states(String.t) :: %{String.t => String.t}
+  @spec states(String.t()) :: %{String.t() => String.t()}
   def states(country \\ "US")
   def states(nil), do: %{}
+
   def states(country) do
     case @states[country] do
       states when is_map(states) -> states
@@ -411,15 +414,15 @@ defmodule Shippex.Util do
       iex> Util.abbreviation_to_country_name("TX")
       nil
   """
-  @spec abbreviation_to_country_name(String.t) :: nil | String.t
+  @spec abbreviation_to_country_name(String.t()) :: nil | String.t()
   def abbreviation_to_country_name(abbr) when is_bitstring(abbr) do
     @countries[abbr]
   end
 
   defp filter_for_comparison(string) do
     string
-    |> String.trim
-    |> String.downcase
+    |> String.trim()
+    |> String.downcase()
     |> String.normalize(:nfd)
     |> String.replace(~r/[^A-z\s]/u, "")
   end
@@ -441,17 +444,15 @@ defmodule Shippex.Util do
       iex> Util.price_to_cents(28)
       2800
   """
-  @spec price_to_cents(nil | number() | String.t) :: integer
+  @spec price_to_cents(nil | number() | String.t()) :: integer
   def price_to_cents(string) when is_bitstring(string) do
     {float, _} = Float.parse(string)
     price_to_cents(float)
   end
-  def price_to_cents(nil),
-    do: 0
-  def price_to_cents(float) when is_float(float),
-    do: Float.floor(float * 100) |> round
-  def price_to_cents(integer) when is_integer(integer),
-    do: integer * 100
+
+  def price_to_cents(nil), do: 0
+  def price_to_cents(float) when is_float(float), do: Float.floor(float * 100) |> round
+  def price_to_cents(integer) when is_integer(integer), do: integer * 100
 
   @doc """
   Converts pounds to kilograms.

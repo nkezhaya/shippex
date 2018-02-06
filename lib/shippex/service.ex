@@ -40,77 +40,96 @@ defmodule Shippex.Service do
   """
   @compile {:inline, get: 1}
   @spec get(atom) :: t | nil
-  def get(:ups_ground),
-    do: %S{id: :ups_ground, carrier: :ups, description: "UPS Ground"}
+  def get(:ups_ground), do: %S{id: :ups_ground, carrier: :ups, description: "UPS Ground"}
+
   def get(:ups_next_day_air),
     do: %S{id: :ups_next_day_air, carrier: :ups, description: "UPS Next Day Air"}
+
   def get(:ups_second_day_air),
     do: %S{id: :ups_second_day_air, carrier: :ups, description: "UPS 2nd Day Air"}
+
   def get(:ups_three_day_select),
     do: %S{id: :ups_three_day_select, carrier: :ups, description: "UPS 3 Day Select"}
-  def get(:ups_expedited),
-    do: %S{id: :ups_expedited, carrier: :ups, description: "UPS Expedited"}
+
+  def get(:ups_expedited), do: %S{id: :ups_expedited, carrier: :ups, description: "UPS Expedited"}
+
   def get(:ups_express_saver),
     do: %S{id: :ups_express_saver, carrier: :ups, description: "UPS Express Saver"}
-  def get(:ups_express),
-    do: %S{id: :ups_express, carrier: :ups, description: "UPS Express"}
-  def get(:ups_standard),
-    do: %S{id: :ups_standard, carrier: :ups, description: "UPS Standard"}
+
+  def get(:ups_express), do: %S{id: :ups_express, carrier: :ups, description: "UPS Express"}
+  def get(:ups_standard), do: %S{id: :ups_standard, carrier: :ups, description: "UPS Standard"}
+
   def get(:ups_worldwide_saver),
     do: %S{id: :ups_worldwide_saver, carrier: :ups, description: "UPS Worldwide Saver"}
+
   def get(:ups_worldwide_expedited),
     do: %S{id: :ups_worldwide_expedited, carrier: :ups, description: "UPS Worldwide Expedited"}
+
   def get(:ups_worldwide_express),
     do: %S{id: :ups_worldwide_express, carrier: :ups, description: "UPS Worldwide Express"}
-  def get(:usps_media),
-    do: %S{id: :usps_media, carrier: :usps, description: "Media Mail Parcel"}
+
+  def get(:usps_media), do: %S{id: :usps_media, carrier: :usps, description: "Media Mail Parcel"}
+
   def get(:usps_library),
     do: %S{id: :usps_library, carrier: :usps, description: "Library Mail Parcel"}
+
   def get(:usps_first_class),
     do: %S{id: :usps_first_class, carrier: :usps, description: "First-Class Mail Parcel"}
+
   def get(:usps_retail_ground),
     do: %S{id: :usps_retail_ground, carrier: :usps, description: "USPS Retail Ground"}
+
   def get(:usps_parcel_select),
     do: %S{id: :usps_parcel_select, carrier: :usps, description: "Parcel Select Ground"}
+
   def get(:usps_priority),
     do: %S{id: :usps_priority, carrier: :usps, description: "Priority Mail"}
+
   def get(:usps_priority_express),
     do: %S{id: :usps_priority_express, carrier: :usps, description: "Priority Mail Express"}
+
   def get(:usps_priority_international),
-    do: %S{id: :usps_priority_international, carrier: :usps, description: "Priority Mail International"}
-  def get(:usps_gxg),
-    do: %S{id: :usps_gxg, carrier: :usps, description: "GXG"}
-  def get(_service),
-    do: nil
+    do: %S{
+      id: :usps_priority_international,
+      carrier: :usps,
+      description: "Priority Mail International"
+    }
+
+  def get(:usps_gxg), do: %S{id: :usps_gxg, carrier: :usps, description: "GXG"}
+  def get(_service), do: nil
 
   @doc """
   Returns all services for `carrier` based on the `shipment` provided.
 
       Shippex.Service.services_for_carrier(:ups)
   """
-  @spec services_for_carrier(Carrier.t, Shipment.t) :: [t]
+  @spec services_for_carrier(Carrier.t(), Shipment.t()) :: [t]
   def services_for_carrier(carrier, %Shipment{to: %{country: dst}}) do
     carrier
     |> services_for_carrier_to_country(dst)
     |> Enum.map(&get/1)
     |> Enum.reject(&is_nil/1)
   end
+
   defp services_for_carrier_to_country(:usps, "US") do
     ~w(usps_media usps_library usps_first_class usps_retail_ground usps_parcel_select usps_priority usps_priority_express)a
   end
+
   defp services_for_carrier_to_country(:usps, _country) do
     ~w(usps_first_class usps_priority usps_priority_express usps_gxg)a
   end
+
   defp services_for_carrier_to_country(:ups, "US") do
     ~w(ups_ground ups_three_day_select ups_second_day_air ups_next_day_air)a
   end
+
   defp services_for_carrier_to_country(:ups, _country) do
     ~w(ups_standard ups_worldwide_expedited ups_worldwide_express ups_worldwide_saver)a
   end
 
   @doc false
   @compile {:inline, service_code: 1}
-  @spec service_code(atom | t) :: String.t | nil
+  @spec service_code(atom | t) :: String.t() | nil
   def service_code(%S{id: id}), do: service_code(id)
   def service_code(:ups_ground), do: "03"
   def service_code(:ups_next_day_air), do: "01"

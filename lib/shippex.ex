@@ -85,13 +85,13 @@ defmodule Shippex do
 
   alias Shippex.{Carrier, Label, Service, Shipment, Transaction}
 
-  @type response :: %{code: String.t, message: String.t}
+  @type response :: %{code: String.t(), message: String.t()}
 
   defmodule InvalidConfigError do
     defexception [:message]
 
     def exception(message) do
-      %InvalidConfigError{message: "Invalid config: #{inspect message}"}
+      %InvalidConfigError{message: "Invalid config: #{inspect(message)}"}
     end
   end
 
@@ -99,7 +99,6 @@ defmodule Shippex do
   def config() do
     case Application.get_env(:shippex, :carriers, :not_found) do
       :not_found -> raise InvalidConfigError, "Shippex config not found"
-
       config -> config
     end
   end
@@ -110,15 +109,15 @@ defmodule Shippex do
 
       Shippex.carriers #=> [:ups]
   """
-  @spec carriers() :: [Carrier.t]
+  @spec carriers() :: [Carrier.t()]
   def carriers() do
     cfg = Shippex.config()
 
-    ups   = if Keyword.get(cfg, :ups),    do: :ups
-    fedex = if Keyword.get(cfg, :fedex),  do: :fedex
-    usps  = if Keyword.get(cfg, :usps),   do: :usps
+    ups = if Keyword.get(cfg, :ups), do: :ups
+    fedex = if Keyword.get(cfg, :fedex), do: :fedex
+    usps = if Keyword.get(cfg, :usps), do: :usps
 
-    Enum.reject [ups, fedex, usps], &is_nil/1
+    Enum.reject([ups, fedex, usps], &is_nil/1)
   end
 
   @doc """
@@ -129,14 +128,14 @@ defmodule Shippex do
 
       Shippex.currency_code() #=> "CAN"
   """
-  @spec currency_code() :: String.t
+  @spec currency_code() :: String.t()
   def currency_code() do
     case Application.get_env(:shippex, :currency, :usd) do
       code when code in [:usd, :can, :mxn] ->
-        code |> Atom.to_string |> String.upcase
+        code |> Atom.to_string() |> String.upcase()
+
       _ ->
-        raise InvalidConfigError,
-          "Shippex currency must be either :usd, :can, or :mxn"
+        raise InvalidConfigError, "Shippex currency must be either :usd, :can, or :mxn"
     end
   end
 
@@ -159,29 +158,35 @@ defmodule Shippex do
   @doc """
   Fetches rates from `carriers` for a given `Shipment`.
   """
-  @spec fetch_rates(Shipment.t, [Carrier.t] | nil) :: [{atom, Rate.t}]
+  @spec fetch_rates(Shipment.t(), [Carrier.t()] | nil) :: [{atom, Rate.t()}]
   def fetch_rates(%Shipment{} = shipment, carriers \\ nil) do
     # Convert the atom to a list if necessary.
-    carriers = cond do
-      is_nil(carriers)  -> Shippex.carriers()
-      is_atom(carriers) -> [carriers]
-      is_list(carriers) -> carriers
+    carriers =
+      cond do
+        is_nil(carriers) ->
+          Shippex.carriers()
 
-      true ->
-        raise """
-        #{inspect carriers} is an invalid carrier or list of carriers.
-        Try using an atom. For example:
+        is_atom(carriers) ->
+          [carriers]
 
-            Shippex.fetch_rates(shipment, :ups)
-        """
-    end
-    |> Enum.map(&Shippex.Carrier.module/1)
+        is_list(carriers) ->
+          carriers
 
-    rates  = Enum.reduce carriers, [], & &1.fetch_rates(shipment) ++ &2
-    oks    = Enum.filter rates, &(elem(&1, 0) == :ok)
-    errors = Enum.filter rates, &(elem(&1, 0) == :error)
+        true ->
+          raise """
+          #{inspect(carriers)} is an invalid carrier or list of carriers.
+          Try using an atom. For example:
 
-    Enum.sort(oks, fn (r1, r2) ->
+              Shippex.fetch_rates(shipment, :ups)
+          """
+      end
+      |> Enum.map(&Shippex.Carrier.module/1)
+
+    rates = Enum.reduce(carriers, [], &(&1.fetch_rates(shipment) ++ &2))
+    oks = Enum.filter(rates, &(elem(&1, 0) == :ok))
+    errors = Enum.filter(rates, &(elem(&1, 0) == :error))
+
+    Enum.sort(oks, fn r1, r2 ->
       {:ok, r1} = r1
       {:ok, r2} = r2
 
@@ -195,7 +200,7 @@ defmodule Shippex do
 
       Shippex.fetch_rate(shipment, service)
   """
-  @spec fetch_rate(Shipment.t, Service.t) :: {atom, Rate.t}
+  @spec fetch_rate(Shipment.t(), Service.t()) :: {atom, Rate.t()}
   def fetch_rate(%Shipment{} = shipment, %Service{carrier: carrier} = service) do
     case Carrier.module(carrier).fetch_rate(shipment, service) do
       [rate] -> rate
@@ -209,7 +214,7 @@ defmodule Shippex do
 
       Shippex.create_transaction(shipment, service)
   """
-  @spec create_transaction(Shipment.t, Service.t) :: {atom, Label.t}
+  @spec create_transaction(Shipment.t(), Service.t()) :: {atom, Label.t()}
   def create_transaction(%Shipment{} = shipment, %Service{carrier: carrier} = service) do
     Carrier.module(carrier).create_transaction(shipment, service)
   end
@@ -230,11 +235,12 @@ defmodule Shippex do
           IO.inspect(message)
       end
   """
-  @spec cancel_transaction(Transaction.t) :: {atom, response}
-  @spec cancel_transaction(Carrier.t, Shipment.t, String.t) :: {atom, response}
+  @spec cancel_transaction(Transaction.t()) :: {atom, response}
+  @spec cancel_transaction(Carrier.t(), Shipment.t(), String.t()) :: {atom, response}
   def cancel_transaction(%Transaction{} = transaction) do
     Carrier.module(transaction.carrier).cancel_transaction(transaction)
   end
+
   def cancel_transaction(carrier, %Shipment{} = shipment, tracking_number) do
     Carrier.module(carrier).cancel_transaction(shipment, tracking_number)
   end
@@ -269,16 +275,19 @@ defmodule Shippex do
           # Present candidates to user for selection
       end
   """
-  @spec validate_address(Address.t, Keyword.t) :: {atom, response | [Address.t]}
+  @spec validate_address(Address.t(), Keyword.t()) :: {atom, response | [Address.t()]}
   def validate_address(%Shippex.Address{} = address, opts \\ []) do
     carrier = Keyword.get(opts, :carrier, :usps)
+
     case address.country do
       "US" ->
         Carrier.module(carrier).validate_address(address)
+
       country ->
         case Shippex.Util.states(country)[address.state] do
           nil ->
             {:error, %{code: "0", description: "State does not belong to country."}}
+
           _ ->
             {:ok, [address]}
         end

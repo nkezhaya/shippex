@@ -1,29 +1,19 @@
 defmodule Shippex.ShippexTest do
   use ExUnit.Case
+  alias Shippex
   doctest Shippex
 
-  test "set env" do
-    Application.put_env(:shippex, :env, :prod)
-    assert Shippex.env == :prod
+  test "fetch rates" do
+    shipment = Helper.valid_shipment()
 
-    Application.put_env(:shippex, :env, :foo)
-    assert_raise Shippex.InvalidConfigError, &Shippex.env/0
+    rates = Shippex.fetch_rates(shipment, carriers: :ups, services: :usps_priority)
 
-    Application.put_env(:shippex, :env, :dev)
-    assert Shippex.env == :dev
-  end
+    assert length(rates) > 3
 
-  test "currency code" do
-    Application.put_env(:shippex, :currency, :mxn)
-    assert Shippex.currency_code == "MXN"
+    rates = Shippex.fetch_rates(shipment, services: [:usps_priority, :usps_priority_express])
 
-    Application.put_env(:shippex, :currency, :can)
-    assert Shippex.currency_code == "CAN"
+    assert length(rates) == 2
 
-    Application.put_env(:shippex, :currency, :foo)
-    assert_raise Shippex.InvalidConfigError, &Shippex.currency_code/0
-
-    Application.put_env(:shippex, :currency, :usd)
-    assert Shippex.currency_code == "USD"
+    Shippex.fetch_rates(shipment, carriers: :usps)
   end
 end

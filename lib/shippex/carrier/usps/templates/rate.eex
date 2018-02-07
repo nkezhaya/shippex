@@ -10,12 +10,7 @@
       <ValueOfContents><%= @shipment.package.monetary_value %></ValueOfContents>
       <Country><%= Util.abbreviation_to_country_name(@shipment.to.country) %></Country>
 
-      <%= if @service == "ALL" do %>
-        <Container>VARIABLE</Container>
-      <% else %>
-        <Container><%= container(@shipment) %></Container>
-      <% end %>
-
+      <Container><%= container(@shipment) %></Container>
       <Size><%= size(@shipment) %></Size>
       <Width><%= @shipment.package.width %></Width>
       <Length><%= @shipment.package.length %></Length>

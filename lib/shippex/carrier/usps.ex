@@ -252,13 +252,20 @@ defmodule Shippex.Carrier.USPS do
     |> String.upcase()
   end
 
-  defp size(%Shipment{package: package}) do
+  defp size(%Shipment{package: package} = shipment) do
     is_large? =
-      if package.container in @large_containers do
-        package
-        |> Map.take(~w(large width height)a)
-        |> Map.values()
-        |> Enum.any?(&(&1 > 12))
+      cond do
+        container(shipment) == "RECTANGULAR" ->
+          true
+
+        package.container in @large_containers ->
+          package
+          |> Map.take(~w(large width height)a)
+          |> Map.values()
+          |> Enum.any?(&(&1 > 12))
+
+        true ->
+          false
       end
 
     if is_large?, do: "LARGE", else: "REGULAR"

@@ -249,7 +249,7 @@ defmodule Shippex do
         rates || Task.shutdown(task, :brutal_kill)
       end)
       |> Enum.filter(fn
-        {:ok, _} = result -> true
+        {:ok, _} -> true
         _ -> false
       end)
       |> Enum.map(fn {:ok, rates} -> rates end)

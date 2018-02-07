@@ -8,7 +8,7 @@ defmodule Shippex.USPS.LabelTest do
   test "label generated" do
     shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination(), Helper.package())
 
-    rate = Shippex.Carrier.USPS.fetch_rate(shipment, :all) |> random_rate()
+    rate = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority) |> random_rate()
 
     {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
   end
@@ -16,14 +16,14 @@ defmodule Shippex.USPS.LabelTest do
   test "rates generated for canada" do
     shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination("CA"), Helper.package())
 
-    rate = Shippex.Carrier.USPS.fetch_rate(shipment, :all) |> random_rate()
+    rate = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority) |> random_rate()
 
     {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
   end
 
   test "rates generated for mexico" do
     shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination("MX"), Helper.package())
-    rate = Shippex.Carrier.USPS.fetch_rate(shipment, :all) |> random_rate()
+    rate = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority) |> random_rate()
 
     {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
   end

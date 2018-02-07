@@ -46,6 +46,7 @@ defmodule Shippex.Carrier.USPS do
       case service do
         %Shippex.Service{} = service -> Service.service_code(service)
         :all -> "ALL"
+        s when is_atom(s) -> Service.service_code(s)
         s when is_bitstring(s) -> s
       end
 

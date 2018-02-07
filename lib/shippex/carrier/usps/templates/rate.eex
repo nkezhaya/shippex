@@ -3,7 +3,7 @@
     <Revision>2</Revision>
 
     <Package ID="0">
-      <Pounds>0</Pounds>
+      <Pounds>1</Pounds>
       <Ounces><%= weight_in_ounces(@shipment) %></Ounces>
       <Machinable>False</Machinable>
       <MailType><%= international_mail_type(@shipment.package) %></MailType>

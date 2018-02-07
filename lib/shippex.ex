@@ -91,7 +91,7 @@ defmodule Shippex do
     defexception [:message]
 
     def exception(message) do
-      %InvalidConfigError{message: "Invalid config: #{inspect(message)}"}
+      %InvalidConfigError{message: message}
     end
   end
 
@@ -124,11 +124,19 @@ defmodule Shippex do
   Returns the configured currency code. Raises an error if an invalid code was
   used.
 
-      config :shippex, :currency, :can
+      iex> Application.put_env(:shippex, :currency, :mxn)
+      iex> Shippex.currency_code
+      "MXN"
 
-      Shippex.currency_code() #=> "CAN"
+      iex> Application.put_env(:shippex, :currency, :can)
+      iex> Shippex.currency_code
+      "CAN"
+
+      iex> Application.put_env(:shippex, :currency, :usd)
+      iex> Shippex.currency_code
+      "USD"
   """
-  @spec currency_code() :: String.t()
+  @spec currency_code() :: String.t() | none()
   def currency_code() do
     case Application.get_env(:shippex, :currency, :usd) do
       code when code in [:usd, :can, :mxn] ->
@@ -143,11 +151,11 @@ defmodule Shippex do
   Fetches the env atom for the config. Must be either `:dev` or `:prod`, or an
   exception will be thrown.
 
-      config :shippex, :env, :dev
-
-      Shippex.env #=> :dev
+      iex> Application.put_env(:shippex, :env, :dev)
+      iex> Shippex.env
+      :dev
   """
-  @spec env() :: atom
+  @spec env() :: :dev | :prod | none()
   def env() do
     case Application.get_env(:shippex, :env, :dev) do
       e when e in [:dev, :prod] -> e
@@ -156,33 +164,101 @@ defmodule Shippex do
   end
 
   @doc """
-  Fetches rates from `carriers` for a given `Shipment`.
+  Fetches rates for a given `shipment`. Possible options:
+
+    * `carriers` - Fetches rates for *all* services for the given carriers
+    * `services` - Fetches rates only for the given services
+
+  These may be used in combination. To fetch rates for *all* UPS services, as
+  well as USPS Priority, for example:
+
+      Shippex.fetch_rates(shipment, carriers: :ups, services: [:usps_priority])
+
+  If no options are provided, Shippex will fetch rates for every service from
+  every available carrier.
   """
-  @spec fetch_rates(Shipment.t(), [Carrier.t()] | nil) :: [{atom, Rate.t()}]
-  def fetch_rates(%Shipment{} = shipment, carriers \\ nil) do
+  @spec fetch_rates(Shipment.t(), Keyword.t()) :: [{atom, Rate.t()}]
+  def fetch_rates(%Shipment{} = shipment, opts \\ []) do
     # Convert the atom to a list if necessary.
+    carriers = Keyword.get(opts, :carriers)
+    services = Keyword.get(opts, :services)
+
     carriers =
-      cond do
-        is_nil(carriers) ->
-          Shippex.carriers()
+      if is_nil(carriers) and is_nil(services) do
+        Shippex.carriers()
+      else
+        cond do
+          is_nil(carriers) ->
+            []
 
-        is_atom(carriers) ->
-          [carriers]
+          is_atom(carriers) ->
+            [carriers]
 
-        is_list(carriers) ->
-          carriers
+          is_list(carriers) ->
+            carriers
 
-        true ->
+          true ->
+            raise """
+            #{inspect(carriers)} is an invalid carrier or list of carriers.
+            Try using an atom. For example:
+
+                Shippex.fetch_rates(shipment, carriers: :usps)
+            """
+        end
+      end
+
+    services =
+      case services do
+        nil ->
+          []
+
+        service when is_atom(service) ->
+          [service]
+
+        services when is_list(services) ->
+          services
+
+        services ->
           raise """
-          #{inspect(carriers)} is an invalid carrier or list of carriers.
+          #{inspect(services)} is an invalid service or list of services.
           Try using an atom. For example:
 
-              Shippex.fetch_rates(shipment, :ups)
+              Shippex.fetch_rates(shipment, services: :usps_priority)
           """
       end
-      |> Enum.map(&Shippex.Carrier.module/1)
+      |> Enum.reject(&(Service.get(&1).carrier in carriers))
 
-    rates = Enum.reduce(carriers, [], &(&1.fetch_rates(shipment) ++ &2))
+    carrier_tasks =
+      Enum.map(carriers, fn carrier ->
+        Task.async(fn ->
+          Carrier.module(carrier).fetch_rates(shipment)
+        end)
+      end)
+
+    service_tasks =
+      Enum.map(services, fn service ->
+        Task.async(fn ->
+          fetch_rate(shipment, service)
+        end)
+      end)
+
+    rates =
+      (carrier_tasks ++ service_tasks)
+      |> Task.yield_many(5000)
+      |> Enum.map(fn {task, rates} ->
+        rates || Task.shutdown(task, :brutal_kill)
+      end)
+      |> Enum.filter(fn
+        {:ok, _} = result -> true
+        _ -> false
+      end)
+      |> Enum.map(fn {:ok, rates} -> rates end)
+      |> List.flatten()
+      |> Enum.reject(fn
+        {atom, _} -> not (atom in [:ok, :error])
+        _ -> true
+      end)
+
     oks = Enum.filter(rates, &(elem(&1, 0) == :ok))
     errors = Enum.filter(rates, &(elem(&1, 0) == :error))
 
@@ -196,11 +272,17 @@ defmodule Shippex do
 
   @doc """
   Fetches the rate for `shipment` for a specific `Service`. The `service` module
-  contains the `Carrier` and selected delivery speed.
+  contains the `Carrier` and selected delivery speed. You can also pass in the
+  ID of the service.
 
       Shippex.fetch_rate(shipment, service)
   """
-  @spec fetch_rate(Shipment.t(), Service.t()) :: {atom, Rate.t()}
+  @spec fetch_rate(Shipment.t(), atom() | Service.t()) :: {atom, Rate.t()}
+  def fetch_rate(%Shipment{} = shipment, service) when is_atom(service) do
+    service = Service.get(service)
+    fetch_rate(shipment, service)
+  end
+
   def fetch_rate(%Shipment{} = shipment, %Service{carrier: carrier} = service) do
     case Carrier.module(carrier).fetch_rate(shipment, service) do
       [rate] -> rate

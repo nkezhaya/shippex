@@ -152,7 +152,7 @@ defmodule Shippex.Carrier.USPS do
 
       rate = %Shippex.Rate{service: service, price: price}
       image = String.replace(data.image, "\n", "")
-      label = %Label{tracking_number: data.tracking_number, format: :tiff, image: image}
+      label = %Label{tracking_number: data.tracking_number, format: :pdf, image: image}
 
       transaction = Shippex.Transaction.transaction(shipment, rate, label)
 

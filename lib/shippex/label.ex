@@ -11,7 +11,7 @@ defmodule Shippex.Label do
   Note that `:image` is always a pure base64 string, and doesn't contain common
   prefixes like `"data:image/gif;base64,"` and so on.
 
-  Currently, UPS returns GIF labels, and USPS returns TIFF labels.
+  Currently, UPS returns GIF labels, and USPS returns PDF labels.
   """
 
   @type t :: %__MODULE__{}

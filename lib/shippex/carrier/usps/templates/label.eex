@@ -22,7 +22,7 @@
     <GrossOunces><%= weight_in_ounces(@shipment) %></GrossOunces>
     <ContentType>MERCHANDISE</ContentType>
     <Agreement>Y</Agreement>
-    <ImageType>TIF</ImageType>
+    <ImageType>PDF</ImageType>
     <Size><%= size(@shipment) %></Size>
     <Length><%= @shipment.package.length %></Length>
     <Width><%= @shipment.package.width %></Width>
@@ -65,6 +65,6 @@
       <CustomerRefNo><%= @shipment.id %></CustomerRefNo>
     <% end %>
 
-    <ImageType>TIF</ImageType>
+    <ImageType>PDF</ImageType>
   <% end %>
 </<%= @api %>Request>

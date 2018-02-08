@@ -26,5 +26,5 @@
   <<%= prefix %>State><%= address.state %></<%= prefix %>State>
   <<%= prefix %>Zip5><%= address.zip %></<%= prefix %>Zip5>
   <<%= prefix %>Zip4></<%= prefix %>Zip4>
-  <<%= prefix %>Phone><%= String.replace(address.phone, ~r/\D+/, "") %></<%= prefix %>Phone>
+  <<%= prefix %>Phone><%= address.phone |> String.replace(~r/^\+1/, "") |> String.replace(~r/\D+/, "") %></<%= prefix %>Phone>
 <% end %>

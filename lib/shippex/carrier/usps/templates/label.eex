@@ -1,5 +1,5 @@
-<%= if @shipment.international? do %>
-  <eVSPriorityMailIntlRequest USERID="<%= config().username %>">
+<<%= @api %>Request USERID="<%= config().username %>">
+  <%= if @shipment.international? do %>
     <Revision>2</Revision>
     <%= render_address shipment: @shipment, address: :from %>
     <%= render_address shipment: @shipment, address: :to %>
@@ -34,16 +34,18 @@
         <%= Date.to_iso8601(date) |> String.split("-") |> Enum.reverse |> Enum.join("/") %>
       </LabelDate>
     <% end %>
-  </eVSPriorityMailIntlRequest>
-<% else %>
-  <eVSRequest USERID="<%= config().username %>">
+  <% else %>
     <%= render_address shipment: @shipment, address: :from %>
     <%= render_address shipment: @shipment, address: :to %>
 
     <% package = @shipment.package %>
     <WeightInOunces><%= weight_in_ounces(@shipment) %></WeightInOunces>
     <ServiceType><%= @service %></ServiceType>
-    <Container><%= container(@shipment) %></Container>
+    <%= if String.downcase(@service) == "priority express" do %>
+      <Container>VARIABLE</Container>
+    <% else %>
+      <Container><%= container(@shipment) %></Container>
+    <% end %>
     <Width><%= package.width %></Width>
     <Length><%= package.length %></Length>
     <Height><%= package.height %></Height>
@@ -64,5 +66,5 @@
     <% end %>
 
     <ImageType>TIF</ImageType>
-  </eVSRequest>
-<% end %>
+  <% end %>
+</<%= @api %>Request>

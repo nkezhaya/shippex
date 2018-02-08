@@ -148,8 +148,8 @@ defmodule Shippex.Service do
   def service_code(:usps_retail_ground), do: "RETAIL GROUND"
   def service_code(:usps_parcel_select), do: "PARCEL SELECT GROUND"
   def service_code(:usps_priority), do: "PRIORITY"
-  def service_code(:usps_priority_express), do: "PRIORITY MAIL EXPRESS"
-  def service_code(:usps_priority_international), do: "PRIORITY MAIL INTERNATIONAL"
+  def service_code(:usps_priority_express), do: "PRIORITY EXPRESS"
+  def service_code(:usps_priority_international), do: "PRIORITY INTERNATIONAL"
   def service_code(:usps_gxg), do: "GXG"
   def service_code(_), do: nil
 end

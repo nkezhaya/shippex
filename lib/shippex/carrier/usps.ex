@@ -60,47 +60,83 @@ defmodule Shippex.Carrier.USPS do
     rate = render_rate(shipment: shipment, service: service)
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: rate}) do
-      if shipment.international? do
-        xpath(
-          body,
-          ~x"//IntlRateV2Response//Package//Service"l,
-          name: ~x"./SvcDescription//text()"s,
-          service: ~x"./SvcDescription//text()"s,
-          rate: ~x"./Postage//text()"s
-        )
-      else
-        xpath(
-          body,
-          ~x"//RateV4Response//Package//Postage"l,
-          name: ~x"./MailService//text()"s,
-          service: ~x"./MailService//text()"s,
-          rate: ~x"./Rate//text()"s
-        )
-      end
-      |> Enum.map(fn %{name: name, service: service, rate: rate} ->
-        %{
-          name: strip_html(name),
-          service: description_to_service(service),
-          rate: Util.price_to_cents(rate)
-        }
-      end)
-      |> Enum.map(fn %{name: description, service: service, rate: cents} ->
-        rate = %Shippex.Rate{service: %{service | description: description}, price: cents}
+      rates =
+        if shipment.international? do
+          xpath(
+            body,
+            ~x"//IntlRateV2Response//Package//Service"l,
+            name: ~x"./SvcDescription//text()"s,
+            service: ~x"./SvcDescription//text()"s,
+            rate: ~x"./Postage//text()"s
+          )
+        else
+          xpath(
+            body,
+            ~x"//RateV4Response//Package//Postage"l,
+            name: ~x"./MailService//text()"s,
+            service: ~x"./MailService//text()"s,
+            rate: ~x"./Rate//text()"s
+          )
+        end
+        |> Enum.map(fn %{name: name, service: service, rate: rate} ->
+          %{
+            name: strip_html(name),
+            service: description_to_service(service),
+            rate: Util.price_to_cents(rate)
+          }
+        end)
+        |> Enum.map(fn %{name: description, service: service, rate: cents} ->
+          rate = %Shippex.Rate{service: %{service | description: description}, price: cents}
 
-        {:ok, rate}
-      end)
+          {:ok, rate}
+        end)
+
+      rates =
+        if shipment.international? do
+          rates
+          |> Enum.sort(fn {:ok, rate1}, {:ok, rate2} ->
+            service = String.downcase(service)
+            d1 = String.jaro_distance(String.downcase(rate1.service.description), service)
+            d2 = String.jaro_distance(String.downcase(rate2.service.description), service)
+
+            d1 > d2
+          end)
+        else
+          rates
+        end
+
+      if service == "ALL" do
+        rates
+      else
+        case rates do
+          [] -> {:error, "Rate unavailable for service."}
+          [rate] -> rate
+          list when is_list(list) -> hd(list)
+        end
+      end
     end
   end
 
   def create_transaction(%Shipment{} = shipment, %Service{} = service) do
-    request = render_label(shipment: shipment, service: Service.service_code(service))
-
     api =
-      if shipment.international? do
-        "eVSPriorityMailIntl"
-      else
-        "eVS"
+      cond do
+        not shipment.international? ->
+          "eVS"
+
+        service.id == :usps_priority_express ->
+          "eVSExpressMailIntl"
+
+        service.id == :usps_priority ->
+          "eVSPriorityMailIntl"
+
+        true ->
+          raise """
+          Only the Priority and Priority Express services are supported for
+          international shipments at the moment.
+          """
       end
+
+    request = render_label(shipment: shipment, service: Service.service_code(service), api: api)
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: request}) do
       data =
@@ -180,9 +216,6 @@ defmodule Shippex.Carrier.USPS do
 
   defp description_to_service(description) do
     cond do
-      description =~ ~r/priority mail international/i ->
-        :usps_priority_international
-
       description =~ ~r/priority mail express/i ->
         :usps_priority_express
 
@@ -207,7 +240,7 @@ defmodule Shippex.Carrier.USPS do
     |> Shippex.Service.get()
   end
 
-  defp international_mail_type(%Package{container: nil}), do: "ALL"
+  defp international_mail_type(%Package{container: nil}), do: "PACKAGE"
 
   defp international_mail_type(%Package{container: container}) do
     container = "#{container}"

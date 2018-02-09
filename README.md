@@ -12,7 +12,7 @@ Docs: [https://hexdocs.pm/shippex/Shippex.html](https://hexdocs.pm/shippex/Shipp
 
 ```elixir
 def deps do
-  [{:shippex, "~> 0.4.0"}]
+  [{:shippex, "~> 0.6.3"}]
 end
 ```
 
@@ -57,20 +57,22 @@ package = %Shippex.Package{
   monetary_value: 20 # optional
 }
 
-shipment = %Shippex.Shipment{
-  from: origin,
-  to: destination,
-  package: package
-}
+shipment = Shippex.Shipment.shipment(origin, destination, package)
 
 # Fetch rates
-rates = Shippex.fetch_rates(shipment)
+rates = Shippex.fetch_rates(shipment, carriers: :usps)
 
 # Accept one of the services and print the label
 {:ok, rate} = Enum.shuffle(rates) |> hd
 
 # Fetch the label. Includes the tracking number and a gif image of the label.
-{:ok, label} = Shippex.fetch_label(rate, shipment)
+{:ok, transaction} = Shippex.create_transaction(shipment, rate.service)
+
+rate = transaction.rate
+label = transaction.label
+
+# Print the price
+IO.puts(rate.price)
 
 # Write the label to disk.
 File.write!("#{label.tracking_number}.#{label.format}",

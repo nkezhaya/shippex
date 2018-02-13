@@ -12,14 +12,14 @@
         <Quantity>1</Quantity>
         <Value><%= @shipment.package.monetary_value %></Value>
         <NetPounds>0</NetPounds>
-        <NetOunces><%= weight_in_ounces(@shipment) %></NetOunces>
+        <NetOunces><%= round(weight_in_ounces(@shipment)) %></NetOunces>
         <HSTariffNumber></HSTariffNumber>
         <CountryOfOrigin>United States</CountryOfOrigin>
       </ItemDetail>
     </ShippingContents>
 
     <GrossPounds>0</GrossPounds>
-    <GrossOunces><%= weight_in_ounces(@shipment) %></GrossOunces>
+    <GrossOunces><%= round(weight_in_ounces(@shipment)) %></GrossOunces>
     <ContentType>MERCHANDISE</ContentType>
     <Agreement>Y</Agreement>
     <ImageType>PDF</ImageType>

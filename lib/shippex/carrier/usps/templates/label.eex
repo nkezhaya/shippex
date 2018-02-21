@@ -10,11 +10,12 @@
       <ItemDetail>
         <Description><%= @shipment.package.description %></Description>
         <Quantity>1</Quantity>
-        <Value><%= @shipment.package.monetary_value %></Value>
+        <Value><%= Util.price_to_cents(@shipment.package.monetary_value) %></Value>
         <NetPounds>0</NetPounds>
         <NetOunces><%= round(weight_in_ounces(@shipment)) %></NetOunces>
         <HSTariffNumber></HSTariffNumber>
         <CountryOfOrigin>United States</CountryOfOrigin>
+        <InsuredAmount><%= @shipment.package.insurance %></InsuredAmount>
       </ItemDetail>
     </ShippingContents>
 
@@ -52,7 +53,7 @@
 
     <ProcessingCategory></ProcessingCategory>
     <PriceOptions></PriceOptions>
-    <InsuredAmount></InsuredAmount>
+    <InsuredAmount><%= package.insurance %></InsuredAmount>
     <AddressServiceRequested>true</AddressServiceRequested>
 
     <%= if date = @shipment.ship_date do %>

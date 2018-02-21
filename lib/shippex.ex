@@ -83,7 +83,7 @@ defmodule Shippex do
       File.write!("\#{label.tracking_number}.gif", Base.decode64!(label.image))
   """
 
-  alias Shippex.{Carrier, Label, Service, Shipment, Transaction}
+  alias Shippex.{Carrier, Service, Shipment, Transaction}
 
   @type response :: %{code: String.t(), message: String.t()}
 
@@ -96,10 +96,16 @@ defmodule Shippex do
   end
 
   @doc false
+  @spec config() :: Keyword.t | none()
   def config() do
     case Application.get_env(:shippex, :carriers, :not_found) do
       :not_found -> raise InvalidConfigError, "Shippex config not found"
-      config -> config
+      config ->
+        if not Keyword.keyword?(config) do
+          raise InvalidConfigError, "Shippex config was found, but doesn't contain a keyword list."
+        end
+
+        config
     end
   end
 
@@ -120,22 +126,7 @@ defmodule Shippex do
     Enum.reject([ups, fedex, usps], &is_nil/1)
   end
 
-  @doc """
-  Returns the configured currency code. Raises an error if an invalid code was
-  used.
-
-      iex> Application.put_env(:shippex, :currency, :mxn)
-      iex> Shippex.currency_code
-      "MXN"
-
-      iex> Application.put_env(:shippex, :currency, :can)
-      iex> Shippex.currency_code
-      "CAN"
-
-      iex> Application.put_env(:shippex, :currency, :usd)
-      iex> Shippex.currency_code
-      "USD"
-  """
+  @doc false
   @spec currency_code() :: String.t() | none()
   def currency_code() do
     case Application.get_env(:shippex, :currency, :usd) do
@@ -147,14 +138,7 @@ defmodule Shippex do
     end
   end
 
-  @doc """
-  Fetches the env atom for the config. Must be either `:dev` or `:prod`, or an
-  exception will be thrown.
-
-      iex> Application.put_env(:shippex, :env, :dev)
-      iex> Shippex.env
-      :dev
-  """
+  @doc false
   @spec env() :: :dev | :prod | none()
   def env() do
     case Application.get_env(:shippex, :env, :dev) do
@@ -296,7 +280,7 @@ defmodule Shippex do
 
       Shippex.create_transaction(shipment, service)
   """
-  @spec create_transaction(Shipment.t(), Service.t()) :: {atom, Label.t()}
+  @spec create_transaction(Shipment.t(), Service.t()) :: {atom, Transaction.t()}
   def create_transaction(%Shipment{} = shipment, %Service{carrier: carrier} = service) do
     Carrier.module(carrier).create_transaction(shipment, service)
   end
@@ -318,11 +302,11 @@ defmodule Shippex do
       end
   """
   @spec cancel_transaction(Transaction.t()) :: {atom, response}
-  @spec cancel_transaction(Carrier.t(), Shipment.t(), String.t()) :: {atom, response}
   def cancel_transaction(%Transaction{} = transaction) do
     Carrier.module(transaction.carrier).cancel_transaction(transaction)
   end
 
+  @spec cancel_transaction(Carrier.t(), Shipment.t(), String.t()) :: {atom, response}
   def cancel_transaction(carrier, %Shipment{} = shipment, tracking_number) do
     Carrier.module(carrier).cancel_transaction(shipment, tracking_number)
   end

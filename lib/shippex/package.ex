@@ -2,18 +2,20 @@ defmodule Shippex.Package do
   @moduledoc """
   Defines the struct for storing a `Package`, which is then passed along with
   an origin and destination address for shipping estimates. A `description` is
-  optional, as it may or may not be used with various carriers. The
-  `monetary_value` *might* be required depending on the origin/destination
-  countries of the shipment.
+  optional, as it may or may not be used with various carriers.
+
+  The `monetary_value` *might* be required depending on the origin/destination
+  countries of the shipment. Both `monetary_value` and `insurance` are integers
+  stored in USD cents.
 
   For USPS, a package has a `container` string which can be one of the
   pre-defined USPS containers.
 
-      %Shippex.Package{length: 8
-                       width: 8,
-                       height: 8,
-                       weight: 5.5,
-                       monetary_value: 100}
+      Shippex.Package.package(%{length: 8
+                                width: 8,
+                                height: 8,
+                                weight: 5.5,
+                                monetary_value: 100_00})
   """
 
   @type t :: %__MODULE__{}
@@ -26,7 +28,18 @@ defmodule Shippex.Package do
          }
 
   @enforce_keys [:length, :width, :height, :weight]
-  defstruct [:length, :width, :height, :weight, :girth, :description, :monetary_value, :container]
+  @fields ~w(length width height weight girth description monetary_value container insurance)a
+  defstruct @fields
+
+  @doc """
+  Builds and returns a `Package`. Use this instead of directly initializing
+  the struct.
+  """
+  @spec new(%{length: number(), width: number(), height: number(), weight: number()}) :: t()
+  def new(attrs) do
+    attrs = Map.take(attrs, @fields)
+    struct(__MODULE__, attrs)
+  end
 
   @doc """
   Returns a map of predefined containers for use with USPS. These can be

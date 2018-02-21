@@ -1,3 +1,5 @@
+<% package = @shipment.package %>
+
 <%= if @shipment.international? do %>
   <IntlRateV2Request USERID="<%= config().username %>">
     <Revision>2</Revision>
@@ -6,16 +8,22 @@
       <Pounds>1</Pounds>
       <Ounces><%= weight_in_ounces(@shipment) %></Ounces>
       <Machinable>False</Machinable>
-      <MailType><%= international_mail_type(@shipment.package) %></MailType>
-      <ValueOfContents><%= @shipment.package.monetary_value %></ValueOfContents>
+      <MailType><%= international_mail_type(package) %></MailType>
+      <ValueOfContents><%= Util.price_to_dollars(package.insurance || package.monetary_value) %></ValueOfContents>
       <Country><%= Util.abbreviation_to_country_name(@shipment.to.country) %></Country>
 
       <Container><%= container(@shipment) %></Container>
       <Size><%= size(@shipment) %></Size>
-      <Width><%= @shipment.package.width %></Width>
-      <Length><%= @shipment.package.length %></Length>
-      <Height><%= @shipment.package.height %></Height>
+      <Width><%= package.width %></Width>
+      <Length><%= package.length %></Length>
+      <Height><%= package.height %></Height>
       <Girth></Girth>
+
+      <%= if package.insurance do %>
+        <ExtraServices>
+          <ExtraService><%= insurance_code(@shipment, @service) %></ExtraService>
+        </ExtraServices>
+      <% end %>
 
       <OriginZip><%= @shipment.from.zip %></OriginZip>
     </Package>
@@ -25,22 +33,25 @@
     <Revision>2</Revision>
 
     <Package ID="0">
-      <Service><%= @service %></Service>
+      <Service><%= Service.service_code(@service) %></Service>
       <ZipOrigination><%= @shipment.from.zip %></ZipOrigination>
       <ZipDestination><%= @shipment.to.zip %></ZipDestination>
       <Pounds>0</Pounds>
       <Ounces><%= weight_in_ounces(@shipment) %></Ounces>
-
-      <%= if @service == "ALL" do %>
-        <Container>VARIABLE</Container>
-      <% else %>
-        <Container><%= container(@shipment) %></Container>
-      <% end %>
+      <Container><%= container(@shipment) %></Container>
       <Size><%= size(@shipment) %></Size>
-      <Width><%= @shipment.package.width %></Width>
-      <Length><%= @shipment.package.length %></Length>
-      <Height><%= @shipment.package.height %></Height>
+      <Width><%= package.width %></Width>
+      <Length><%= package.length %></Length>
+      <Height><%= package.height %></Height>
       <Girth></Girth>
+      <Value><%= Util.price_to_dollars(package.insurance || package.monetary_value) %></Value>
+
+      <%= if package.insurance do %>
+        <SpecialServices>
+          <SpecialService><%= insurance_code(@shipment, @service) %></SpecialService>
+        </SpecialServices>
+      <% end %>
+
       <Machinable>False</Machinable>
     </Package>
   </RateV4Request>

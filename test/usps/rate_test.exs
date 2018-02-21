@@ -17,6 +17,18 @@ defmodule Shippex.USPS.RateTest do
     {:ok, _} = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_retail_ground)
   end
 
+  test "rates generated with insurance", %{shipment: shipment} do
+    package = %{shipment.package | container: :box_large}
+    shipment = %{shipment | package: package}
+    {:ok, rate1} = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority)
+
+    package = %{shipment.package | container: :box_large, insurance: 100}
+    shipment = %{shipment | package: package}
+    {:ok, rate2} = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority)
+
+    assert rate1.price > rate2.price
+  end
+
   test "intl rates generated", %{shipment: shipment} do
     destination = Shippex.Address.address(%{
       first_name: "Some",
@@ -33,6 +45,6 @@ defmodule Shippex.USPS.RateTest do
 
     package = %{shipment.package | container: :variable}
     shipment = %{shipment | package: package}
-    assert Shippex.Carrier.USPS.fetch_rate(shipment, "ALL")
+    assert Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority)
   end
 end

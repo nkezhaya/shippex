@@ -63,7 +63,7 @@ defmodule Helper do
       height: 4,
       weight: 5,
       description: "Headphones",
-      monetary_value: 20
+      monetary_value: 20_00
     }
   end
 end

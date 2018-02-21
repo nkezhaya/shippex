@@ -1,8 +1,9 @@
 defmodule Shippex.Transaction do
   @moduledoc false
-  @type t :: %__MODULE__{}
 
   alias Shippex.{Transaction, Shipment, Rate, Label}
+
+  @type t :: %Transaction{}
 
   @enforce_keys [:shipment, :rate, :label, :carrier]
   defstruct [:shipment, :rate, :label, :carrier]

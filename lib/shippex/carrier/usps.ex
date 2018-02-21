@@ -37,17 +37,15 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
-  def fetch_rates(%Shipment{} = shipment) do
-    fetch_rate(shipment, :all)
+  def fetch_rates(_shipment) do
+    raise "Not implemented for USPS"
   end
 
   def fetch_rate(%Shipment{} = shipment, service) do
     service =
       case service do
-        %Shippex.Service{} = service -> Service.service_code(service)
-        :all -> "ALL"
-        s when is_atom(s) -> Service.service_code(s)
-        s when is_bitstring(s) -> s
+        %Shippex.Service{} = service -> service
+        s when is_atom(s) -> Service.get(s)
       end
 
     api =
@@ -195,6 +193,12 @@ defmodule Shippex.Carrier.USPS do
       {status, data.reason}
     end
   end
+
+  defp insurance_code(%{international?: true}, %{id: :usps_gxg}), do: "106"
+  defp insurance_code(%{international?: true}, %{id: :usps_priority}), do: "108"
+  defp insurance_code(%{international?: true}, %{id: :usps_priority_express}), do: "107"
+  defp insurance_code(%{international?: false}, %{id: :usps_priority}), do: "125"
+  defp insurance_code(%{international?: false}, %{id: :usps_priority_express}), do: "101"
 
   defp weight_in_ounces(%Shipment{package: %Package{weight: weight}}) do
     16 *

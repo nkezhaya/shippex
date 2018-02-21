@@ -14,10 +14,10 @@ defmodule Shippex.Service do
 
       Shippex.Service.services_for_carrier(:ups)
       [
-        %Shippex.Service{carrier: :ups, code: "01", description: "UPS Next Day Air"},
-        %Shippex.Service{carrier: :ups, code: "02", description: "UPS 2nd Day Air"},
-        %Shippex.Service{carrier: :ups, code: "12", description: "UPS 3 Day Select"},
-        %Shippex.Service{carrier: :ups, code: "03", description: "UPS Ground"}
+        %Shippex.Service{id: :ups_next_day_air, carrier: :ups, description: "UPS Next Day Air"},
+        %Shippex.Service{id: :ups_second_day_air, carrier: :ups, description: "UPS 2nd Day Air"},
+        %Shippex.Service{id: :ups_three_day_select, carrier: :ups, description: "UPS 3 Day Select"},
+        %Shippex.Service{id: :ups_ground, carrier: :ups, description: "UPS Ground"}
       ]
   """
 
@@ -34,7 +34,7 @@ defmodule Shippex.Service do
   exist.
 
       iex> Service.get(:usps_priority)
-      %Service{id: :usps_priority, carrier: :usps, code: "PRIORITY", description: "Priority Mail"}
+      %Service{id: :usps_priority, carrier: :usps, description: "Priority Mail"}
       iex> Service.get(:invalid_service)
       nil
   """

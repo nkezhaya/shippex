@@ -117,6 +117,9 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
+  def create_transaction(shipment, service) when is_atom(service) do
+    create_transaction(shipment, Service.get(service))
+  end
   def create_transaction(%Shipment{} = shipment, %Service{} = service) do
     api =
       cond do

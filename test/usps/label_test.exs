@@ -15,6 +15,12 @@ defmodule Shippex.USPS.LabelTest do
     {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
   end
 
+  test "label generated with international phone" do
+    destination = %{Helper.destination() | phone: "+85256422472"}
+    shipment = Shippex.Shipment.shipment(Helper.origin(), destination, Helper.package())
+    {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, :usps_priority)
+  end
+
   test "labels generated for canada" do
     shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination("CA"), Helper.package())
 

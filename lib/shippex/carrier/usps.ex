@@ -58,33 +58,100 @@ defmodule Shippex.Carrier.USPS do
     rate = render_rate(shipment: shipment, service: service)
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: rate}) do
+      spec =
+        if shipment.international? do
+          [
+            name: ~x"./SvcDescription//text()"s,
+            service: ~x"./SvcDescription//text()"s,
+            rate: ~x"./Postage//text()"f
+          ]
+        else
+          [
+            name: ~x"./MailService//text()"s,
+            service: ~x"./MailService//text()"s,
+            rate: ~x"./Rate//text()"s
+          ]
+        end
+
+      prefix = if shipment.international?, do: "Extra", else: "Special"
+
+      spec =
+        spec ++
+          [
+            extra_services: [
+              ~x".//#{prefix}Services//#{prefix}Service"l,
+              id: ~x"./ServiceID//text()"s,
+              name: ~x"./ServiceName//text()"s,
+              available: ~x"./Available//text()"s |> transform_by(&String.downcase/1),
+              price: ~x"./Price//text()"s
+            ]
+          ]
+
       rates =
         if shipment.international? do
           xpath(
             body,
             ~x"//IntlRateV2Response//Package//Service"l,
-            name: ~x"./SvcDescription//text()"s,
-            service: ~x"./SvcDescription//text()"s,
-            rate: ~x"./Postage//text()"s
+            spec
           )
         else
           xpath(
             body,
             ~x"//RateV4Response//Package//Postage"l,
-            name: ~x"./MailService//text()"s,
-            service: ~x"./MailService//text()"s,
-            rate: ~x"./Rate//text()"s
+            spec
           )
         end
-        |> Enum.map(fn %{name: name, service: service, rate: rate} ->
+        |> Enum.map(fn response ->
+          postage_line_item = %{name: "Postage", price: response.rate}
+
+          insurance_line_item =
+            if shipment.package.insurance do
+              insurance_code = insurance_code(shipment, service)
+
+              response.extra_services
+              |> Enum.find(fn
+                %{available: "true", id: ^insurance_code} -> true
+                _ -> false
+              end)
+              |> case do
+                %{price: price} ->
+                  %{name: "Insurance", price: price}
+
+                _ ->
+                  nil
+              end
+            end
+
+          line_items =
+            [postage_line_item, insurance_line_item]
+            |> Enum.reject(&is_nil/1)
+            |> Enum.map(fn %{price: price} = line_item ->
+              %{line_item | price: Util.price_to_cents(price)}
+            end)
+
+          Map.put(response, :line_items, line_items)
+        end)
+        |> Enum.map(fn response ->
+          total =
+            Enum.reduce(response.line_items, 0, fn %{price: price}, acc ->
+              price + acc
+            end)
+
           %{
-            name: strip_html(name),
-            service: description_to_service(service),
-            rate: Util.price_to_cents(rate)
+            name: strip_html(response.name),
+            service: description_to_service(response.service),
+            rate: total,
+            line_items: response.line_items
           }
         end)
-        |> Enum.map(fn %{name: description, service: service, rate: cents} ->
-          rate = %Shippex.Rate{service: %{service | description: description}, price: cents}
+        |> Enum.map(fn %{name: description, service: service} = response ->
+          service = %{service | description: description}
+
+          rate = %Shippex.Rate{
+            service: service,
+            price: response.rate,
+            line_items: response.line_items
+          }
 
           {:ok, rate}
         end)
@@ -93,7 +160,8 @@ defmodule Shippex.Carrier.USPS do
         if shipment.international? do
           rates
           |> Enum.sort(fn {:ok, rate1}, {:ok, rate2} ->
-            service = String.downcase(service)
+            service = String.downcase(service.description)
+
             d1 = String.jaro_distance(String.downcase(rate1.service.description), service)
             d2 = String.jaro_distance(String.downcase(rate2.service.description), service)
 
@@ -103,14 +171,10 @@ defmodule Shippex.Carrier.USPS do
           rates
         end
 
-      if service == "ALL" do
-        rates
-      else
-        case rates do
-          [] -> {:error, "Rate unavailable for service."}
-          [rate] -> rate
-          list when is_list(list) -> hd(list)
-        end
+      case rates do
+        [] -> {:error, "Rate unavailable for service."}
+        [rate] -> rate
+        list when is_list(list) -> hd(list)
       end
     end
   end
@@ -148,7 +212,7 @@ defmodule Shippex.Carrier.USPS do
 
       price = Util.price_to_cents(data.rate)
 
-      rate = %Shippex.Rate{service: service, price: price}
+      rate = %Shippex.Rate{service: service, price: price, line_items: []}
       image = String.replace(data.image, "\n", "")
       label = %Label{tracking_number: data.tracking_number, format: :pdf, image: image}
 
@@ -199,6 +263,7 @@ defmodule Shippex.Carrier.USPS do
   defp insurance_code(%{international?: true}, %{id: :usps_priority_express}), do: "107"
   defp insurance_code(%{international?: false}, %{id: :usps_priority}), do: "125"
   defp insurance_code(%{international?: false}, %{id: :usps_priority_express}), do: "101"
+  defp insurance_code(%{international?: false}, %{id: _}), do: "100"
 
   defp weight_in_ounces(%Shipment{package: %Package{weight: weight}}) do
     16 *

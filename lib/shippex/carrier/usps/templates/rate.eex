@@ -19,13 +19,13 @@
       <Height><%= package.height %></Height>
       <Girth></Girth>
 
+      <OriginZip><%= @shipment.from.zip %></OriginZip>
+
       <%= if package.insurance do %>
         <ExtraServices>
           <ExtraService><%= insurance_code(@shipment, @service) %></ExtraService>
         </ExtraServices>
       <% end %>
-
-      <OriginZip><%= @shipment.from.zip %></OriginZip>
     </Package>
   </IntlRateV2Request>
 <% else %>

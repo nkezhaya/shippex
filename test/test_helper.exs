@@ -1,8 +1,9 @@
 ExUnit.start()
 
 defmodule Helper do
-  def valid_shipment do
-    Shippex.Shipment.shipment(origin(), destination(), package())
+  def valid_shipment(opts \\ []) do
+    to = Keyword.get(opts, :to, "US")
+    Shippex.Shipment.shipment(origin(), destination(to), package())
   end
 
   def origin() do

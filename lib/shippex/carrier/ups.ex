@@ -63,7 +63,7 @@ defmodule Shippex.Carrier.UPS do
             body["RatedShipment"]["TotalCharges"]["MonetaryValue"]
             |> Util.price_to_cents()
 
-          rate = %Shippex.Rate{service: service, price: price}
+          rate = %Shippex.Rate{service: service, price: price, line_items: []}
 
           {:ok, rate}
 
@@ -92,7 +92,7 @@ defmodule Shippex.Carrier.UPS do
             results["ShipmentCharges"]["TotalCharges"]["MonetaryValue"]
             |> Util.price_to_cents()
 
-          rate = %Shippex.Rate{service: service, price: price}
+          rate = %Shippex.Rate{service: service, price: price, line_items: []}
 
           package_response = results["PackageResults"]
 

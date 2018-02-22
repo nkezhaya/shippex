@@ -7,6 +7,6 @@ defmodule Shippex.Rate do
 
   @type t :: %__MODULE__{}
 
-  @enforce_keys [:service, :price]
-  defstruct [:service, :price]
+  @enforce_keys [:service, :price, :line_items]
+  defstruct [:service, :price, :line_items]
 end

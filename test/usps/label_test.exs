@@ -55,16 +55,6 @@ defmodule Shippex.USPS.LabelTest do
       Helper.valid_shipment(to: "MX", insurance: nil)
       |> test_shipment(:usps_priority_express)
     end
-
-    test "insured priority label generated for mexico" do
-      Helper.valid_shipment(to: "MX", insurance: 500_00)
-      |> test_shipment(:usps_priority)
-    end
-
-    test "insured priority express label generated for mexico" do
-      Helper.valid_shipment(to: "MX", insurance: 500_00)
-      |> test_shipment(:usps_priority_express)
-    end
   end
 
   defp test_shipment(shipment, service) do

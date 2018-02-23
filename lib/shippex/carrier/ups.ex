@@ -305,7 +305,7 @@ defmodule Shippex.Carrier.UPS do
         AddressLine: Shippex.Address.address_line_list(address),
         City: address.city,
         StateProvinceCode: address.state,
-        PostalCode: address.zip,
+        PostalCode: String.replace(address.zip, ~r/\s+/, ""),
         CountryCode: address.country
       }
     }

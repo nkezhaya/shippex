@@ -463,7 +463,7 @@ defmodule Shippex.Util do
       iex> Util.price_to_dollars(nil)
       "0.00"
       iex> Util.price_to_dollars(200_00)
-      "200.00"
+      "200"
       iex> Util.price_to_dollars("20000")
       ** (FunctionClauseError) no function clause matching in Shippex.Util.price_to_dollars/1
   """

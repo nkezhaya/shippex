@@ -58,7 +58,7 @@ defmodule Helper do
     })
   end
 
-  def package(insurance) do
+  def package(insurance \\ nil) do
     Shippex.Package.new(%{
       length: 8,
       width: 8,

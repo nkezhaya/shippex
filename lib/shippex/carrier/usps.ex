@@ -157,7 +157,11 @@ defmodule Shippex.Carrier.USPS do
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: request}) do
       spec =
-        extra_services_spec(shipment, "Extra") ++
+        if shipment.international? do
+          [insurance_fee: ~x"//InsuranceFee//text()"s]
+        else
+          extra_services_spec(shipment, "Extra")
+        end ++
           [
             rate: ~x"//Postage//text()"s,
             tracking_number: ~x"//BarcodeNumber//text()"s,
@@ -244,21 +248,28 @@ defmodule Shippex.Carrier.USPS do
     postage_line_item = %{name: "Postage", price: rate.rate}
 
     insurance_line_item =
-      if shipment.package.insurance do
-        insurance_code = insurance_code(shipment, service)
+      cond do
+        is_nil(shipment.package.insurance) ->
+          nil
 
-        rate.extra_services
-        |> Enum.find(fn
-          %{available: available, id: ^insurance_code} when available != "false" -> true
-          _ -> false
-        end)
-        |> case do
-          %{price: price} ->
-            %{name: "Insurance", price: price}
+        not is_nil(rate[:insurance_fee]) ->
+          %{name: "Insurance", price: rate.insurance_fee}
 
-          _ ->
-            nil
-        end
+        true ->
+          insurance_code = insurance_code(shipment, service)
+
+          rate.extra_services
+          |> Enum.find(fn
+            %{available: available, id: ^insurance_code} when available != "false" -> true
+            _ -> false
+          end)
+          |> case do
+            %{price: price} ->
+              %{name: "Insurance", price: price}
+
+            _ ->
+              nil
+          end
       end
 
     line_items =

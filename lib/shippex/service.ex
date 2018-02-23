@@ -127,6 +127,9 @@ defmodule Shippex.Service do
     ~w(ups_standard ups_worldwide_expedited ups_worldwide_express ups_worldwide_saver)a
   end
 
+  # Returns the service code used by the third-party API. Only used internally
+  # for API requests.
+
   @doc false
   @compile {:inline, service_code: 1}
   @spec service_code(atom | t) :: String.t() | nil
@@ -151,5 +154,4 @@ defmodule Shippex.Service do
   def service_code(:usps_priority_express), do: "PRIORITY EXPRESS"
   def service_code(:usps_priority_international), do: "PRIORITY INTERNATIONAL"
   def service_code(:usps_gxg), do: "GXG"
-  def service_code(_), do: nil
 end

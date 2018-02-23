@@ -1,3 +1,4 @@
+<% package = @shipment.package %>
 <<%= @api %>Request USERID="<%= config().username %>">
   <%= if @shipment.international? do %>
     <Revision>2</Revision>
@@ -8,26 +9,26 @@
 
     <ShippingContents>
       <ItemDetail>
-        <Description><%= @shipment.package.description %></Description>
+        <Description><%= package.description %></Description>
         <Quantity>1</Quantity>
-        <Value><%= Util.price_to_cents(@shipment.package.monetary_value) %></Value>
+        <Value><%= Util.price_to_dollars(package.monetary_value) %></Value>
         <NetPounds>0</NetPounds>
         <NetOunces><%= round(weight_in_ounces(@shipment)) %></NetOunces>
         <HSTariffNumber></HSTariffNumber>
         <CountryOfOrigin>United States</CountryOfOrigin>
-        <InsuredAmount><%= @shipment.package.insurance %></InsuredAmount>
       </ItemDetail>
     </ShippingContents>
 
+    <InsuredAmount><%= Util.price_to_dollars(package.insurance) %></InsuredAmount>
     <GrossPounds>0</GrossPounds>
     <GrossOunces><%= round(weight_in_ounces(@shipment)) %></GrossOunces>
     <ContentType>MERCHANDISE</ContentType>
     <Agreement>Y</Agreement>
     <ImageType>PDF</ImageType>
     <Size><%= size(@shipment) %></Size>
-    <Length><%= @shipment.package.length %></Length>
-    <Width><%= @shipment.package.width %></Width>
-    <Height><%= @shipment.package.height %></Height>
+    <Length><%= package.length %></Length>
+    <Width><%= package.width %></Width>
+    <Height><%= package.height %></Height>
     <Girth></Girth>
     <DestinationRateIndicator>N</DestinationRateIndicator>
     <%= if date = @shipment.ship_date do %>
@@ -39,10 +40,9 @@
     <%= render_address shipment: @shipment, address: :from %>
     <%= render_address shipment: @shipment, address: :to %>
 
-    <% package = @shipment.package %>
     <WeightInOunces><%= weight_in_ounces(@shipment) %></WeightInOunces>
-    <ServiceType><%= @service %></ServiceType>
-    <%= if String.downcase(@service) == "priority express" do %>
+    <ServiceType><%= Service.service_code(@service) %></ServiceType>
+    <%= if @service.id == :usps_priority_express do %>
       <Container>VARIABLE</Container>
     <% else %>
       <Container><%= container(@shipment) %></Container>
@@ -53,13 +53,19 @@
 
     <ProcessingCategory></ProcessingCategory>
     <PriceOptions></PriceOptions>
-    <InsuredAmount><%= package.insurance %></InsuredAmount>
+    <InsuredAmount><%= Util.price_to_dollars(package.insurance) %></InsuredAmount>
     <AddressServiceRequested>true</AddressServiceRequested>
 
     <%= if date = @shipment.ship_date do %>
       <ShipDate>
         <%= Date.to_iso8601(date) |> String.split("-") |> Enum.reverse |> Enum.join("/") %>
       </ShipDate>
+    <% end %>
+
+    <%= if package.insurance do %>
+      <ExtraServices>
+        <ExtraService><%= insurance_code(@shipment, @service) %></ExtraService>
+      </ExtraServices>
     <% end %>
 
     <%= if @shipment.id do %>

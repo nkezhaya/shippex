@@ -101,7 +101,7 @@ defmodule Shippex.Address do
       address_line_2: params["address_line_2"],
       city: params["city"],
       state: Util.full_state_to_abbreviation(params["state"]),
-      zip: String.replace(params["zip"], ~r/\s+/, ""),
+      zip: String.trim(params["zip"]),
       country: params["country"] || "US"
     }
 

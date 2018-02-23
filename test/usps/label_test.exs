@@ -1,43 +1,69 @@
 defmodule Shippex.USPS.LabelTest do
   use ExUnit.Case
 
-  setup do
-    [shipment: Helper.valid_shipment]
+  describe "domestic" do
+    test "priority label generated" do
+      Helper.valid_shipment
+      |> test_shipment(:usps_priority)
+    end
+
+    test "priority express label generated" do
+      Helper.valid_shipment
+      |> test_shipment(:usps_priority_express)
+    end
+
+    test "insured priority label generated" do
+      Helper.valid_shipment(insurance: 500_00)
+      |> test_shipment(:usps_priority)
+    end
+
+    test "insured priority express label generated" do
+      Helper.valid_shipment(insurance: 500_00)
+      |> test_shipment(:usps_priority_express)
+    end
   end
 
-  test "labels generated" do
-    shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination(), Helper.package())
+  describe "canada" do
+    test "priority label generated for canada" do
+      Helper.valid_shipment(to: "CA")
+      |> test_shipment(:usps_priority)
+    end
 
-    {:ok, rate} = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority)
-    {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
+    test "priority express label generated for canada" do
+      Helper.valid_shipment(to: "CA")
+      |> test_shipment(:usps_priority_express)
+    end
 
-    {:ok, rate} = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority_express)
-    {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
+    test "insured priority label generated for canada" do
+      Helper.valid_shipment(to: "CA", insurance: 500_00)
+      |> test_shipment(:usps_priority)
+    end
+
+    test "insured priority express label generated for canada" do
+      Helper.valid_shipment(to: "CA", insurance: 500_00)
+      |> test_shipment(:usps_priority_express)
+    end
   end
 
-  test "label generated with international phone" do
-    destination = %{Helper.destination() | phone: "+85256422472"}
-    shipment = Shippex.Shipment.shipment(Helper.origin(), destination, Helper.package())
-    {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, :usps_priority)
+  describe "mexico" do
+    test "priority label generated for mexico" do
+      Helper.valid_shipment(to: "MX", insurance: nil)
+      |> test_shipment(:usps_priority)
+    end
+
+    test "priority express label generated for mexico" do
+      Helper.valid_shipment(to: "MX", insurance: nil)
+      |> test_shipment(:usps_priority_express)
+    end
   end
 
-  test "labels generated for canada" do
-    shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination("CA"), Helper.package())
+  defp test_shipment(shipment, service) do
+    expected_line_items = if shipment.package.insurance, do: 2, else: 1
 
-    {:ok, rate} = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority)
-    {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
+    {:ok, rate} = Shippex.Carrier.USPS.fetch_rate(shipment, service)
+    assert length(rate.line_items) == expected_line_items
 
-    {:ok, rate} = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority_express)
-    {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
-  end
-
-  test "labels generated for mexico" do
-    shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination("MX"), Helper.package())
-
-    {:ok, rate} = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority)
-    {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
-
-    {:ok, rate} = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority_express)
-    {:ok, _} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
+    {:ok, transaction} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
+    assert length(transaction.rate.line_items) == expected_line_items
   end
 end

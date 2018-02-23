@@ -13,8 +13,6 @@ defmodule Shippex.ShippexTest do
     rates = Shippex.fetch_rates(shipment, services: [:usps_priority, :usps_priority_express])
 
     assert length(rates) == 2
-
-    assert Shippex.fetch_rates(shipment, carriers: :usps)
   end
 
   test "fetch international rates" do

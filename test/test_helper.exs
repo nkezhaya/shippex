@@ -1,8 +1,10 @@
 ExUnit.start()
 
 defmodule Helper do
-  def valid_shipment do
-    Shippex.Shipment.shipment(origin(), destination(), package())
+  def valid_shipment(opts \\ []) do
+    to = Keyword.get(opts, :to, "US")
+    insurance = Keyword.get(opts, :insurance)
+    Shippex.Shipment.shipment(origin(), destination(to), package(insurance))
   end
 
   def origin() do
@@ -56,14 +58,15 @@ defmodule Helper do
     })
   end
 
-  def package() do
-    %Shippex.Package{
+  def package(insurance \\ nil) do
+    Shippex.Package.new(%{
       length: 8,
       width: 8,
       height: 4,
       weight: 5,
       description: "Headphones",
-      monetary_value: 20
-    }
+      monetary_value: 20_00,
+      insurance: insurance
+    })
   end
 end

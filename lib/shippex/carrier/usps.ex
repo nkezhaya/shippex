@@ -37,17 +37,15 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
-  def fetch_rates(%Shipment{} = shipment) do
-    fetch_rate(shipment, :all)
+  def fetch_rates(_shipment) do
+    raise "Not implemented for USPS"
   end
 
   def fetch_rate(%Shipment{} = shipment, service) do
     service =
       case service do
-        %Shippex.Service{} = service -> Service.service_code(service)
-        :all -> "ALL"
-        s when is_atom(s) -> Service.service_code(s)
-        s when is_bitstring(s) -> s
+        %Shippex.Service{} = service -> service
+        s when is_atom(s) -> Service.get(s)
       end
 
     api =
@@ -60,33 +58,55 @@ defmodule Shippex.Carrier.USPS do
     rate = render_rate(shipment: shipment, service: service)
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: rate}) do
+      spec =
+        extra_services_spec(shipment) ++
+          if shipment.international? do
+            [
+              name: ~x"./SvcDescription//text()"s,
+              service: ~x"./SvcDescription//text()"s,
+              rate: ~x"./Postage//text()"f
+            ]
+          else
+            [
+              name: ~x"./MailService//text()"s,
+              service: ~x"./MailService//text()"s,
+              rate: ~x"./Rate//text()"s
+            ]
+          end
+
       rates =
         if shipment.international? do
           xpath(
             body,
             ~x"//IntlRateV2Response//Package//Service"l,
-            name: ~x"./SvcDescription//text()"s,
-            service: ~x"./SvcDescription//text()"s,
-            rate: ~x"./Postage//text()"s
+            spec
           )
         else
           xpath(
             body,
             ~x"//RateV4Response//Package//Postage"l,
-            name: ~x"./MailService//text()"s,
-            service: ~x"./MailService//text()"s,
-            rate: ~x"./Rate//text()"s
+            spec
           )
         end
-        |> Enum.map(fn %{name: name, service: service, rate: rate} ->
+        |> add_line_items(shipment, service)
+        |> Enum.map(fn response ->
+          total = response.line_items |> Enum.map(& &1.price) |> Enum.sum()
+
           %{
-            name: strip_html(name),
-            service: description_to_service(service),
-            rate: Util.price_to_cents(rate)
+            name: strip_html(response.name),
+            service: description_to_service(response.service),
+            rate: total,
+            line_items: response.line_items
           }
         end)
-        |> Enum.map(fn %{name: description, service: service, rate: cents} ->
-          rate = %Shippex.Rate{service: %{service | description: description}, price: cents}
+        |> Enum.map(fn %{name: description, service: service} = response ->
+          service = %{service | description: description}
+
+          rate = %Shippex.Rate{
+            service: service,
+            price: response.rate,
+            line_items: response.line_items
+          }
 
           {:ok, rate}
         end)
@@ -95,7 +115,8 @@ defmodule Shippex.Carrier.USPS do
         if shipment.international? do
           rates
           |> Enum.sort(fn {:ok, rate1}, {:ok, rate2} ->
-            service = String.downcase(service)
+            service = String.downcase(service.description)
+
             d1 = String.jaro_distance(String.downcase(rate1.service.description), service)
             d2 = String.jaro_distance(String.downcase(rate2.service.description), service)
 
@@ -105,14 +126,10 @@ defmodule Shippex.Carrier.USPS do
           rates
         end
 
-      if service == "ALL" do
-        rates
-      else
-        case rates do
-          [] -> {:error, "Rate unavailable for service."}
-          [rate] -> rate
-          list when is_list(list) -> hd(list)
-        end
+      case rates do
+        [] -> {:error, "Rate unavailable for service."}
+        [rate] -> rate
+        list when is_list(list) -> hd(list)
       end
     end
   end
@@ -139,23 +156,29 @@ defmodule Shippex.Carrier.USPS do
           """
       end
 
-    request = render_label(shipment: shipment, service: Service.service_code(service), api: api)
+    request = render_label(shipment: shipment, service: service, api: api)
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: request}) do
-      data =
-        body
-        |> xpath(
-          ~x"//#{api}Response",
-          rate: ~x"//Postage//text()"s,
-          tracking_number: ~x"//BarcodeNumber//text()"s,
-          image: ~x"//LabelImage//text()"s
-        )
+      spec =
+        if shipment.international? do
+          [insurance_fee: ~x"//InsuranceFee//text()"s]
+        else
+          extra_services_spec(shipment, "Extra")
+        end ++
+          [
+            rate: ~x"//Postage//text()"s,
+            tracking_number: ~x"//BarcodeNumber//text()"s,
+            image: ~x"//LabelImage//text()"s
+          ]
 
-      price = Util.price_to_cents(data.rate)
+      response = xpath(body, ~x"//#{api}Response", spec) |> add_line_items(shipment, service)
 
-      rate = %Shippex.Rate{service: service, price: price}
-      image = String.replace(data.image, "\n", "")
-      label = %Label{tracking_number: data.tracking_number, format: :pdf, image: image}
+      line_items = response.line_items
+      price = line_items |> Enum.map(& &1.price) |> Enum.sum()
+
+      rate = %Shippex.Rate{service: service, price: price, line_items: line_items}
+      image = String.replace(response.image, "\n", "")
+      label = %Label{tracking_number: response.tracking_number, format: :pdf, image: image}
 
       transaction = Shippex.Transaction.transaction(shipment, rate, label)
 
@@ -198,6 +221,76 @@ defmodule Shippex.Carrier.USPS do
       {status, data.reason}
     end
   end
+
+  defp extra_services_spec(shipment, prefix \\ nil) do
+    prefix =
+      case prefix do
+        nil ->
+          if shipment.international?, do: "Extra", else: "Special"
+
+        prefix ->
+          prefix
+      end
+
+    [
+      extra_services: [
+        ~x"//#{prefix}Services//#{prefix}Service"l,
+        id: ~x"./ServiceID//text()"s,
+        name: ~x"./ServiceName//text()"s,
+        available: ~x"./Available//text()"s |> transform_by(&String.downcase/1),
+        price: ~x"./Price//text()"s
+      ]
+    ]
+  end
+
+  defp add_line_items(rates, shipment, service) when is_list(rates) do
+    Enum.map(rates, fn rate -> add_line_items(rate, shipment, service) end)
+  end
+
+  defp add_line_items(rate, shipment, service) do
+    postage_line_item = %{name: "Postage", price: rate.rate}
+
+    insurance_line_item =
+      cond do
+        is_nil(shipment.package.insurance) ->
+          nil
+
+        not is_nil(rate[:insurance_fee]) ->
+          %{name: "Insurance", price: rate.insurance_fee}
+
+        true ->
+          insurance_code = insurance_code(shipment, service)
+
+          rate.extra_services
+          |> Enum.find(fn
+            %{available: available, id: ^insurance_code} when available != "false" -> true
+            _ -> false
+          end)
+          |> case do
+            %{price: price} ->
+              %{name: "Insurance", price: price}
+
+            _ ->
+              nil
+          end
+      end
+
+    line_items =
+      [postage_line_item, insurance_line_item]
+      |> Enum.reject(&is_nil/1)
+      |> Enum.map(fn %{price: price} = line_item ->
+        %{line_item | price: Util.price_to_cents(price)}
+      end)
+
+    Map.put(rate, :line_items, line_items)
+  end
+
+  defp insurance_code(%{international?: true}, %{id: :usps_gxg}), do: "106"
+  defp insurance_code(%{international?: true}, %{id: :usps_priority}), do: "108"
+  defp insurance_code(%{international?: true}, %{id: :usps_priority_express}), do: "107"
+  defp insurance_code(%{international?: false}, %{id: :usps_priority}), do: "125"
+  defp insurance_code(%{international?: false}, %{id: :usps_priority_express}), do: "101"
+  defp insurance_code(%{international?: false}, %{id: _}), do: "100"
 
   defp weight_in_ounces(%Shipment{package: %Package{weight: weight}}) do
     16 *

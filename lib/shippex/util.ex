@@ -455,6 +455,35 @@ defmodule Shippex.Util do
   def price_to_cents(integer) when is_integer(integer), do: integer * 100
 
   @doc """
+  Takes a price and divides it by 100, returning a string representation. This
+  is used for API calls that require dollars instead of cents. Unlike
+  `price_to_cents`, this only accepts integers and nil. Otherwise, it will
+  raise an exception.
+
+      iex> Util.price_to_dollars(nil)
+      "0.00"
+      iex> Util.price_to_dollars(200_00)
+      "200"
+      iex> Util.price_to_dollars("20000")
+      ** (FunctionClauseError) no function clause matching in Shippex.Util.price_to_dollars/1
+  """
+  @spec price_to_dollars(integer) :: String.t() | none()
+  def price_to_dollars(nil), do: "0.00"
+  def price_to_dollars(integer) when is_integer(integer) do
+    dollars = Integer.floor_div(integer, 100)
+    cents = rem(integer, 100)
+    s = "#{dollars}"
+    cond do
+      cents == 0 ->
+        s
+      cents < 10 ->
+        "#{s}.0#{cents}"
+      true ->
+        "#{s}.#{cents}"
+    end
+  end
+
+  @doc """
   Converts pounds to kilograms.
 
       iex> Util.lbs_to_kgs(10)

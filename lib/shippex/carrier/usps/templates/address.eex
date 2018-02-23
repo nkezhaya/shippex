@@ -27,9 +27,5 @@
   <<%= prefix %>Zip5><%= address.zip %></<%= prefix %>Zip5>
   <<%= prefix %>Zip4></<%= prefix %>Zip4>
   <% phone = (address.phone || "") |> String.replace(~r/^\+1/, "") |> String.replace(~r/\D+/, "") %>
-  <%= if not(@shipment.international?) and String.length(phone) != 10 do %>
-    <<%= prefix %>Phone></<%= prefix %>Phone>
-  <% else %>
-    <<%= prefix %>Phone><%= phone %></<%= prefix %>Phone>
-  <% end %>
+  <<%= prefix %>Phone><%= phone %></<%= prefix %>Phone>
 <% end %>

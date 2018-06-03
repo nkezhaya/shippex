@@ -1,9 +1,11 @@
 defmodule Shippex.USPS.RateTest do
   use ExUnit.Case
 
+  alias Shippex.Util
+
   describe "domestic" do
     setup do
-      [shipment: Helper.valid_shipment]
+      [shipment: Helper.valid_shipment()]
     end
 
     test "rates generated", %{shipment: shipment} do
@@ -71,6 +73,28 @@ defmodule Shippex.USPS.RateTest do
       {:ok, rate3} = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority)
 
       assert rate2.price < rate3.price
+    end
+
+    for {code, full} <- Util.countries(), code not in ~w(AN KP SJ SY SO TF US VC YE) do
+      @tag :current
+      @tag String.to_atom(code)
+      @code code
+      @full full
+      test "rates generated for country " <> @full, %{shipment: shipment} do
+        package = %{shipment.package | container: :variable}
+        shipment = %{shipment | package: package}
+
+        address = %{shipment.to | country: @code}
+        shipment = %{shipment | to: address}
+
+        case Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority) do
+          {:ok, rate} ->
+            assert rate
+
+          {:error, %{message: message}} ->
+            raise "#{@code} #{@full} #{message}"
+        end
+      end
     end
   end
 end

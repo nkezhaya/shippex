@@ -21,6 +21,7 @@ defmodule Helper do
   end
 
   def destination(country \\ "US")
+
   def destination("US") do
     Shippex.Address.address(%{
       first_name: "Charlie",
@@ -33,6 +34,7 @@ defmodule Helper do
       zip: "63966"
     })
   end
+
   def destination("CA") do
     Shippex.Address.address(%{
       first_name: "Some",
@@ -45,6 +47,7 @@ defmodule Helper do
       country: "CA"
     })
   end
+
   def destination("MX") do
     Shippex.Address.address(%{
       first_name: "Mexico",
@@ -63,7 +66,7 @@ defmodule Helper do
       length: 8,
       width: 8,
       height: 4,
-      weight: 5,
+      weight: 3,
       description: "Headphones",
       monetary_value: 20_00,
       insurance: insurance

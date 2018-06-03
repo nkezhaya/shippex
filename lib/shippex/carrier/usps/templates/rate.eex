@@ -10,7 +10,7 @@
       <Machinable>False</Machinable>
       <MailType><%= international_mail_type(package) %></MailType>
       <ValueOfContents><%= Util.price_to_dollars(package.insurance || package.monetary_value) %></ValueOfContents>
-      <Country><%= Util.abbreviation_to_country_name(@shipment.to.country) %></Country>
+      <Country><%= country(@shipment.to) %></Country>
 
       <Container><%= container(@shipment) %></Container>
       <Size><%= size(@shipment) %></Size>

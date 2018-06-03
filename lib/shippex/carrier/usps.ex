@@ -5,7 +5,7 @@ defmodule Shippex.Carrier.USPS do
   require EEx
   import SweetXml
   alias Shippex.Carrier.USPS.Client
-  alias Shippex.{Package, Label, Service, Shipment, Util}
+  alias Shippex.{Address, Package, Label, Service, Shipment, Util}
 
   @default_container :rectangular
   @large_containers ~w(rectangular nonrectangular variable)a
@@ -137,6 +137,7 @@ defmodule Shippex.Carrier.USPS do
   def create_transaction(shipment, service) when is_atom(service) do
     create_transaction(shipment, Service.get(service))
   end
+
   def create_transaction(%Shipment{} = shipment, %Service{} = service) do
     api =
       cond do
@@ -373,6 +374,18 @@ defmodule Shippex.Carrier.USPS do
       {:ok, candidates}
     end
   end
+
+  defp country(%Address{country: code}) do
+    Util.abbreviation_to_country_name(code)
+    |> replace_name()
+  end
+
+  defp replace_name("Russian Federation"), do: "Russia"
+  defp replace_name("Republic of Korea"), do: "South Korea"
+  defp replace_name("Democratic People's Republic of Korea"), do: "North Korea"
+  defp replace_name("Congo (Kinshasa)"), do: "Congo, Democratic Republic of the"
+  defp replace_name("Congo (Brazzaville)"), do: "Congo, Republic of the"
+  defp replace_name(name), do: name
 
   defp container(%Shipment{package: package}) do
     case Package.usps_containers()[package.container] do

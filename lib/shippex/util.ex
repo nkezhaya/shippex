@@ -393,11 +393,28 @@ defmodule Shippex.Util do
     end
   end
 
-  @spec states(String.t()) :: %{String.t() => String.t()}
-  def states(country \\ "US")
-  def states(nil), do: %{}
+  @doc """
+  Returns a map of country codes and their full names.
 
-  def states(country) do
+      iex> countries = Util.countries()
+      ...> match? %{"US" => "United States"}, countries
+      true
+  """
+  @spec countries() :: %{String.t() => String.t()}
+  def countries() do
+    @countries
+  end
+
+  @doc """
+  Returns a map of state codes and full names for the given 2-letter country
+  code.
+
+      iex> states = Util.states("US")
+      ...> match? %{"TX" => "Texas"}, states
+      true
+  """
+  @spec states(String.t()) :: %{String.t() => String.t()}
+  def states(country \\ "US") do
     case @states[country] do
       states when is_map(states) -> states
       _ -> %{}
@@ -469,15 +486,19 @@ defmodule Shippex.Util do
   """
   @spec price_to_dollars(integer) :: String.t() | none()
   def price_to_dollars(nil), do: "0.00"
+
   def price_to_dollars(integer) when is_integer(integer) do
     dollars = Integer.floor_div(integer, 100)
     cents = rem(integer, 100)
     s = "#{dollars}"
+
     cond do
       cents == 0 ->
         s
+
       cents < 10 ->
         "#{s}.0#{cents}"
+
       true ->
         "#{s}.#{cents}"
     end

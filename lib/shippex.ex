@@ -83,7 +83,7 @@ defmodule Shippex do
       File.write!("\#{label.tracking_number}.gif", Base.decode64!(label.image))
   """
 
-  alias Shippex.{Carrier, Service, Shipment, Transaction}
+  alias Shippex.{Address, Carrier, Rate, Service, Shipment, Transaction}
 
   @type response :: %{code: String.t(), message: String.t()}
 
@@ -96,13 +96,16 @@ defmodule Shippex do
   end
 
   @doc false
-  @spec config() :: Keyword.t | none()
+  @spec config() :: Keyword.t() | none()
   def config() do
     case Application.get_env(:shippex, :carriers, :not_found) do
-      :not_found -> raise InvalidConfigError, "Shippex config not found"
+      :not_found ->
+        raise InvalidConfigError, "Shippex config not found"
+
       config ->
         if not Keyword.keyword?(config) do
-          raise InvalidConfigError, "Shippex config was found, but doesn't contain a keyword list."
+          raise InvalidConfigError,
+                "Shippex config was found, but doesn't contain a keyword list."
         end
 
         config

@@ -5,10 +5,12 @@ defmodule Shippex.Carrier do
   """
 
   alias Shippex.Carrier
+  alias Shippex.{Shipment, Service, Rate, Transaction}
 
   @callback fetch_rates(Shipment.t()) :: [{atom, Rate.t()}]
   @callback fetch_rate(Shipment.t(), Service.t()) :: [{atom, Rate.t()}] | {atom, Rate.t()}
-  @callback create_transaction(Shipment.t(), atom() | Service.t()) :: {atom, Transaction.t() | map}
+  @callback create_transaction(Shipment.t(), atom() | Service.t()) ::
+              {atom, Transaction.t() | map}
   @callback cancel_transaction(Transaction.t()) :: {atom, String.t()}
   @callback cancel_transaction(Shipment.t(), String.t()) :: {atom, String.t()}
 

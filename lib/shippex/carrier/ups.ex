@@ -141,13 +141,13 @@ defmodule Shippex.Carrier.UPS do
 
       case body["SummaryResult"]["Status"] do
         %{"Code" => "1"} ->
-          {:ok, %{code: "1", message: "Voided successfully."}}
+          {:ok, "Voided successfully."}
 
-        %{"Code" => code, "Description" => description} ->
-          {:error, %{code: code, message: description}}
+        %{"Code" => _code, "Description" => description} ->
+          {:error, description}
 
         _ ->
-          raise "Invalid response: #{response}"
+          {:error, "Invalid response from UPS."}
       end
     end
   end

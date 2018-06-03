@@ -398,6 +398,19 @@ defmodule Shippex.Util do
   end
 
   @doc """
+  Returns a map of territory codes and full names for the given 2-letter
+  country code.
+
+      iex> territories = Util.territories()
+      ...> match? %{"PR" => "Puerto Rico"}, territories
+      true
+  """
+  @spec territories(String.t()) :: %{String.t() => String.t()}
+  def territories(country \\ "US") do
+    @territories[country]
+  end
+
+  @doc """
   Returns a map of state codes and full names for the given 2-letter country
   code.
 

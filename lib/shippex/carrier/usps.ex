@@ -5,7 +5,7 @@ defmodule Shippex.Carrier.USPS do
   require EEx
   import SweetXml
   alias Shippex.Carrier.USPS.Client
-  alias Shippex.{Address, Package, Label, Service, Shipment, Util}
+  alias Shippex.{Address, Package, Label, Service, Shipment, Util, ISO}
 
   @default_container :rectangular
   @large_containers ~w(rectangular nonrectangular variable)a
@@ -376,16 +376,20 @@ defmodule Shippex.Carrier.USPS do
   end
 
   defp country(%Address{country: code}) do
-    Util.abbreviation_to_country_name(code)
+    ISO.abbreviation_to_country_name(code)
     |> replace_name()
   end
 
   defp replace_name("Russian Federation"), do: "Russia"
-  defp replace_name("Republic of Korea"), do: "South Korea"
-  defp replace_name("Democratic People's Republic of Korea"), do: "North Korea"
-  defp replace_name("Congo (Kinshasa)"), do: "Congo, Democratic Republic of the"
-  defp replace_name("Congo (Brazzaville)"), do: "Congo, Republic of the"
-  defp replace_name(name), do: name
+  defp replace_name("Korea (South)"), do: "South Korea"
+  defp replace_name("Korea (North)"), do: "North Korea"
+  defp replace_name("Congo, the"), do: "Congo, Republic of the"
+  defp replace_name("Falkland Islands (Malvinas)"), do: "Falkland Islands"
+  defp replace_name("Holy See"), do: "Vatican City"
+  defp replace_name("Cocos (Keeling) Islands"), do: "Cocos Island (Australia)"
+  defp replace_name("Ivory Coast (Cote d'Ivoire)"), do: "Vatican City"
+  defp replace_name("Bosnia & Herzegovina"), do: "Bosnia-Herzegovina"
+  defp replace_name(name), do: String.replace(name, "&", "and")
 
   defp container(%Shipment{package: package}) do
     case Package.usps_containers()[package.container] do

@@ -1,7 +1,7 @@
 defmodule Shippex.USPS.RateTest do
   use ExUnit.Case
 
-  alias Shippex.Util
+  alias Shippex.ISO
 
   describe "domestic" do
     setup do
@@ -75,7 +75,10 @@ defmodule Shippex.USPS.RateTest do
       assert rate2.price < rate3.price
     end
 
-    for {code, full} <- Util.countries(), code not in ~w(AN KP SJ SY SO TF US VC YE) do
+    @us_territories ~w(PR PW MH FM MP GU AS VI)
+    for {code, full} <- ISO.countries(),
+        code not in @us_territories and
+          code not in ~w(AN AQ BV EH KP HM IO PN SO SJ SY TF US YE YU) do
       @tag :current
       @tag String.to_atom(code)
       @code code

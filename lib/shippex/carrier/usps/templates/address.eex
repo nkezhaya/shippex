@@ -18,7 +18,7 @@
 
 <%= if @shipment.international? and @address == :to do %>
   <<%= prefix %>Province><%= address.state %></<%= prefix %>Province>
-  <<%= prefix %>Country><%= Util.abbreviation_to_country_name(address.country) %></<%= prefix %>Country>
+  <<%= prefix %>Country><%= ISO.abbreviation_to_country_name(address.country) %></<%= prefix %>Country>
   <<%= prefix %>PostalCode><%= address.zip %></<%= prefix %>PostalCode>
   <<%= prefix %>POBoxFlag>N</<%= prefix %>POBoxFlag>
   <<%= prefix %>Phone><%= address.phone %></<%= prefix %>Phone>

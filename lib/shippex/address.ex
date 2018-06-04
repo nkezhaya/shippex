@@ -33,7 +33,7 @@ defmodule Shippex.Address do
   ]
 
   alias __MODULE__, as: Address
-  alias Shippex.Util
+  alias Shippex.ISO
 
   @doc """
   Initializes an `Address` struct from the given `params`, and performs minor
@@ -100,7 +100,7 @@ defmodule Shippex.Address do
       address: params["address"],
       address_line_2: params["address_line_2"],
       city: params["city"],
-      state: Util.full_state_to_abbreviation(params["state"]),
+      state: ISO.full_state_to_abbreviation(params["state"]),
       zip: String.trim(params["zip"]),
       country: params["country"] || "US"
     }

@@ -7,6 +7,13 @@ defmodule Shippex.ISO do
   @iso Poison.decode!(File.read!(:code.priv_dir(:shippex) ++ '/iso-3166-2.json'))
 
   @doc """
+  Returns all ISO-3166-2 data.
+  """
+  def data() do
+    @iso
+  end
+
+  @doc """
   Converts a full state name to its state code, or abbreviation.
 
       iex> ISO.full_state_to_abbreviation("Texas")

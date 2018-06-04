@@ -223,6 +223,14 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
+  def us_territories() do
+    ~w(PR PW MH FM MP GU AS VI)
+  end
+
+  def invalid_destinations() do
+    ~w(AN AQ BV EH KP HM IO PN SO SJ SY TF US YE YU)
+  end
+
   defp extra_services_spec(shipment, prefix \\ nil) do
     prefix =
       case prefix do
@@ -387,8 +395,12 @@ defmodule Shippex.Carrier.USPS do
   defp replace_name("Falkland Islands (Malvinas)"), do: "Falkland Islands"
   defp replace_name("Holy See"), do: "Vatican City"
   defp replace_name("Cocos (Keeling) Islands"), do: "Cocos Island (Australia)"
-  defp replace_name("Ivory Coast (Cote d'Ivoire)"), do: "Vatican City"
+  defp replace_name("Cote d'Ivoire"), do: "Ivory Coast"
   defp replace_name("Bosnia & Herzegovina"), do: "Bosnia-Herzegovina"
+
+  defp replace_name("South Georgia and the South Sandwich Islands"),
+    do: "South Georgia (Falkland Islands)"
+
   defp replace_name(name), do: String.replace(name, "&", "and")
 
   defp container(%Shipment{package: package}) do

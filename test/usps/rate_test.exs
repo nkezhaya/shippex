@@ -75,10 +75,9 @@ defmodule Shippex.USPS.RateTest do
       assert rate2.price < rate3.price
     end
 
-    @us_territories ~w(PR PW MH FM MP GU AS VI)
-    for {code, full} <- ISO.countries(),
-        code not in @us_territories and
-          code not in ~w(AN AQ BV EH KP HM IO PN SO SJ SY TF US YE YU) do
+    @us_territories Shippex.Carrier.USPS.us_territories()
+    @invalid_destinations Shippex.Carrier.USPS.invalid_destinations()
+    for {code, full} <- ISO.countries(), code not in (@us_territories ++ @invalid_destinations) do
       @tag :current
       @tag String.to_atom(code)
       @code code

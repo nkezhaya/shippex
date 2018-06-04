@@ -29,7 +29,7 @@ defmodule Shippex.Mixfile do
   defp package do
     [
       name: :shippex,
-      files: ["lib", "mix.exs", "README.md", "LICENSE"],
+      files: ["lib", "priv", "mix.exs", "README.md", "LICENSE"],
       maintainers: ["Nick Kezhaya"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/whitepaperclip/shippex"}

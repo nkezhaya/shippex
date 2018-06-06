@@ -6,15 +6,17 @@ defmodule Shippex.UPS.AddressTest do
 
     name = "Earl G"
     phone = "123-456-7890"
-    valid_address = Shippex.Address.address(%{
-      "name" => name,
-      "phone" => phone,
-      "address" => "404 S Figueroa St",
-      "address_line_2" => "Suite 101",
-      "city" => "Los Angeles",
-      "state" => "CA",
-      "zip" => "90071"
-    })
+
+    valid_address =
+      Shippex.Address.new!(%{
+        "name" => name,
+        "phone" => phone,
+        "address" => "404 S Figueroa St",
+        "address_line_2" => "Suite 101",
+        "city" => "Los Angeles",
+        "state" => "CA",
+        "zip" => "90071"
+      })
 
     assert valid_address.address_line_2 == "Suite 101"
 
@@ -23,53 +25,29 @@ defmodule Shippex.UPS.AddressTest do
     assert hd(candidates).name == name
     assert hd(candidates).phone == phone
 
-    Enum.each candidates, fn(candidate) ->
+    Enum.each(candidates, fn candidate ->
       assert candidate.address_line_2 == "Suite 101"
-    end
+    end)
 
-    ambiguous_address = Shippex.Address.address(%{
-      "address" => "404 S Figaro St",
-      "address_line_2" => "Suite 101",
-      "city" => "Los Angeles",
-      "state" => "CA",
-      "zip" => "90071"
-    })
+    ambiguous_address =
+      Shippex.Address.new!(%{
+        "address" => "404 S Figaro St",
+        "address_line_2" => "Suite 101",
+        "city" => "Los Angeles",
+        "state" => "CA",
+        "zip" => "90071"
+      })
 
     {:ok, candidates} = Shippex.validate_address(ambiguous_address, carrier: :ups)
     assert length(candidates) > 1
 
-    invalid_address = Shippex.Address.address(%{
-      "address" => "9999 Wat Wat",
-      "city" => "San Francisco",
-      "state" => "CA",
-      "zip" => "90071"
-    })
-
-    {:error, _} = Shippex.validate_address(invalid_address, carrier: :ups)
-
-    invalid_address = Shippex.Address.address(%{
-      "name" => name,
-      "phone" => phone,
-      "address" => "404 S Figueroa St",
-      "address_line_2" => "Suite 101",
-      "city" => "Los Angeles",
-      "state" => "BC",
-      "zip" => "90071",
-      "country" => "US"
-    })
-
-    {:error, _} = Shippex.validate_address(invalid_address, carrier: :ups)
-
-    invalid_address = Shippex.Address.address(%{
-      "name" => name,
-      "phone" => phone,
-      "address" => "404 S Figueroa St",
-      "address_line_2" => "Suite 101",
-      "city" => "Los Angeles",
-      "state" => "BX",
-      "zip" => "90071",
-      "country" => "MX"
-    })
+    invalid_address =
+      Shippex.Address.new!(%{
+        "address" => "9999 Wat Wat",
+        "city" => "San Francisco",
+        "state" => "CA",
+        "zip" => "90071"
+      })
 
     {:error, _} = Shippex.validate_address(invalid_address, carrier: :ups)
   end

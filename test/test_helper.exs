@@ -8,7 +8,7 @@ defmodule Helper do
   end
 
   def origin() do
-    Shippex.Address.address(%{
+    Shippex.Address.new!(%{
       first_name: "Jimmy",
       last_name: "Go",
       phone: "213-624-2378",
@@ -23,7 +23,7 @@ defmodule Helper do
   def destination(country \\ "US")
 
   def destination("US") do
-    Shippex.Address.address(%{
+    Shippex.Address.new!(%{
       first_name: "Charlie",
       last_name: "Foo",
       phone: "646-473-0204",
@@ -36,7 +36,7 @@ defmodule Helper do
   end
 
   def destination("CA") do
-    Shippex.Address.address(%{
+    Shippex.Address.new!(%{
       first_name: "Some",
       last_name: "Person",
       phone: "778-123-1234",
@@ -49,13 +49,13 @@ defmodule Helper do
   end
 
   def destination("MX") do
-    Shippex.Address.address(%{
+    Shippex.Address.new!(%{
       first_name: "Mexico",
       last_name: "Mexico",
       phone: "123-123-1234",
       address: "Ferrol 4",
       city: "Ciudad de México",
-      state: "CX",
+      state: "DIF",
       zip: "03100",
       country: "MX"
     })

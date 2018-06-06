@@ -352,14 +352,8 @@ defmodule Shippex do
       "US" ->
         Carrier.module(carrier).validate_address(address)
 
-      country ->
-        case Shippex.ISO.states(country)[address.state] do
-          nil ->
-            {:error, %{code: "0", description: "State does not belong to country."}}
-
-          _ ->
-            {:ok, [address]}
-        end
+      _country ->
+        {:ok, [address]}
     end
   end
 end

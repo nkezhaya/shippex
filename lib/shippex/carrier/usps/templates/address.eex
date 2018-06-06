@@ -23,7 +23,7 @@
   <<%= prefix %>POBoxFlag>N</<%= prefix %>POBoxFlag>
   <<%= prefix %>Phone><%= address.phone %></<%= prefix %>Phone>
 <% else %>
-  <<%= prefix %>State><%= address.state %></<%= prefix %>State>
+  <<%= prefix %>State><%= state_without_country(address) %></<%= prefix %>State>
   <<%= prefix %>Zip5><%= address.zip %></<%= prefix %>Zip5>
   <<%= prefix %>Zip4></<%= prefix %>Zip4>
   <% phone = (address.phone || "") |> String.replace(~r/^\+1/, "") |> String.replace(~r/\D+/, "") %>

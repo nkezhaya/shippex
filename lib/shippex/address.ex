@@ -45,7 +45,7 @@ defmodule Shippex.Address do
   If `name` is specified directly, Shippex will try to infer the first and last
   names in case they're required separately for API calls.
 
-      Shippex.Address.address(%{
+      Shippex.Address.new(%{
         first_name: "Earl",
         last_name: "Grey",
         phone: "123-123-1234",
@@ -56,8 +56,8 @@ defmodule Shippex.Address do
         zip: "78703"
       })
   """
-  @spec address(map()) :: t | none
-  def address(params) when is_map(params) do
+  @spec new(map()) :: {:ok, t} | {:error, String.t()}
+  def new(params) when is_map(params) do
     params =
       for {key, val} <- params, into: %{} do
         key =
@@ -91,6 +91,15 @@ defmodule Shippex.Address do
           {nil, nil, nil}
       end
 
+    {state, country} =
+      case validated_state_and_country(params["state"], params["country"]) do
+        {:ok, state, country} ->
+          {state, country}
+
+        {:error, error} ->
+          throw({:invalid_state_and_country, error})
+      end
+
     address = %Address{
       name: name,
       first_name: first_name,
@@ -100,9 +109,9 @@ defmodule Shippex.Address do
       address: params["address"],
       address_line_2: params["address_line_2"],
       city: params["city"],
-      state: ISO.full_state_to_abbreviation(params["state"]),
+      state: state,
       zip: String.trim(params["zip"]),
-      country: params["country"] || "US"
+      country: country
     }
 
     # Check for a passed array.
@@ -120,6 +129,14 @@ defmodule Shippex.Address do
           address
       end
 
+    {:ok, address}
+  catch
+    {:invalid_state_and_country, error} ->
+      {:error, error}
+  end
+
+  def new!(params) do
+    {:ok, address} = new(params)
     address
   end
 
@@ -131,5 +148,139 @@ defmodule Shippex.Address do
   def address_line_list(%Shippex.Address{} = address) do
     [address.address, address.address_line_2]
     |> Enum.reject(&is_nil/1)
+  end
+
+  @doc """
+  Returns the state code without its country code prefix.
+
+      iex> address = Shippex.Address.new!(%{
+      ...>   first_name: "Earl",
+      ...>   last_name: "Grey",
+      ...>   phone: "123-123-1234",
+      ...>   address: "9999 Hobby Lane",
+      ...>   address_line_2: nil,
+      ...>   city: "Austin",
+      ...>   state: "US-TX",
+      ...>   zip: "78703",
+      ...>   country: "US"
+      ...>  })
+      iex> Address.state_without_country(address)
+      "TX"
+  """
+  def state_without_country(%Shippex.Address{state: state, country: country}) do
+    String.replace(state, "#{country}-", "")
+  end
+
+  @doc """
+  Converts a full state name to its 2-letter ISO-3166-2 code. The country MUST
+  be an ISO-compliant 2-letter country code.
+
+      iex> Address.state_code("Texas")
+      "US-TX"
+      iex> Address.state_code("teXaS")
+      "US-TX"
+      iex> Address.state_code("TX")
+      nil
+      iex> Address.state_code("AlberTa", "CA")
+      "CA-AB"
+      iex> Address.state_code("Veracruz", "MX")
+      "MX-VER"
+      iex> Address.state_code("Yucatán", "MX")
+      "MX-YUC"
+      iex> Address.state_code("Yucatan", "MX")
+      "MX-YUC"
+      iex> Address.state_code("YucatAN", "MX")
+      "MX-YUC"
+      iex> Address.state_code("Not a state.")
+      nil
+  """
+  @spec state_code(String.t(), String.t()) :: nil | String.t()
+  def state_code(state, country) when is_bitstring(state) and is_bitstring(country) do
+    iso = ISO.data()
+    divisions = iso[country]["divisions"]
+
+    cond do
+      Map.has_key?(divisions, "#{country}-#{state}") ->
+        "#{country}-#{state}"
+
+      Map.has_key?(divisions, state) ->
+        state
+
+      true ->
+        state = filter_for_comparison(state)
+
+        divisions
+        |> Enum.find(fn {_state_code, full_state} ->
+          filter_for_comparison(full_state) == state
+        end)
+        |> case do
+          nil -> nil
+          {state_code, _full_state} -> state_code
+        end
+    end
+  end
+
+  @doc """
+  Converts a full country name to its 2-letter ISO-3166-2 code.
+
+      iex> Address.country_code("United States")
+      "US"
+      iex> Address.country_code("Mexico")
+      "MX"
+      iex> Address.country_code("Not a country.")
+      nil
+  """
+  @spec country_code(String.t()) :: nil | String.t()
+  def country_code(country) do
+    iso = ISO.data()
+
+    if Map.has_key?(iso, country) do
+      country
+    else
+      Enum.find_value(iso, fn
+        {code, %{"name" => ^country}} -> code
+        _ -> nil
+      end)
+    end
+  end
+
+  @doc """
+  Takes a state and country input and returns the validated, ISO-3166-compliant
+  results in a tuple.
+
+      iex> Address.validated_state_and_country("TX")
+      {"US-TX", "US"}
+      iex> Address.validated_state_and_country("TX", "US")
+      {"US-TX", "US"}
+      iex> Address.validated_state_and_country("US-TX", "US")
+      {"US-TX", "US"}
+      iex> Address.validated_state_and_country("Texas", "US")
+      {"US-TX", "US"}
+      iex> Address.validated_state_and_country("Texas", "United States")
+      {"US-TX", "US"}
+  """
+  @spec validated_state_and_country(any, any) ::
+          {:ok, String.t(), String.t()} | {:error, String.t()}
+  def validated_state_and_country(state, country \\ nil) do
+    country = country_code(country || "US")
+
+    cond do
+      String.starts_with?(state, "#{country}-") ->
+        {:ok, state, country}
+
+      not is_nil(abbr = state_code(state, country)) ->
+        {:ok, abbr, country}
+
+      true ->
+        {:error, "Invalid state #{state} for country #{country}"}
+    end
+  end
+
+  defp filter_for_comparison(string) do
+    string
+    |> String.trim()
+    |> String.downcase()
+    |> String.normalize(:nfd)
+    |> String.replace(~r/[^A-z\s]/u, "")
   end
 end

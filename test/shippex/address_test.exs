@@ -2,7 +2,7 @@ defmodule Shippex.AddressTest do
   use ExUnit.Case
 
   test "address shortens the full state" do
-    address = Shippex.Address.address(%{
+    address = Shippex.Address.new!(%{
       "name" => "Earl G",
       "address" => "9999 Hobby Ln",
       "city" => "Austin",
@@ -11,7 +11,21 @@ defmodule Shippex.AddressTest do
       "country" => "US"
     })
 
-    assert address.state == "TX"
+    assert address.state == "US-TX"
+    assert address.country == "US"
+  end
+
+  test "address handles full country and state names" do
+    address = Shippex.Address.new!(%{
+      "name" => "Earl G",
+      "address" => "9999 Hobby Ln",
+      "city" => "Austin",
+      "state" => "Texas",
+      "zip" => "78703",
+      "country" => "United States"
+    })
+
+    assert address.state == "US-TX"
     assert address.country == "US"
   end
 
@@ -19,7 +33,7 @@ defmodule Shippex.AddressTest do
     address_line_1 = "9999 Hobby Ln"
     address_line_2 = "Ste 900"
 
-    address = Shippex.Address.address(%{
+    address = Shippex.Address.new!(%{
       "address" => [address_line_1, address_line_2],
       "city" => "Austin",
       "state" => "Texas",

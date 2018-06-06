@@ -14,47 +14,6 @@ defmodule Shippex.ISO do
   end
 
   @doc """
-  Converts a full state name to its state code, or abbreviation.
-
-      iex> ISO.full_state_to_abbreviation("Texas")
-      "TX"
-      iex> ISO.full_state_to_abbreviation("teXaS")
-      "TX"
-      iex> ISO.full_state_to_abbreviation("TX")
-      nil
-      iex> ISO.full_state_to_abbreviation("AlberTa")
-      "AB"
-      iex> ISO.full_state_to_abbreviation("Veracruz")
-      "VER"
-      iex> ISO.full_state_to_abbreviation("Yucatán")
-      "YUC"
-      iex> ISO.full_state_to_abbreviation("Yucatan")
-      "YUC"
-      iex> ISO.full_state_to_abbreviation("YucatAN")
-      "YUC"
-      iex> ISO.full_state_to_abbreviation("Not a state.")
-      nil
-  """
-  @spec full_state_to_abbreviation(String.t()) :: nil | String.t()
-  def full_state_to_abbreviation(state) when is_bitstring(state) do
-    state = filter_for_comparison(state)
-
-    Enum.find_value(@iso, fn {country, %{"divisions" => divisions}} ->
-      divisions
-      |> Enum.find(fn {_state_code, full_state} ->
-        filter_for_comparison(full_state) == state
-      end)
-      |> case do
-        nil ->
-          false
-
-        {state_code, _full_state} ->
-          String.replace_prefix(state_code, "#{country}-", "")
-      end
-    end)
-  end
-
-  @doc """
   Returns a map of country codes and their full names.
 
       iex> countries = ISO.countries()
@@ -112,13 +71,5 @@ defmodule Shippex.ISO do
   @spec abbreviation_to_country_name(String.t()) :: nil | String.t()
   def abbreviation_to_country_name(abbr) when is_bitstring(abbr) do
     countries()[abbr]
-  end
-
-  defp filter_for_comparison(string) do
-    string
-    |> String.trim()
-    |> String.downcase()
-    |> String.normalize(:nfd)
-    |> String.replace(~r/[^A-z\s]/u, "")
   end
 end

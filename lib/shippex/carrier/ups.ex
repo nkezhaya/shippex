@@ -2,8 +2,10 @@ defmodule Shippex.Carrier.UPS do
   @moduledoc false
   @behaviour Shippex.Carrier
 
+  import Shippex.Address, only: [state_without_country: 1]
+
   alias Shippex.Carrier.UPS.Client
-  alias Shippex.Util
+  alias Shippex.{Address, Shipment, Service, Transaction, Util}
 
   defmacro with_response(response, do: block) do
     quote do
@@ -27,8 +29,8 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
-  def fetch_rates(%Shippex.Shipment{} = shipment) do
-    services = Shippex.Service.services_for_carrier(:ups, shipment)
+  def fetch_rates(%Shipment{} = shipment) do
+    services = Service.services_for_carrier(:ups, shipment)
 
     rates =
       Enum.map(services, fn service ->
@@ -46,7 +48,7 @@ defmodule Shippex.Carrier.UPS do
     end) ++ errors
   end
 
-  def fetch_rate(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
+  def fetch_rate(%Shipment{} = shipment, %Service{} = service) do
     params =
       Map.new()
       |> Map.merge(security_params())
@@ -73,7 +75,7 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
-  def create_transaction(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
+  def create_transaction(%Shipment{} = shipment, %Service{} = service) do
     params =
       Map.new()
       |> Map.merge(security_params())
@@ -102,7 +104,7 @@ defmodule Shippex.Carrier.UPS do
             image: package_response["ShippingLabel"]["GraphicImage"]
           }
 
-          transaction = Shippex.Transaction.transaction(shipment, rate, label)
+          transaction = Transaction.transaction(shipment, rate, label)
 
           {:ok, transaction}
 
@@ -115,7 +117,7 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
-  def cancel_transaction(%Shippex.Transaction{} = transaction) do
+  def cancel_transaction(%Transaction{} = transaction) do
     cancel_transaction(transaction.label.tracking_number)
   end
 
@@ -152,7 +154,7 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
-  def validate_address(%Shippex.Address{} = address) do
+  def validate_address(%Address{} = address) do
     xav_params = %{
       XAVRequest: %{
         Request: %{
@@ -162,7 +164,7 @@ defmodule Shippex.Carrier.UPS do
         AddressKeyFormat: %{
           AddressLine: address.address,
           PoliticalDivision2: address.city,
-          PoliticalDivision1: address.state,
+          PoliticalDivision1: state_without_country(address),
           PostcodePrimaryLow: address.zip,
           CountryCode: address.country
         }
@@ -188,7 +190,7 @@ defmodule Shippex.Carrier.UPS do
           Enum.map(candidates, fn candidate ->
             candidate = candidate["AddressKeyFormat"]
 
-            Shippex.Address.address(%{
+            Address.new!(%{
               "first_name" => address.first_name,
               "last_name" => address.last_name,
               "name" => address.name,
@@ -224,7 +226,7 @@ defmodule Shippex.Carrier.UPS do
     }
   end
 
-  defp rate_request_params(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
+  defp rate_request_params(%Shipment{} = shipment, %Service{} = service) do
     %{
       RateRequest: %{
         Request: %{
@@ -235,7 +237,7 @@ defmodule Shippex.Carrier.UPS do
     }
   end
 
-  defp shipment_request_params(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
+  defp shipment_request_params(%Shipment{} = shipment, %Service{} = service) do
     shipment_data =
       shipment_params(shipment, service)
       |> Map.merge(%{
@@ -264,7 +266,7 @@ defmodule Shippex.Carrier.UPS do
     }
   end
 
-  defp shipment_params(%Shippex.Shipment{} = shipment, %Shippex.Service{} = service) do
+  defp shipment_params(%Shipment{} = shipment, %Service{} = service) do
     from = shipment.from
     to = shipment.to
 
@@ -291,20 +293,20 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
-  defp service_params(%Shippex.Service{} = service) do
-    code = Shippex.Service.service_code(service)
+  defp service_params(%Service{} = service) do
+    code = Service.service_code(service)
     %{Code: code, Description: service.description}
   end
 
-  defp address_params(%Shippex.Address{} = address) do
+  defp address_params(%Address{} = address) do
     %{
       Name: address.name,
       AttentionName: address.name,
       Phone: %{Number: address.phone},
       Address: %{
-        AddressLine: Shippex.Address.address_line_list(address),
+        AddressLine: Address.address_line_list(address),
         City: address.city,
-        StateProvinceCode: address.state,
+        StateProvinceCode: state_without_country(address),
         PostalCode: String.replace(address.zip, ~r/\s+/, ""),
         CountryCode: address.country
       }
@@ -315,7 +317,7 @@ defmodule Shippex.Carrier.UPS do
     config = config()
 
     address =
-      Shippex.Address.address(%{
+      Address.new!(%{
         "name" => config.shipper.name,
         "phone" => config.shipper.phone,
         "address" => config.shipper.address,
@@ -331,7 +333,7 @@ defmodule Shippex.Carrier.UPS do
     |> Map.put(:ShipperNumber, config.shipper.account_number)
   end
 
-  defp package_params(%Shippex.Shipment{} = shipment) do
+  defp package_params(%Shipment{} = shipment) do
     package = shipment.package
 
     [len, width, height] =

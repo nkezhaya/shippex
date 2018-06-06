@@ -4,6 +4,8 @@ defmodule Shippex.Carrier.USPS do
 
   require EEx
   import SweetXml
+  import Shippex.Address, only: [state_without_country: 1]
+
   alias Shippex.Carrier.USPS.Client
   alias Shippex.{Address, Package, Label, Service, Shipment, Util, ISO}
 
@@ -376,7 +378,7 @@ defmodule Shippex.Carrier.USPS do
         |> Enum.map(fn candidate ->
           candidate
           |> Map.merge(Map.take(address, ~w(first_name last_name name company_name phone)a))
-          |> Shippex.Address.address()
+          |> Shippex.Address.new!()
         end)
 
       {:ok, candidates}

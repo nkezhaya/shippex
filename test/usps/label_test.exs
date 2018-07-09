@@ -3,12 +3,12 @@ defmodule Shippex.USPS.LabelTest do
 
   describe "domestic" do
     test "priority label generated" do
-      Helper.valid_shipment
+      Helper.valid_shipment()
       |> test_shipment(:usps_priority)
     end
 
     test "priority express label generated" do
-      Helper.valid_shipment
+      Helper.valid_shipment()
       |> test_shipment(:usps_priority_express)
     end
 
@@ -20,6 +20,14 @@ defmodule Shippex.USPS.LabelTest do
     test "insured priority express label generated" do
       Helper.valid_shipment(insurance: 500_00)
       |> test_shipment(:usps_priority_express)
+    end
+
+    @tag :current
+    test "setting insurance to 0 does not trigger error" do
+      shipment = Helper.valid_shipment(insurance: 0)
+
+      {:ok, transaction} = Shippex.Carrier.USPS.create_transaction(shipment, :usps_priority)
+      assert length(transaction.rate.line_items) == 1
     end
   end
 

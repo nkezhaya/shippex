@@ -62,7 +62,7 @@
       </ShipDate>
     <% end %>
 
-    <%= if package.insurance do %>
+    <%= if is_integer(package.insurance) and package.insurance > 0 do %>
       <ExtraServices>
         <ExtraService><%= insurance_code(@shipment, @service) %></ExtraService>
       </ExtraServices>

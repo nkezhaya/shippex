@@ -58,25 +58,23 @@ defmodule Shippex do
         width: 8,
         height: 4,
         weight: 5,
-        description: "Headphones"
+        description: "Headphones",
+        monetary_value: 20 # optional
       }
 
   ## Link the origin, destination, and package with a Shipment
 
-      shipment = %Shippex.Shipment{
-        from: origin,
-        to: destination,
-        package: package
-      }
+      shipment = Shippex.Shipment.shipment(origin, destination, package)
 
   ## Fetch rates to present to the user.
 
-      rates = Shippex.fetch_rates(shipment)
+      rates = Shippex.fetch_rates(shipment, carriers: [:usps, :ups])
 
   ## Accept one of the services and print the label
 
       {:ok, rate} = Enum.shuffle(rates) |> hd
-      {:ok, label} = Shippex.fetch_label(rate, shipment)
+      {:ok, transaction} = Shippex.create_transaction(shipment, rate.service)
+      label = transaction.label
 
   ## Write the label gif to disk
 
@@ -283,7 +281,8 @@ defmodule Shippex do
 
       Shippex.create_transaction(shipment, service)
   """
-  @spec create_transaction(Shipment.t(), Service.t()) :: {atom, Transaction.t()}
+  @spec create_transaction(Shipment.t(), Service.t()) ::
+          {:ok, Transaction.t()} | {:error, response}
   def create_transaction(%Shipment{} = shipment, %Service{carrier: carrier} = service) do
     Carrier.module(carrier).create_transaction(shipment, service)
   end

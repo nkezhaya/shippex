@@ -12,7 +12,7 @@ Docs: [https://hexdocs.pm/shippex/Shippex.html](https://hexdocs.pm/shippex/Shipp
 
 ```elixir
 def deps do
-  [{:shippex, "~> 0.6.7"}]
+  [{:shippex, "~> 0.6"}]
 end
 ```
 

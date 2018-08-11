@@ -46,7 +46,7 @@ defmodule Shippex.Package do
   Builds and returns a `Package`. Use this instead of directly initializing
   the struct.
   """
-  @spec new(%{length: number(), width: number(), height: number(), weight: number()}) :: t()
+  @spec new(map()) :: t()
   def new(attrs) do
     attrs = Map.take(attrs, @fields)
     struct(__MODULE__, attrs)

@@ -18,18 +18,29 @@ defmodule Shippex.Package do
                                 monetary_value: 100_00})
   """
 
-  @type t :: %__MODULE__{}
-  @typep flat_rate_container :: %{
-           name: String.t(),
-           rate: integer,
-           length: number,
-           width: number,
-           height: number
-         }
-
   @enforce_keys [:length, :width, :height, :weight]
   @fields ~w(length width height weight girth description monetary_value container insurance)a
   defstruct @fields
+
+  @typep flat_rate_container :: %{
+           name: String.t(),
+           rate: integer(),
+           length: number(),
+           width: number(),
+           height: number()
+         }
+
+  @type t :: %__MODULE__{
+          length: number(),
+          width: number(),
+          height: number(),
+          weight: number(),
+          girth: nil | number(),
+          description: nil | String.t(),
+          monetary_value: nil | integer(),
+          container: nil | String.t(),
+          insurance: nil | integer()
+        }
 
   @doc """
   Builds and returns a `Package`. Use this instead of directly initializing

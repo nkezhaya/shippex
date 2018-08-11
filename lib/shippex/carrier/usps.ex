@@ -183,7 +183,7 @@ defmodule Shippex.Carrier.USPS do
       image = String.replace(response.image, "\n", "")
       label = %Label{tracking_number: response.tracking_number, format: :pdf, image: image}
 
-      transaction = Shippex.Transaction.transaction(shipment, rate, label)
+      transaction = Shippex.Transaction.new(shipment, rate, label)
 
       {:ok, transaction}
     end
@@ -226,7 +226,7 @@ defmodule Shippex.Carrier.USPS do
   end
 
   def us_territories() do
-    ~w(PR PW MH FM MP GU AS VI)
+    ~w(US PR PW MH FM MP GU AS VI)
   end
 
   def invalid_destinations() do

@@ -104,7 +104,7 @@ defmodule Shippex.Carrier.UPS do
             image: package_response["ShippingLabel"]["GraphicImage"]
           }
 
-          transaction = Transaction.transaction(shipment, rate, label)
+          transaction = Transaction.new(shipment, rate, label)
 
           {:ok, transaction}
 

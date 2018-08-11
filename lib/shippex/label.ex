@@ -14,8 +14,12 @@ defmodule Shippex.Label do
   Currently, UPS returns GIF labels, and USPS returns PDF labels.
   """
 
-  @type t :: %__MODULE__{}
-
   @enforce_keys [:tracking_number, :format, :image]
   defstruct [:tracking_number, :format, :image]
+
+  @type t :: %__MODULE__{
+          tracking_number: String.t(),
+          format: :gif | :pdf | :tif | :png,
+          image: String.t()
+        }
 end

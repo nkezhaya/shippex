@@ -4,8 +4,6 @@ defmodule Shippex.Address do
   *not* initialize this struct directly. Instead, use `address/1`.
   """
 
-  @type t :: %__MODULE__{}
-
   @enforce_keys [
     :first_name,
     :last_name,
@@ -32,6 +30,20 @@ defmodule Shippex.Address do
     :country
   ]
 
+  @type t :: %__MODULE__{
+          first_name: nil | String.t(),
+          last_name: nil | String.t(),
+          name: nil | String.t(),
+          company_name: nil | String.t(),
+          phone: nil | String.t(),
+          address: String.t(),
+          address_line_2: nil | String.t(),
+          city: String.t(),
+          state: String.t(),
+          zip: String.t(),
+          country: String.t()
+        }
+
   alias __MODULE__, as: Address
   alias Shippex.ISO
 
@@ -56,7 +68,7 @@ defmodule Shippex.Address do
         zip: "78703"
       })
   """
-  @spec new(map()) :: {:ok, t} | {:error, String.t()}
+  @spec new(map()) :: {:ok, t()} | {:error, String.t()}
   def new(params) when is_map(params) do
     params =
       for {key, val} <- params, into: %{} do
@@ -135,6 +147,10 @@ defmodule Shippex.Address do
       {:error, error}
   end
 
+  @doc """
+  Calls `new/1` and raises an error on failure.
+  """
+  @spec new!(map()) :: t()
   def new!(params) do
     {:ok, address} = new(params)
     address
@@ -144,8 +160,8 @@ defmodule Shippex.Address do
   Returns the list of non-`nil` address lines. If no `address_line_2` is
   present, it returns a list of a single `String`.
   """
-  @spec address_line_list(t) :: [String.t()]
-  def address_line_list(%Shippex.Address{} = address) do
+  @spec address_line_list(t()) :: [String.t()]
+  def address_line_list(%Address{} = address) do
     [address.address, address.address_line_2]
     |> Enum.reject(&is_nil/1)
   end
@@ -167,7 +183,8 @@ defmodule Shippex.Address do
       iex> Address.state_without_country(address)
       "TX"
   """
-  def state_without_country(%Shippex.Address{state: state, country: country}) do
+  @spec state_without_country(t()) :: String.t()
+  def state_without_country(%Address{state: state, country: country}) do
     String.replace(state, "#{country}-", "")
   end
 

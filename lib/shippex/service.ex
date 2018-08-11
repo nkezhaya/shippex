@@ -21,13 +21,17 @@ defmodule Shippex.Service do
       ]
   """
 
-  @type t :: %__MODULE__{}
+  alias __MODULE__, as: S
+  alias Shippex.{Carrier, Shipment}
 
   @enforce_keys [:id, :carrier, :description]
   defstruct [:id, :carrier, :description]
 
-  alias __MODULE__, as: S
-  alias Shippex.{Carrier, Shipment}
+  @type t :: %__MODULE__{
+          id: atom(),
+          carrier: Carrier.t(),
+          description: String.t()
+        }
 
   @doc """
   Looks up a shipping service by its unique Shippex ID. Returns nil if none

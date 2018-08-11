@@ -10,10 +10,17 @@ defmodule Shippex.Shipment do
 
   alias Shippex.{Shipment, Address, Package}
 
-  @type t :: %__MODULE__{}
-
   @enforce_keys [:from, :to, :package, :ship_date, :international?]
   defstruct [:id, :from, :to, :package, :ship_date, :international?]
+
+  @type t :: %__MODULE__{
+          id: any(),
+          from: Address.t(),
+          to: Address.t(),
+          package: Package.t(),
+          ship_date: any(),
+          international?: boolean()
+        }
 
   @doc """
   Builds a `Shipment`.

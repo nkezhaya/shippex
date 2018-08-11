@@ -5,8 +5,14 @@ defmodule Shippex.Rate do
   speed.
   """
 
-  @type t :: %__MODULE__{}
+  alias Shippex.Service
 
   @enforce_keys [:service, :price, :line_items]
   defstruct [:service, :price, :line_items]
+
+  @type t :: %__MODULE__{
+          service: Service.t(),
+          price: integer(),
+          line_items: nil | [%{name: String.t(), price: integer()}]
+        }
 end

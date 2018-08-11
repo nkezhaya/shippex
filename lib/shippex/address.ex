@@ -150,10 +150,12 @@ defmodule Shippex.Address do
   @doc """
   Calls `new/1` and raises an error on failure.
   """
-  @spec new!(map()) :: t()
+  @spec new!(map()) :: t() | none()
   def new!(params) do
-    {:ok, address} = new(params)
-    address
+    case new(params) do
+      {:ok, address} -> address
+      {:error, error} -> raise error
+    end
   end
 
   @doc """

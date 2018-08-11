@@ -25,19 +25,41 @@ defmodule Shippex.Shipment do
   @doc """
   Builds a `Shipment`.
   """
-  @spec shipment(Address.t(), Address.t(), Package.t(), Keyword.t()) :: t
-  def shipment(%Address{} = from, %Address{} = to, %Package{} = package, opts \\ []) do
+  @spec new(Address.t(), Address.t(), Package.t(), Keyword.t()) ::
+          {:ok, t()} | {:error, String.t()}
+  def new(%Address{} = from, %Address{} = to, %Package{} = package, opts \\ []) do
     intl = from.country != to.country
     ship_date = Keyword.get(opts, :ship_date)
 
     if from.country != "US" do
-      raise "Shippex does not yet support shipments originating outside of the US."
+      throw({:error, "Shippex does not yet support shipments originating outside of the US."})
     end
 
     if not (is_nil(ship_date) or match?(%Date{}, ship_date)) do
-      raise "Invalid ship date: #{ship_date}"
+      throw({:error, "Invalid ship date: #{ship_date}"})
     end
 
-    %Shipment{from: from, to: to, package: package, ship_date: ship_date, international?: intl}
+    shipment = %Shipment{
+      from: from,
+      to: to,
+      package: package,
+      ship_date: ship_date,
+      international?: intl
+    }
+
+    {:ok, shipment}
+  catch
+    {:error, _} = e -> e
+  end
+
+  @doc """
+  Builds a `Shipment`. Raises on failure.
+  """
+  @spec new!(Address.t(), Address.t(), Package.t(), Keyword.t()) :: t() | none()
+  def new!(%Address{} = from, %Address{} = to, %Package{} = package, opts \\ []) do
+    case new(from, to, package, opts) do
+      {:ok, shipment} -> shipment
+      {:error, error} -> raise error
+    end
   end
 end

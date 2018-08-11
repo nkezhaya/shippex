@@ -2,18 +2,18 @@ defmodule Shippex.USPS.CancelTest do
   use ExUnit.Case
 
   setup do
-    [shipment: Helper.valid_shipment]
+    [shipment: Helper.valid_shipment()]
   end
 
   test "cancel domestic transaction" do
-    shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination(), Helper.package())
+    shipment = Shippex.Shipment.new(Helper.origin(), Helper.destination(), Helper.package())
 
     cancel_shipment(shipment, Shippex.Service.get(:usps_priority))
     cancel_shipment(shipment, Shippex.Service.get(:usps_priority_express))
   end
 
   test "cancel international transaction" do
-    shipment = Shippex.Shipment.shipment(Helper.origin(), Helper.destination("MX"), Helper.package())
+    shipment = Shippex.Shipment.new(Helper.origin(), Helper.destination("MX"), Helper.package())
 
     cancel_shipment(shipment, Shippex.Service.get(:usps_priority))
     cancel_shipment(shipment, Shippex.Service.get(:usps_priority_express))

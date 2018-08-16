@@ -4,7 +4,7 @@ defmodule Helper do
   def valid_shipment(opts \\ []) do
     to = Keyword.get(opts, :to, "US")
     insurance = Keyword.get(opts, :insurance)
-    Shippex.Shipment.shipment(origin(), destination(to), package(insurance))
+    Shippex.Shipment.new!(origin(), destination(to), package(insurance))
   end
 
   def origin() do

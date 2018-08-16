@@ -77,7 +77,7 @@ defmodule Shippex.USPS.RateTest do
 
     @us_territories Shippex.Carrier.USPS.us_territories()
     @invalid_destinations Shippex.Carrier.USPS.invalid_destinations()
-    for {code, full} <- ISO.countries(), code not in (@us_territories ++ @invalid_destinations) do
+    for {code, full} <- ISO.countries(), code not in (@us_territories ++ @invalid_destinations), code != "US" do
       @tag :current
       @tag String.to_atom(code)
       @code code

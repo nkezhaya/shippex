@@ -226,7 +226,7 @@ defmodule Shippex.Carrier.USPS do
   end
 
   def us_territories() do
-    ~w(US PR PW MH FM MP GU AS VI)
+    ~w(PR PW MH FM MP GU AS VI)
   end
 
   def invalid_destinations() do

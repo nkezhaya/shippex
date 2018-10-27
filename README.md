@@ -27,7 +27,7 @@ end
 ## Fetching rates
 
 ```elixir
-origin = Shippex.Address.address(%{
+origin = Shippex.Address.new(%{
   name: "Earl G",
   phone: "123-123-1234",
   address: "9999 Hobby Lane",
@@ -37,7 +37,7 @@ origin = Shippex.Address.address(%{
   zip: "78703"
 })
 
-destination = Shippex.Address.address(%{
+destination = Shippex.Address.new(%{
   name: "Bar Baz",
   phone: "123-123-1234",
   address: "1234 Foo Blvd",
@@ -48,16 +48,16 @@ destination = Shippex.Address.address(%{
   country: "US" # optional
 })
 
-package = %Shippex.Package{
+package = Shippex.Package.new(%{
   length: 8,
   width: 8,
   height: 4,
   weight: 5,
   description: "Headphones",
   monetary_value: 20 # optional
-}
+})
 
-shipment = Shippex.Shipment.shipment(origin, destination, package)
+shipment = Shippex.Shipment.new(origin, destination, package)
 
 # Fetch rates
 rates = Shippex.fetch_rates(shipment, carriers: :usps)
@@ -86,14 +86,3 @@ Carrier support:
 - [x] UPS
 - [x] USPS
 - [ ] FedEx
-
-Country support:
-
-- [x] US
-- [x] Canada
-- [x] Mexico
-- [ ] Puerto Rico
-- [ ] Virgin Islands
-- [ ] US territories
-- [ ] European Union
-- [ ] Poland

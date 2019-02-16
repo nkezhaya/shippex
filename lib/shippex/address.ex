@@ -199,7 +199,9 @@ defmodule Shippex.Address do
       iex> Address.state_code("teXaS")
       "US-TX"
       iex> Address.state_code("TX")
-      nil
+      "US-TX"
+      iex> Address.state_code("US-TX")
+      "US-TX"
       iex> Address.state_code("AlberTa", "CA")
       "CA-AB"
       iex> Address.state_code("Veracruz", "MX")
@@ -214,7 +216,7 @@ defmodule Shippex.Address do
       nil
   """
   @spec state_code(String.t(), String.t()) :: nil | String.t()
-  def state_code(state, country) when is_bitstring(state) and is_bitstring(country) do
+  def state_code(state, country \\ "US") when is_bitstring(state) and is_bitstring(country) do
     iso = ISO.data()
     divisions = iso[country]["divisions"]
 
@@ -268,30 +270,36 @@ defmodule Shippex.Address do
   results in a tuple.
 
       iex> Address.validated_state_and_country("TX")
-      {"US-TX", "US"}
+      {:ok, "US-TX", "US"}
       iex> Address.validated_state_and_country("TX", "US")
-      {"US-TX", "US"}
+      {:ok, "US-TX", "US"}
       iex> Address.validated_state_and_country("US-TX", "US")
-      {"US-TX", "US"}
+      {:ok, "US-TX", "US"}
       iex> Address.validated_state_and_country("Texas", "US")
-      {"US-TX", "US"}
+      {:ok, "US-TX", "US"}
       iex> Address.validated_state_and_country("Texas", "United States")
-      {"US-TX", "US"}
+      {:ok, "US-TX", "US"}
+      iex> Address.validated_state_and_country("Texas", "United States")
+      {:ok, "US-TX", "US"}
+      iex> Address.validated_state_and_country("SG-SG", "SomeCountry")
+      {:error, "Invalid country: SomeCountry"}
+      iex> Address.validated_state_and_country("SG-Invalid", "SG")
+      {:error, "Invalid state 'SG-Invalid' for country: SG (SG)"}
   """
   @spec validated_state_and_country(any, any) ::
           {:ok, String.t(), String.t()} | {:error, String.t()}
   def validated_state_and_country(state, country \\ nil) do
-    country = country_code(country || "US")
+    country_code = country_code(country || "US")
 
     cond do
-      String.starts_with?(state, "#{country}-") ->
-        {:ok, state, country}
+      is_nil(country_code) ->
+        {:error, "Invalid country: #{country}"}
 
-      not is_nil(abbr = state_code(state, country)) ->
-        {:ok, abbr, country}
+      not is_nil(abbr = state_code(state, country_code)) ->
+        {:ok, abbr, country_code}
 
       true ->
-        {:error, "Invalid state #{state} for country #{country}"}
+        {:error, "Invalid state '#{state}' for country: #{country} (#{country_code})"}
     end
   end
 

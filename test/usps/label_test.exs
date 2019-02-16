@@ -22,7 +22,6 @@ defmodule Shippex.USPS.LabelTest do
       |> test_shipment(:usps_priority_express)
     end
 
-    @tag :current
     test "setting insurance to 0 does not trigger error" do
       shipment = Helper.valid_shipment(insurance: 0)
 

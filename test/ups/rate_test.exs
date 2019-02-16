@@ -2,7 +2,7 @@ defmodule Shippex.UPS.RateTest do
   use ExUnit.Case
 
   setup do
-    [shipment: Helper.valid_shipment]
+    [shipment: Helper.valid_shipment()]
   end
 
   test "rates generated, label fetched", %{shipment: shipment} do
@@ -17,33 +17,35 @@ defmodule Shippex.UPS.RateTest do
   end
 
   test "rates generated for canada", %{shipment: shipment} do
-    destination = Shippex.Address.new!(%{
-      name: "Canada Name",
-      phone: "123-123-1234",
-      address: "655 Burrard St",
-      city: "Vancouver",
-      state: "BC",
-      zip: "V6C 2R7",
-      country: "CA"
-    })
+    destination =
+      Shippex.Address.new!(%{
+        name: "Canada Name",
+        phone: "123-123-1234",
+        address: "655 Burrard St",
+        city: "Vancouver",
+        state: "BC",
+        zip: "V6C 2R7",
+        country: "CA"
+      })
 
-    shipment = Shippex.Shipment.shipment(shipment.from, destination, shipment.package)
+    shipment = Shippex.Shipment.new!(shipment.from, destination, shipment.package)
 
     rates(shipment)
   end
 
   test "rates generated for mexico", %{shipment: shipment} do
-    destination = Shippex.Address.new!(%{
-      name: "Mexico Name",
-      phone: "123-123-1234",
-      address: "Ferrol 4",
-      city: "Ciudad de México",
-      state: "DIF",
-      zip: "03100",
-      country: "MX"
-    })
+    destination =
+      Shippex.Address.new!(%{
+        name: "Mexico Name",
+        phone: "123-123-1234",
+        address: "Ferrol 4",
+        city: "Ciudad de México",
+        state: "DIF",
+        zip: "03100",
+        country: "MX"
+      })
 
-    shipment = Shippex.Shipment.shipment(shipment.from, destination, shipment.package)
+    shipment = Shippex.Shipment.new!(shipment.from, destination, shipment.package)
 
     rates(shipment)
   end
@@ -54,12 +56,12 @@ defmodule Shippex.UPS.RateTest do
 
     assert rates
 
-    Enum.each rates, fn (rate) ->
+    Enum.each(rates, fn rate ->
       {:ok, _} = rate
-    end
+    end)
 
     # Accept one of the services and print the label
-    {:ok, rate} = rates |> Enum.shuffle |> hd
+    {:ok, rate} = rates |> Enum.shuffle() |> hd
 
     {:ok, label} = Shippex.Carrier.UPS.create_transaction(shipment, rate.service)
 

@@ -16,8 +16,7 @@ defmodule Shippex.ShippexTest do
   end
 
   test "fetch international rates" do
-    shipment =
-      Shippex.Shipment.shipment(Helper.origin(), Helper.destination("CA"), Helper.package())
+    shipment = Shippex.Shipment.new!(Helper.origin(), Helper.destination("CA"), Helper.package())
 
     [{:ok, rate1}, {:ok, rate2}] =
       Shippex.fetch_rates(shipment, services: [:usps_priority, :usps_priority_express])

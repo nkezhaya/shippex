@@ -230,7 +230,7 @@ defmodule Shippex.Carrier.USPS do
   end
 
   def invalid_destinations() do
-    ~w(AN AQ BV EH KP HM IO PN SO SJ SY TF YE YU)
+    ~w(AN AQ BV EH KP HM IO PN SO SJ SY SZ TF YE YU)
   end
 
   defp extra_services_spec(shipment, prefix \\ nil) do

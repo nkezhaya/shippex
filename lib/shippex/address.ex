@@ -185,8 +185,8 @@ defmodule Shippex.Address do
       iex> Address.state_without_country(address)
       "TX"
   """
-  @spec state_without_country(t()) :: String.t()
-  def state_without_country(%Address{state: state, country: country}) do
+  @spec state_without_country(t() | %{state: String.t(), country: String.t()}) :: String.t()
+  def state_without_country(%{state: state, country: country}) do
     String.replace(state, "#{country}-", "")
   end
 

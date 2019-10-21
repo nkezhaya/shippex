@@ -122,7 +122,7 @@ defmodule Shippex.Address do
       address_line_2: params["address_line_2"],
       city: params["city"],
       state: state,
-      zip: String.trim(params["zip"]),
+      zip: String.trim(params["zip"] || ""),
       country: country
     }
 

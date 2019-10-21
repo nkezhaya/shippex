@@ -64,9 +64,26 @@ defmodule Shippex.USPS.LabelTest do
     end
   end
 
+  describe "south korea" do
+    test "priority label generated for south korea" do
+      address =
+        Shippex.Address.new!(%{
+          first_name: "John",
+          last_name: "Doe",
+          address: "29-11 Hoehyeondong 1(il)-ga",
+          city: "Seoul",
+          state: "11",
+          country: "KR",
+          phone: "123-123-1234"
+        })
+
+      Helper.valid_shipment(to: address, insurance: nil)
+      |> test_shipment(:usps_priority)
+    end
+  end
+
   defp test_shipment(shipment, service) do
     expected_line_items = if shipment.package.insurance, do: 2, else: 1
-
     {:ok, rate} = Shippex.Carrier.USPS.fetch_rate(shipment, service)
     assert length(rate.line_items) == expected_line_items
 

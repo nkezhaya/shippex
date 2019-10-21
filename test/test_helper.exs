@@ -61,6 +61,8 @@ defmodule Helper do
     })
   end
 
+  def destination(%Shippex.Address{} = address), do: address
+
   def package(insurance \\ nil) do
     Shippex.Package.new(%{
       length: 8,

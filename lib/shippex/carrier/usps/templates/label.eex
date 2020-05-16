@@ -8,20 +8,22 @@
     <Container><%= container(@shipment) %></Container>
 
     <ShippingContents>
-      <ItemDetail>
-        <Description><%= package.description %></Description>
-        <Quantity>1</Quantity>
-        <Value><%= Util.price_to_dollars(package.monetary_value) %></Value>
-        <NetPounds>0</NetPounds>
-        <NetOunces><%= round(weight_in_ounces(@shipment)) %></NetOunces>
-        <HSTariffNumber></HSTariffNumber>
-        <CountryOfOrigin>United States</CountryOfOrigin>
-      </ItemDetail>
+      <%= for item <- package.items do %>
+        <ItemDetail>
+          <Description><%= item.description %></Description>
+          <Quantity>1</Quantity>
+          <Value><%= Util.price_to_dollars(item.monetary_value) %></Value>
+          <NetPounds>0</NetPounds>
+          <NetOunces><%= round(weight_in_ounces(item.weight)) %></NetOunces>
+          <HSTariffNumber></HSTariffNumber>
+          <CountryOfOrigin>United States</CountryOfOrigin>
+        </ItemDetail>
+      <% end %>
     </ShippingContents>
 
     <InsuredAmount><%= Util.price_to_dollars(package.insurance) %></InsuredAmount>
     <GrossPounds>0</GrossPounds>
-    <GrossOunces><%= round(weight_in_ounces(@shipment)) %></GrossOunces>
+    <GrossOunces><%= round(weight_in_ounces(@shipment.package.weight)) %></GrossOunces>
     <ContentType>MERCHANDISE</ContentType>
     <Agreement>Y</Agreement>
     <ImageType>PDF</ImageType>
@@ -40,7 +42,7 @@
     <%= render_address shipment: @shipment, address: :from %>
     <%= render_address shipment: @shipment, address: :to %>
 
-    <WeightInOunces><%= weight_in_ounces(@shipment) %></WeightInOunces>
+    <WeightInOunces><%= weight_in_ounces(@shipment.package.weight) %></WeightInOunces>
     <ServiceType><%= Service.service_code(@service) %></ServiceType>
     <%= if @service.id == :usps_priority_express do %>
       <Container>VARIABLE</Container>

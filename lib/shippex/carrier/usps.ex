@@ -33,8 +33,8 @@ defmodule Shippex.Carrier.USPS do
               {:error, %{code: code, message: message}}
           end
 
-        {:error, _} ->
-          {:error, %{code: 1, message: "The USPS API is down."}}
+        {:error, error} ->
+          {:error, %{code: 1, message: "The USPS API is down.", extra: error}}
       end
     end
   end
@@ -303,20 +303,23 @@ defmodule Shippex.Carrier.USPS do
   defp insurance_code(%{international?: false}, %{id: :usps_priority_express}), do: "101"
   defp insurance_code(%{international?: false}, %{id: _}), do: "100"
 
-  defp weight_in_ounces(%Shipment{package: %Package{weight: weight}}) do
+  @spec weight_in_ounces(number()) :: number()
+  defp weight_in_ounces(pounds) do
     16 *
       case Application.get_env(:shippex, :weight_unit, :lbs) do
         :lbs ->
-          weight
+          pounds
 
         :kg ->
-          Util.kgs_to_lbs(weight)
+          Util.kgs_to_lbs(pounds)
 
         u ->
           raise """
           Invalid unit of measurement specified: #{IO.inspect(u)}
 
-          Must be either :lbs or :kg
+          Must be either :lbs or :kg. This can be configured with:
+
+              config :shippex, :weight_unit, :lbs
           """
       end
   end

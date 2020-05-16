@@ -355,4 +355,9 @@ defmodule Shippex do
         {:ok, [address]}
     end
   end
+
+  @doc false
+  def json_library() do
+    Application.get_env(:shippex, :json_library, Jason)
+  end
 end

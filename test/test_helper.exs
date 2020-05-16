@@ -66,10 +66,19 @@ defmodule Helper do
       length: 8,
       width: 8,
       height: 4,
-      weight: 3,
-      description: "Headphones",
-      monetary_value: 20_00,
-      insurance: insurance
+      insurance: insurance,
+      items: [
+        %{
+          weight: 3,
+          description: "Headphones",
+          monetary_value: 20_00
+        },
+        %{
+          weight: 1,
+          description: "Small headphones",
+          monetary_value: 40_00
+        }
+      ]
     })
   end
 end

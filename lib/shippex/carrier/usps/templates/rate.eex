@@ -6,7 +6,7 @@
 
     <Package ID="0">
       <Pounds>1</Pounds>
-      <Ounces><%= weight_in_ounces(@shipment) %></Ounces>
+      <Ounces><%= weight_in_ounces(@shipment.package.weight) %></Ounces>
       <Machinable>False</Machinable>
       <MailType><%= international_mail_type(package) %></MailType>
       <ValueOfContents><%= Util.price_to_dollars(package.insurance || package.monetary_value) %></ValueOfContents>
@@ -37,7 +37,7 @@
       <ZipOrigination><%= @shipment.from.zip %></ZipOrigination>
       <ZipDestination><%= @shipment.to.zip %></ZipDestination>
       <Pounds>0</Pounds>
-      <Ounces><%= weight_in_ounces(@shipment) %></Ounces>
+      <Ounces><%= weight_in_ounces(@shipment.package.weight) %></Ounces>
       <Container><%= container(@shipment) %></Container>
       <Size><%= size(@shipment) %></Size>
       <Width><%= package.width %></Width>

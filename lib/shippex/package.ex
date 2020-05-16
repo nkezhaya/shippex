@@ -4,25 +4,34 @@ defmodule Shippex.Package do
   an origin and destination address for shipping estimates. A `description` is
   optional, as it may or may not be used with various carriers.
 
-  The `monetary_value` *might* be required depending on the origin/destination
-  countries of the shipment. Both `monetary_value` and `insurance` are integers
-  stored in USD cents.
-
   For USPS, a package has a `container` string which can be one of the
   pre-defined USPS containers.
+
+  Do not pass a `weight` parameter. Instead, pass in a list of `:items` with a
+  weight parameter on each of these. The weight on the package will be the sum
+  of the weights of each of these. Same for `:monetary_value`.
+
+  `:description` can optionally be passed in. Otherwise, it will be generated
+  by joining the descriptions of each of the items.
 
       Shippex.Package.package(%{length: 8
                                 width: 8,
                                 height: 8,
-                                weight: 5.5,
-                                monetary_value: 100_00})
+                                items: [
+                                  %{weight: 1, monetary_value: 100, description: "A"},
+                                  %{weight: 2, monetary_value: 200, description: "B"}
+                                ]})
+
+      # => %Package{weight: 3, monetary_value: 300, description: "A, B", ...}
   """
 
-  @enforce_keys [:length, :width, :height, :weight]
-  @fields ~w(length width height weight girth description monetary_value container insurance)a
+  alias Shippex.Item
+
+  @enforce_keys [:length, :width, :height, :weight, :items, :monetary_value, :description]
+  @fields ~w(length width height weight girth container insurance monetary_value description items)a
   defstruct @fields
 
-  @typep flat_rate_container :: %{
+  @typep flat_rate_container() :: %{
            name: String.t(),
            rate: integer(),
            length: number(),
@@ -30,16 +39,17 @@ defmodule Shippex.Package do
            height: number()
          }
 
-  @type t :: %__MODULE__{
+  @type t() :: %__MODULE__{
           length: number(),
           width: number(),
           height: number(),
           weight: number(),
+          monetary_value: number(),
           girth: nil | number(),
-          description: nil | String.t(),
-          monetary_value: nil | integer(),
           container: nil | String.t(),
-          insurance: nil | integer()
+          insurance: nil | number(),
+          description: nil | String.t(),
+          items: [Item.t()]
         }
 
   @doc """
@@ -48,7 +58,44 @@ defmodule Shippex.Package do
   """
   @spec new(map()) :: t()
   def new(attrs) do
-    attrs = Map.take(attrs, @fields)
+    items =
+      case attrs do
+        %{items: [_ | _] = items} -> Enum.map(items, &Item.new/1)
+        _ -> []
+      end
+
+    weight =
+      items
+      |> Enum.filter(&is_number(&1.weight))
+      |> Enum.reduce(0, &(&1.weight + &2))
+
+    monetary_value =
+      items
+      |> Enum.filter(&is_number(&1.monetary_value))
+      |> Enum.reduce(0, &(&1.monetary_value + &2))
+
+    description =
+      case attrs do
+        %{description: d} when is_bitstring(d) and d != "" ->
+          d
+
+        _ ->
+          items
+          |> Enum.filter(&is_bitstring(&1.description))
+          |> Enum.map(&String.normalize(&1.description, :nfc))
+          |> Enum.join(", ")
+      end
+
+    attrs =
+      attrs
+      |> Map.merge(%{
+        items: items,
+        weight: weight,
+        monetary_value: monetary_value,
+        description: description
+      })
+      |> Map.take(@fields)
+
     struct(__MODULE__, attrs)
   end
 
@@ -56,8 +103,8 @@ defmodule Shippex.Package do
   Returns a map of predefined containers for use with USPS. These can be
   passed to `package.container` for fetching rates.
   """
-  @spec usps_containers :: %{atom => String.t()}
-  def usps_containers do
+  @spec usps_containers() :: %{atom() => String.t()}
+  def usps_containers() do
     %{
       box_large: "Lg Flat Rate Box",
       box_medium: "Md Flat Rate Box",
@@ -78,7 +125,7 @@ defmodule Shippex.Package do
   Returns a map of flat rate USPS containers, along with their string description
   and flat shipping rate (in cents).
   """
-  @spec usps_flat_rate_containers() :: %{atom => flat_rate_container}
+  @spec usps_flat_rate_containers() :: %{atom() => flat_rate_container()}
   def usps_flat_rate_containers() do
     %{
       envelope: %{name: "Flat Rate Envelope", rate: 665, length: 12.5, height: 9.5, width: 0},

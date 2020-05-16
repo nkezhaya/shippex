@@ -4,7 +4,7 @@ defmodule Shippex.ISO do
   compliance with the ISO-3166-2 standard.
   """
 
-  @iso Poison.decode!(File.read!(:code.priv_dir(:shippex) ++ '/iso-3166-2.json'))
+  @iso Shippex.json_library().decode!(File.read!(:code.priv_dir(:shippex) ++ '/iso-3166-2.json'))
 
   @doc """
   Returns all ISO-3166-2 data.

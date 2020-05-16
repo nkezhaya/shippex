@@ -23,8 +23,8 @@ defmodule Shippex.Carrier.UPS do
             unquote(block)
           end
 
-        {:error, _} ->
-          {:error, %{code: 1, message: "The UPS API is down."}}
+        {:error, error} ->
+          {:error, %{code: 1, message: "The UPS API is down.", extra: error}}
       end
     end
   end
@@ -391,8 +391,8 @@ defmodule Shippex.Carrier.UPS do
 
     # HTTPoison implementation
     def process_url(endpoint), do: base_url() <> endpoint
-    def process_request_body(body), do: Poison.encode!(body)
-    def process_response_body(body), do: Poison.decode!(body)
+    def process_request_body(body), do: Shippex.json_library().encode!(body)
+    def process_response_body(body), do: Shippex.json_library().decode!(body)
 
     defp base_url do
       case Shippex.env() do

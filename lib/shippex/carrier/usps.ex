@@ -152,10 +152,13 @@ defmodule Shippex.Carrier.USPS do
         service.id == :usps_priority ->
           "eVSPriorityMailIntl"
 
+        service.id == :usps_first_class ->
+          "eVSFirstClassMailIntl"
+
         true ->
           raise """
           Only the Priority and Priority Express services are supported for
-          international shipments at the moment.
+          international shipments at the moment. (Received :#{service.id}.)
           """
       end
 

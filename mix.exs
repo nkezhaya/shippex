@@ -42,7 +42,7 @@ defmodule Shippex.Mixfile do
       {:httpoison, ">= 0.0.0"},
       {:sweet_xml, ">= 0.0.0"},
       {:html_entities, ">= 0.0.0"},
-      {:jason, "~> 1.2"},
+      {:jason, "~> 1.2", optional: true},
       {:decimal, "~> 1.3"}
     ]
   end

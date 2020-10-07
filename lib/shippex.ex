@@ -123,8 +123,9 @@ defmodule Shippex do
     ups = if Keyword.get(cfg, :ups), do: :ups
     fedex = if Keyword.get(cfg, :fedex), do: :fedex
     usps = if Keyword.get(cfg, :usps), do: :usps
+    dummy = if Keyword.get(cfg, :dummy), do: :dummy
 
-    Enum.reject([ups, fedex, usps], &is_nil/1)
+    Enum.reject([ups, fedex, usps, dummy], &is_nil/1)
   end
 
   @doc false

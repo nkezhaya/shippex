@@ -13,6 +13,7 @@ defmodule Shippex.Carrier do
               {atom, Transaction.t() | map}
   @callback cancel_transaction(Transaction.t()) :: {atom, String.t()}
   @callback cancel_transaction(Shipment.t(), String.t()) :: {atom, String.t()}
+  @callback validate_address(Address.t()) :: {:ok, [Address.t()]} | {:error, any()}
 
   @type t :: atom
 
@@ -28,10 +29,12 @@ defmodule Shippex.Carrier do
   """
   @spec module(atom | String.t()) :: module()
   def module(carrier) when is_atom(carrier) do
+    # NOTE, this might be a good place to use a protocol?
     module =
       case carrier do
         :ups -> Carrier.UPS
         :usps -> Carrier.USPS
+        :dummy -> Carrier.Dummy
         c -> raise "#{c} is not a supported carrier at this time."
       end
 

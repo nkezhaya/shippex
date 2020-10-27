@@ -241,6 +241,14 @@ defmodule Shippex.Address do
     end
   end
 
+  defp filter_for_comparison(string) do
+    string
+    |> String.trim()
+    |> String.downcase()
+    |> String.normalize(:nfd)
+    |> String.replace(~r/[^A-z\s]/u, "")
+  end
+
   @doc """
   Converts a full country name to its 2-letter ISO-3166-2 code.
 
@@ -303,11 +311,42 @@ defmodule Shippex.Address do
     end
   end
 
-  defp filter_for_comparison(string) do
-    string
+  @doc """
+  Returns a common country name for the given country code.  This removes
+  occurrences of `"(the)"` that may be present in the ISO-3166-2 data. For
+  example, the code "US" normally maps to "United States of America (the)". We
+  can shorten this with:
+
+      iex> Address.common_country_name("US")
+      "United States"
+  """
+  @common_names %{
+    "US" => "United States"
+  }
+
+  @spec common_country_name(String.t()) :: String.t()
+
+  for {code, name} <- @common_names do
+    def common_country_name(unquote(code)), do: unquote(name)
+  end
+
+  def common_country_name(code) do
+    code
+    |> ISO.abbreviation_to_country_name()
+    |> String.replace("(the)", "")
     |> String.trim()
-    |> String.downcase()
-    |> String.normalize(:nfd)
-    |> String.replace(~r/[^A-z\s]/u, "")
+  end
+
+  @doc """
+  Returns the country code for the given common name, or nil if none was found.
+
+      iex> Address.common_country_name("United States")
+      "US"
+      iex> Address.common_country_name("United States of America")
+      nil
+  """
+  @spec common_country_code(String.t()) :: nil | String.t()
+  for {code, name} <- @common_names do
+    def common_country_code(unquote(name)), do: unquote(code)
   end
 end

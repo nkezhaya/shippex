@@ -51,7 +51,8 @@ defmodule Shippex.Mixfile do
       {:html_entities, ">= 0.0.0"},
       {:jason, "~> 1.2", optional: true},
       {:decimal, "~> 1.3"},
-      {:csv, "~> 2.4", optional: true, only: [:dev]}
+      {:csv, "~> 2.4", optional: true, only: [:dev]},
+      {:floki, ">= 0.0.0", optional: true, only: [:dev]}
     ]
   end
 end

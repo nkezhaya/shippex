@@ -1,4 +1,22 @@
 {
+  "AD": {
+    "name": "Andorra",
+    "divisions": {
+      "AD-AD": "Andorra"
+    }
+  },
+  "AE": {
+    "name": "United Arab Emirates",
+    "divisions": {
+      "AE-AZ": "Abū Zaby (Abu Dhabi)",
+      "AE-AJ": "‘Ajmān",
+      "AE-FU": "Al Fujayrah",
+      "AE-SH": "Ash Shāriqah (Sharjah)",
+      "AE-DU": "Dubayy (Dubai)",
+      "AE-RK": "R'as al Khaymah",
+      "AE-UQ": "Umm al Qaywayn"
+    }
+  },
   "AF": {
     "name": "Afghanistan",
     "divisions": {
@@ -32,6 +50,18 @@
       "AF-TAK": "Takhār",
       "AF-WAR": "Wardak (Wardag)",
       "AF-ZAB": "Zābol (Zābul)"
+    }
+  },
+  "AG": {
+    "name": "Antigua & Barbuda",
+    "divisions": {
+      "AG-AG": "Antigua & Barbuda"
+    }
+  },
+  "AI": {
+    "name": "Anguilla",
+    "divisions": {
+      "AI-AI": "Anguilla"
     }
   },
   "AL": {
@@ -75,68 +105,26 @@
       "AL-VL": "Vlorë"
     }
   },
-  "DZ": {
-    "name": "Algeria",
+  "AM": {
+    "name": "Armenia",
     "divisions": {
-      "DZ-01": "Adrar",
-      "DZ-44": "Aïn Defla",
-      "DZ-46": "Aïn Témouchent",
-      "DZ-16": "Alger",
-      "DZ-05": "Batna",
-      "DZ-08": "Béchar",
-      "DZ-06": "Béjaïa",
-      "DZ-07": "Biskra",
-      "DZ-09": "Blida",
-      "DZ-34": "Bordj Bou Arréridj",
-      "DZ-10": "Bouira",
-      "DZ-35": "Boumerdès",
-      "DZ-02": "Chlef",
-      "DZ-25": "Constantine",
-      "DZ-17": "Djelfa",
-      "DZ-32": "El Bayadh",
-      "DZ-39": "El Oued",
-      "DZ-36": "El Tarf",
-      "DZ-47": "Ghardaïa",
-      "DZ-24": "Guelma",
-      "DZ-33": "Illizi",
-      "DZ-18": "Jijel",
-      "DZ-40": "Khenchela",
-      "DZ-03": "Laghouat",
-      "DZ-29": "Mascara",
-      "DZ-26": "Médéa",
-      "DZ-43": "Mila",
-      "DZ-27": "Mostaganem",
-      "DZ-28": "Msila",
-      "DZ-45": "Naama",
-      "DZ-31": "Oran",
-      "DZ-30": "Ouargla",
-      "DZ-04": "Oum el Bouaghi",
-      "DZ-48": "Relizane",
-      "DZ-20": "Saïda",
-      "DZ-19": "Sétif",
-      "DZ-22": "Sidi Bel Abbès",
-      "DZ-21": "Skikda",
-      "DZ-41": "Souk Ahras",
-      "DZ-11": "Tamanghasset",
-      "DZ-12": "Tébessa",
-      "DZ-14": "Tiaret",
-      "DZ-37": "Tindouf",
-      "DZ-42": "Tipaza",
-      "DZ-38": "Tissemsilt",
-      "DZ-15": "Tizi Ouzou",
-      "DZ-13": "Tlemcen"
+      "AM-ER": "Erevan",
+      "AM-AG": "Aragacotn",
+      "AM-AR": "Ararat",
+      "AM-AV": "Armavir",
+      "AM-GR": "Geģark'unik'",
+      "AM-KT": "Kotayk'",
+      "AM-LO": "Loŕy",
+      "AM-SH": "Širak",
+      "AM-SU": "Syunik'",
+      "AM-TV": "Tavuš",
+      "AM-VD": "Vayoc Jor"
     }
   },
-  "AS": {
-    "name": "American Samoa",
+  "AN": {
+    "name": "Netherlands Antilles",
     "divisions": {
-      "AS-AS": "American Samoa"
-    }
-  },
-  "AD": {
-    "name": "Andorra",
-    "divisions": {
-      "AD-AD": "Andorra"
+      "AN-AN": "Netherlands Antilles"
     }
   },
   "AO": {
@@ -162,22 +150,10 @@
       "AO-ZAI": "Zaïre"
     }
   },
-  "AI": {
-    "name": "Anguilla",
-    "divisions": {
-      "AI-AI": "Anguilla"
-    }
-  },
   "AQ": {
     "name": "Antarctica",
     "divisions": {
       "AQ-AQ": "Antarctica"
-    }
-  },
-  "AG": {
-    "name": "Antigua & Barbuda",
-    "divisions": {
-      "AG-AG": "Antigua & Barbuda"
     }
   },
   "AR": {
@@ -209,26 +185,24 @@
       "AR-T": "Tucumán"
     }
   },
-  "AM": {
-    "name": "Armenia",
+  "AS": {
+    "name": "American Samoa",
     "divisions": {
-      "AM-ER": "Erevan",
-      "AM-AG": "Aragacotn",
-      "AM-AR": "Ararat",
-      "AM-AV": "Armavir",
-      "AM-GR": "Geģark'unik'",
-      "AM-KT": "Kotayk'",
-      "AM-LO": "Loŕy",
-      "AM-SH": "Širak",
-      "AM-SU": "Syunik'",
-      "AM-TV": "Tavuš",
-      "AM-VD": "Vayoc Jor"
+      "AS-AS": "American Samoa"
     }
   },
-  "AW": {
-    "name": "Aruba",
+  "AT": {
+    "name": "Austria",
     "divisions": {
-      "AW-AW": "Aruba"
+      "AT-1": "Burgenland",
+      "AT-2": "Kärnten",
+      "AT-3": "Niederösterreich",
+      "AT-4": "Oberösterreich",
+      "AT-5": "Salzburg",
+      "AT-6": "Steiermark",
+      "AT-7": "Tirol",
+      "AT-8": "Vorarlberg",
+      "AT-9": "Wien"
     }
   },
   "AU": {
@@ -244,18 +218,10 @@
       "AU-NT": "Northern Territory"
     }
   },
-  "AT": {
-    "name": "Austria",
+  "AW": {
+    "name": "Aruba",
     "divisions": {
-      "AT-1": "Burgenland",
-      "AT-2": "Kärnten",
-      "AT-3": "Niederösterreich",
-      "AT-4": "Oberösterreich",
-      "AT-5": "Salzburg",
-      "AT-6": "Steiermark",
-      "AT-7": "Tirol",
-      "AT-8": "Vorarlberg",
-      "AT-9": "Wien"
+      "AW-AW": "Aruba"
     }
   },
   "AZ": {
@@ -340,47 +306,17 @@
       "AZ-ZAR": "Zärdab"
     }
   },
-  "BS": {
-    "name": "Bahamas",
+  "BA": {
+    "name": "Bosnia & Herzegovina",
     "divisions": {
-      "BS-AC": "Acklins and Crooked Islands",
-      "BS-BI": "Bimini",
-      "BS-CI": "Cat Island",
-      "BS-EX": "Exuma",
-      "BS-FP": "Freeport",
-      "BS-FC": "Fresh Creek",
-      "BS-GH": "Governor's Harbour",
-      "BS-GT": "Green Turtle Cay",
-      "BS-HI": "Harbour Island",
-      "BS-HR": "High Rock",
-      "BS-IN": "Inagua",
-      "BS-KB": "Kemps Bay",
-      "BS-LI": "Long Island",
-      "BS-MH": "Marsh Harbour",
-      "BS-MG": "Mayaguana",
-      "BS-NP": "New Providence",
-      "BS-NB": "Nicholls Town and Berry Islands",
-      "BS-RI": "Ragged Island",
-      "BS-RS": "Rock Sound",
-      "BS-SP": "Sandy Point",
-      "BS-SR": "San Salvador and Rum Cay"
+      "BA-BIH": "Federacija Bosna i Hercegovina",
+      "BA-SRP": "Republika Srpska"
     }
   },
-  "BH": {
-    "name": "Bahrain",
+  "BB": {
+    "name": "Barbados",
     "divisions": {
-      "BH-01": "Al Ḩadd",
-      "BH-03": "Al Manāmah",
-      "BH-10": "Al Minţaqah al Gharbīyah",
-      "BH-07": "Al Minţaqah al Wusţa",
-      "BH-05": "Al Minţaqah ash Shamālīyah",
-      "BH-02": "Al Muḩarraq",
-      "BH-09": "Ar Rifā‘",
-      "BH-04": "Jidd Ḩafş",
-      "BH-12": "Madīnat Ḩamad",
-      "BH-08": "Madīnat ‘Īsá",
-      "BH-11": "Minţaqat Juzur Ḩawār",
-      "BH-06": "Sitrah"
+      "BB-BB": "Barbados"
     }
   },
   "BD": {
@@ -414,23 +350,6 @@
       "BD-5S": "Rangpur anchal"
     }
   },
-  "BB": {
-    "name": "Barbados",
-    "divisions": {
-      "BB-BB": "Barbados"
-    }
-  },
-  "BY": {
-    "name": "Belarus",
-    "divisions": {
-      "BY-BR": "Brestskaya voblasts'",
-      "BY-HO": "Homyel'skaya voblasts’",
-      "BY-HR": "Hrodnenskaya voblasts'",
-      "BY-MA": "Mahilyowskaya voblasts'",
-      "BY-MI": "Minskaya voblasts'",
-      "BY-VI": "Vitsyebskaya voblasts'"
-    }
-  },
   "BE": {
     "name": "Belgium",
     "divisions": {
@@ -447,162 +366,6 @@
       "BE-WLG": "Liège (fr)",
       "BE-WLX": "Luxembourg (fr)",
       "BE-WNA": "Namur (fr)"
-    }
-  },
-  "BZ": {
-    "name": "Belize",
-    "divisions": {
-      "BZ-BZ": "Belize",
-      "BZ-CY": "Cayo",
-      "BZ-CZL": "Corozal",
-      "BZ-OW": "Orange Walk",
-      "BZ-SC": "Stann Creek",
-      "BZ-TOL": "Toledo"
-    }
-  },
-  "BJ": {
-    "name": "Benin",
-    "divisions": {
-      "BJ-AK": "Atakora",
-      "BJ-AQ": "Atlantique",
-      "BJ-BO": "Borgou",
-      "BJ-MO": "Mono",
-      "BJ-OU": "Ouémé",
-      "BJ-ZO": "Zou"
-    }
-  },
-  "BM": {
-    "name": "Bermuda",
-    "divisions": {
-      "BM-BM": "Bermuda"
-    }
-  },
-  "BT": {
-    "name": "Bhutan",
-    "divisions": {
-      "BT-33": "Bumthang",
-      "BT-12": "Chhukha",
-      "BT-22": "Dagana",
-      "BT-GA": "Gasa",
-      "BT-13": "Ha",
-      "BT-44": "Lhuentse",
-      "BT-42": "Monggar",
-      "BT-11": "Paro",
-      "BT-43": "Pemagatshel",
-      "BT-23": "Punakha",
-      "BT-45": "Samdrup Jongkha",
-      "BT-14": "Samtse",
-      "BT-31": "Sarpang",
-      "BT-15": "Thimphu",
-      "BT-41": "Trashigang",
-      "BT-TY": "Trashi Yangtse",
-      "BT-32": "Trongsa",
-      "BT-21": "Tsirang",
-      "BT-24": "Wangdue Phodrang",
-      "BT-34": "Zhemgang"
-    }
-  },
-  "BO": {
-    "name": "Bolivia",
-    "divisions": {
-      "BO-C": "Cochabamba",
-      "BO-H": "Chuquisaca",
-      "BO-B": "El Beni",
-      "BO-L": "La Paz",
-      "BO-O": "Oruro",
-      "BO-N": "Pando",
-      "BO-P": "Potosi",
-      "BO-S": "Santa Cruz",
-      "BO-T": "Tarija"
-    }
-  },
-  "BA": {
-    "name": "Bosnia & Herzegovina",
-    "divisions": {
-      "BA-BIH": "Federacija Bosna i Hercegovina",
-      "BA-SRP": "Republika Srpska"
-    }
-  },
-  "BW": {
-    "name": "Botswana",
-    "divisions": {
-      "BW-CE": "Central [Serowe-Palapye]",
-      "BW-CH": "Chobe",
-      "BW-GH": "Ghanzi",
-      "BW-KG": "Kgalagadi",
-      "BW-KL": "Kgatleng",
-      "BW-KW": "Kweneng",
-      "BW-NG": "Ngamiland [North-West]",
-      "BW-NE": "North-East",
-      "BW-SE": "South-East",
-      "BW-SO": "Southern [Ngwaketse]"
-    }
-  },
-  "BV": {
-    "name": "Bouvet Island",
-    "divisions": {
-      "BV-BV": "Bouvet Island"
-    }
-  },
-  "BR": {
-    "name": "Brazil",
-    "divisions": {
-      "BR-DF": "Distrito Federal",
-      "BR-AC": "Acre",
-      "BR-AL": "Alagoas",
-      "BR-AP": "Amapá",
-      "BR-AM": "Amazonas",
-      "BR-BA": "Bahia",
-      "BR-CE": "Ceará",
-      "BR-ES": "Espírito Santo",
-      "BR-GO": "Goiás",
-      "BR-MA": "Maranhāo",
-      "BR-MT": "Mato Grosso",
-      "BR-MS": "Mato Grosso do Sul",
-      "BR-MG": "Minas Gerais",
-      "BR-PA": "Pará",
-      "BR-PB": "Paraíba",
-      "BR-PR": "Paraná",
-      "BR-PE": "Pernambuco",
-      "BR-PI": "Piauí",
-      "BR-RJ": "Rio de Janeiro",
-      "BR-RN": "Rio Grande do Norte",
-      "BR-RS": "Rio Grande do Sul",
-      "BR-R0": "Rondônia",
-      "BR-RR": "Roraima",
-      "BR-SC": "Santa Catarina",
-      "BR-SP": "São Paulo",
-      "BR-SE": "Sergipe",
-      "BR-TO": "Tocantins"
-    }
-  },
-  "IO": {
-    "name": "British Indian Ocean Territory",
-    "divisions": {
-      "IO-IO": "British Indian Ocean Territory"
-    }
-  },
-  "BN": {
-    "name": "Brunei Darussalam",
-    "divisions": {
-      "BN-BE": "Belait",
-      "BN-BM": "Brunei-Muara",
-      "BN-TE": "Temburong",
-      "BN-TU": "Tutong"
-    }
-  },
-  "BG": {
-    "name": "Bulgaria",
-    "divisions": {
-      "BG-02": "Burgas",
-      "BG-09": "Haskovo",
-      "BG-04": "Loveč",
-      "BG-05": "Montana",
-      "BG-06": "Plovdiv",
-      "BG-07": "Ruse",
-      "BG-08": "Sofija",
-      "BG-01": "Sofija-Grad",
-      "BG-03": "Varna"
     }
   },
   "BF": {
@@ -655,6 +418,37 @@
       "BF-ZOU": "Zoundwéogo"
     }
   },
+  "BG": {
+    "name": "Bulgaria",
+    "divisions": {
+      "BG-02": "Burgas",
+      "BG-09": "Haskovo",
+      "BG-04": "Loveč",
+      "BG-05": "Montana",
+      "BG-06": "Plovdiv",
+      "BG-07": "Ruse",
+      "BG-08": "Sofija",
+      "BG-01": "Sofija-Grad",
+      "BG-03": "Varna"
+    }
+  },
+  "BH": {
+    "name": "Bahrain",
+    "divisions": {
+      "BH-01": "Al Ḩadd",
+      "BH-03": "Al Manāmah",
+      "BH-10": "Al Minţaqah al Gharbīyah",
+      "BH-07": "Al Minţaqah al Wusţa",
+      "BH-05": "Al Minţaqah ash Shamālīyah",
+      "BH-02": "Al Muḩarraq",
+      "BH-09": "Ar Rifā‘",
+      "BH-04": "Jidd Ḩafş",
+      "BH-12": "Madīnat Ḩamad",
+      "BH-08": "Madīnat ‘Īsá",
+      "BH-11": "Minţaqat Juzur Ḩawār",
+      "BH-06": "Sitrah"
+    }
+  },
   "BI": {
     "name": "Burundi",
     "divisions": {
@@ -675,46 +469,170 @@
       "BI-RY": "Ruyigi"
     }
   },
-  "KH": {
-    "name": "Cambodia",
+  "BJ": {
+    "name": "Benin",
     "divisions": {
-      "KH-23": "Krong Kaeb [Krŏng Kêb]",
-      "KH-18": "Krong Preah Sihanouk [Krŏng Preăh Sihanouk]",
-      "KH-12": "Phnom Penh [Phnum Pénh]",
-      "KH-2": "Baat Dambang [Bătdâmbâng]",
-      "KH-1": "Banteay Mean Chey [Bântéay Méanchey]",
-      "KH-3": "Kampong Chaam [Kâmpóng Cham]",
-      "KH-4": "Kampong Chhnang [Kâmpóng Chhnăng]",
-      "KH-5": "Kampong Spueu [Kâmpóng Spœ]",
-      "KH-6": "Kampong Thum [Kâmpóng Thum]",
-      "KH-7": "Kampot [Kâmpôt]",
-      "KH-8": "Kandaal [Kândal]",
-      "KH-10": "Kracheh [Krâchéh]",
-      "KH-11": "Mond01 Kiri [Môndól Kiri]",
-      "KH-22": "Otdar Mean Chey [Ŏtdâr Méanchey]",
-      "KH-15": "Pousaat [Poŭthĭsăt]",
-      "KH-13": "Preah Vihear [Preăh Vihéar]",
-      "KH-14": "Prey Veaeng [Prey Vêng]",
-      "KH-16": "Rotanak Kiri [Rôtânôkiri]",
-      "KH-17": "Siem Reab [Siĕmréab]",
-      "KH-19": "Stueng Traeng [Stœng Trêng]",
-      "KH-20": "Svaay Rieng [Svay Riĕng]",
-      "KH-21": "Taakaev [Takêv]"
+      "BJ-AK": "Atakora",
+      "BJ-AQ": "Atlantique",
+      "BJ-BO": "Borgou",
+      "BJ-MO": "Mono",
+      "BJ-OU": "Ouémé",
+      "BJ-ZO": "Zou"
     }
   },
-  "CM": {
-    "name": "Cameroon",
+  "BM": {
+    "name": "Bermuda",
     "divisions": {
-      "CM-AD": "Adamaoua",
-      "CM-CE": "Centre",
-      "CM-ES": "Est",
-      "CM-EN": "Far North",
-      "CM-LT": "Littoral",
-      "CM-NO": "North",
-      "CM-NW": "North-West",
-      "CM-SU": "South",
-      "CM-SW": "South-West",
-      "CM-OU": "West"
+      "BM-BM": "Bermuda"
+    }
+  },
+  "BN": {
+    "name": "Brunei Darussalam",
+    "divisions": {
+      "BN-BE": "Belait",
+      "BN-BM": "Brunei-Muara",
+      "BN-TE": "Temburong",
+      "BN-TU": "Tutong"
+    }
+  },
+  "BO": {
+    "name": "Bolivia",
+    "divisions": {
+      "BO-C": "Cochabamba",
+      "BO-H": "Chuquisaca",
+      "BO-B": "El Beni",
+      "BO-L": "La Paz",
+      "BO-O": "Oruro",
+      "BO-N": "Pando",
+      "BO-P": "Potosi",
+      "BO-S": "Santa Cruz",
+      "BO-T": "Tarija"
+    }
+  },
+  "BR": {
+    "name": "Brazil",
+    "divisions": {
+      "BR-DF": "Distrito Federal",
+      "BR-AC": "Acre",
+      "BR-AL": "Alagoas",
+      "BR-AP": "Amapá",
+      "BR-AM": "Amazonas",
+      "BR-BA": "Bahia",
+      "BR-CE": "Ceará",
+      "BR-ES": "Espírito Santo",
+      "BR-GO": "Goiás",
+      "BR-MA": "Maranhāo",
+      "BR-MT": "Mato Grosso",
+      "BR-MS": "Mato Grosso do Sul",
+      "BR-MG": "Minas Gerais",
+      "BR-PA": "Pará",
+      "BR-PB": "Paraíba",
+      "BR-PR": "Paraná",
+      "BR-PE": "Pernambuco",
+      "BR-PI": "Piauí",
+      "BR-RJ": "Rio de Janeiro",
+      "BR-RN": "Rio Grande do Norte",
+      "BR-RS": "Rio Grande do Sul",
+      "BR-R0": "Rondônia",
+      "BR-RR": "Roraima",
+      "BR-SC": "Santa Catarina",
+      "BR-SP": "São Paulo",
+      "BR-SE": "Sergipe",
+      "BR-TO": "Tocantins"
+    }
+  },
+  "BS": {
+    "name": "Bahamas",
+    "divisions": {
+      "BS-AC": "Acklins and Crooked Islands",
+      "BS-BI": "Bimini",
+      "BS-CI": "Cat Island",
+      "BS-EX": "Exuma",
+      "BS-FP": "Freeport",
+      "BS-FC": "Fresh Creek",
+      "BS-GH": "Governor's Harbour",
+      "BS-GT": "Green Turtle Cay",
+      "BS-HI": "Harbour Island",
+      "BS-HR": "High Rock",
+      "BS-IN": "Inagua",
+      "BS-KB": "Kemps Bay",
+      "BS-LI": "Long Island",
+      "BS-MH": "Marsh Harbour",
+      "BS-MG": "Mayaguana",
+      "BS-NP": "New Providence",
+      "BS-NB": "Nicholls Town and Berry Islands",
+      "BS-RI": "Ragged Island",
+      "BS-RS": "Rock Sound",
+      "BS-SP": "Sandy Point",
+      "BS-SR": "San Salvador and Rum Cay"
+    }
+  },
+  "BT": {
+    "name": "Bhutan",
+    "divisions": {
+      "BT-33": "Bumthang",
+      "BT-12": "Chhukha",
+      "BT-22": "Dagana",
+      "BT-GA": "Gasa",
+      "BT-13": "Ha",
+      "BT-44": "Lhuentse",
+      "BT-42": "Monggar",
+      "BT-11": "Paro",
+      "BT-43": "Pemagatshel",
+      "BT-23": "Punakha",
+      "BT-45": "Samdrup Jongkha",
+      "BT-14": "Samtse",
+      "BT-31": "Sarpang",
+      "BT-15": "Thimphu",
+      "BT-41": "Trashigang",
+      "BT-TY": "Trashi Yangtse",
+      "BT-32": "Trongsa",
+      "BT-21": "Tsirang",
+      "BT-24": "Wangdue Phodrang",
+      "BT-34": "Zhemgang"
+    }
+  },
+  "BV": {
+    "name": "Bouvet Island",
+    "divisions": {
+      "BV-BV": "Bouvet Island"
+    }
+  },
+  "BW": {
+    "name": "Botswana",
+    "divisions": {
+      "BW-CE": "Central [Serowe-Palapye]",
+      "BW-CH": "Chobe",
+      "BW-GH": "Ghanzi",
+      "BW-KG": "Kgalagadi",
+      "BW-KL": "Kgatleng",
+      "BW-KW": "Kweneng",
+      "BW-NG": "Ngamiland [North-West]",
+      "BW-NE": "North-East",
+      "BW-SE": "South-East",
+      "BW-SO": "Southern [Ngwaketse]"
+    }
+  },
+  "BY": {
+    "name": "Belarus",
+    "divisions": {
+      "BY-BR": "Brestskaya voblasts'",
+      "BY-HO": "Homyel'skaya voblasts’",
+      "BY-HR": "Hrodnenskaya voblasts'",
+      "BY-MA": "Mahilyowskaya voblasts'",
+      "BY-MI": "Minskaya voblasts'",
+      "BY-VI": "Vitsyebskaya voblasts'"
+    }
+  },
+  "BZ": {
+    "name": "Belize",
+    "divisions": {
+      "BZ-BZ": "Belize",
+      "BZ-CY": "Cayo",
+      "BZ-CZL": "Corozal",
+      "BZ-OW": "Orange Walk",
+      "BZ-SC": "Stann Creek",
+      "BZ-TOL": "Toledo"
     }
   },
   "CA": {
@@ -735,31 +653,26 @@
       "CA-YT": "Yukon Territory (Teritoire du Yukon)"
     }
   },
-  "CV": {
-    "name": "Cape Verde",
+  "CC": {
+    "name": "Cocos (Keeling) Islands",
     "divisions": {
-      "CV-B": "Ilhas de Barlavento",
-      "CV-BV": "Boa Vista",
-      "CV-PA": "Paul",
-      "CV-PN": "Porto Novo",
-      "CV-RG": "Ribeira Grande",
-      "CV-SL": "Sal",
-      "CV-SN": "Sāo Nicolau",
-      "CV-SV": "Sāo Vicente",
-      "CV-S": "Ilhas de Sotavento",
-      "CV-BR": "Brava",
-      "CV-FO": "Fogo",
-      "CV-MA": "Maio",
-      "CV-PR": "Praia",
-      "CV-CA": "Santa Catarina",
-      "CV-CR": "Santa Cruz",
-      "CV-TA": "Tarrafal"
+      "CC-CC": "Cocos (Keeling) Islands"
     }
   },
-  "KY": {
-    "name": "Cayman Islands",
+  "CD": {
+    "name": "Congo, Democratic Republic of the",
     "divisions": {
-      "KY-KY": "Cayman Islands"
+      "CD-KN": "Kinshasa",
+      "CD-BN": "Bandundu",
+      "CD-BC": "Bas-Congo",
+      "CD-EQ": "Équateur",
+      "CD-HC": "Haut-Congo",
+      "CD-KW": "Kasai-Occidental",
+      "CD-KE": "Kasai-Oriental",
+      "CD-KA": "Katanga",
+      "CD-MA": "Maniema",
+      "CD-NK": "Nord-Kivu",
+      "CD-SK": "Sud-Kivu"
     }
   },
   "CF": {
@@ -784,23 +697,78 @@
       "CF-VK": "Vakaga"
     }
   },
-  "TD": {
-    "name": "Chad",
+  "CG": {
+    "name": "Congo, the",
     "divisions": {
-      "TD-BA": "Batha",
-      "TD-BI": "Biltine",
-      "TD-BET": "Borkou-Ennedi-Tibesti",
-      "TD-CB": "Chari-Baguirmi",
-      "TD-GR": "Guéra",
-      "TD-KA": "Kanem",
-      "TD-LC": "Lac",
-      "TD-LO": "Logone-Occidental",
-      "TD-LR": "Logone-Oriental",
-      "TD-MK": "Mayo-Kébbi",
-      "TD-MC": "Moyen-Chari",
-      "TD-OD": "Ouaddaï",
-      "TD-SA": "Salamat",
-      "TD-TA": "Tandjilé"
+      "CG-BZV": "Brazzaville",
+      "CG-11": "Bouenza",
+      "CG-8": "Cuvette",
+      "CG-15": "Cuvette-Ouest",
+      "CG-5": "Kouilou",
+      "CG-2": "Lékoumou",
+      "CG-7": "Likouala",
+      "CG-9": "Niari",
+      "CG-14": "Plateaux",
+      "CG-12": "Pool",
+      "CG-13": "Sangha"
+    }
+  },
+  "CH": {
+    "name": "Switzerland",
+    "divisions": {
+      "CH-AG": "Aargau",
+      "CH-AR": "Appenzell Ausser-Rhoden",
+      "CH-AI": "Appenzell Inner-Rhoden",
+      "CH-BL": "Basel-Landschaft",
+      "CH-BS": "Basel-Stadt",
+      "CH-BE": "Bern",
+      "CH-FR": "Freiburg",
+      "CH-GE": "Geneve",
+      "CH-GL": "Glarus",
+      "CH-GR": "Graubünden",
+      "CH-JU": "Jura",
+      "CH-LU": "Luzern",
+      "CH-NE": "Neuchatel",
+      "CH-NW": "Nidwalden",
+      "CH-OW": "Obwalden",
+      "CH-SG": "Sankt Gallen",
+      "CH-SH": "Schaffhausen",
+      "CH-SZ": "Schwyz",
+      "CH-SO": "Solothurn",
+      "CH-TG": "Thurgau",
+      "CH-TI": "Ticino",
+      "CH-UR": "Uri",
+      "CH-VS": "Wallis",
+      "CH-VD": "Vaud",
+      "CH-ZG": "Zug",
+      "CH-ZH": "Zürich"
+    }
+  },
+  "CI": {
+    "name": "Cote d'Ivoire",
+    "divisions": {
+      "CI-06": "18 Montagnes (Région des)",
+      "CI-16": "Agnébi (Région de l')",
+      "CI-09": "Bas-Sassandra (Région du)",
+      "CI-10": "Denguélé (Région du)",
+      "CI-02": "Haut-Sassandra (Région du)",
+      "CI-07": "Lacs (Région des)",
+      "CI-01": "Lagunes (Région des)",
+      "CI-12": "Marahoué (Région de la)",
+      "CI-05": "Moyen-Comoé (Région du)",
+      "CI-11": "Nzi-Comoé (Région)",
+      "CI-03": "Savanes (Région des)",
+      "CI-15": "Sud-Bandama (Région du)",
+      "CI-13": "Sud-Comoé (Région du)",
+      "CI-04": "Vallée du Bandama (Région de la)",
+      "CI-14": "Worodougou (Région du)",
+      "CI-08": "Zanzan (Région du)"
+    }
+  },
+  "CK": {
+    "name": "Cook Islands",
+    "divisions": {
+      "CK-CK": "Cook Islands"
     }
   },
   "CL": {
@@ -819,6 +787,21 @@
       "CL-RM": "Regíon Metropolitana de Santiago",
       "CL-TA": "Tarapacá",
       "CL-VS": "Valparaiso"
+    }
+  },
+  "CM": {
+    "name": "Cameroon",
+    "divisions": {
+      "CM-AD": "Adamaoua",
+      "CM-CE": "Centre",
+      "CM-ES": "Est",
+      "CM-EN": "Far North",
+      "CM-LT": "Littoral",
+      "CM-NO": "North",
+      "CM-NW": "North-West",
+      "CM-SU": "South",
+      "CM-SW": "South-West",
+      "CM-OU": "West"
     }
   },
   "CN": {
@@ -859,18 +842,6 @@
       "CN-91": "Hong Kong"
     }
   },
-  "CX": {
-    "name": "Christmas Island",
-    "divisions": {
-      "CX-CX": "Christmas Island"
-    }
-  },
-  "CC": {
-    "name": "Cocos (Keeling) Islands",
-    "divisions": {
-      "CC-CC": "Cocos (Keeling) Islands"
-    }
-  },
   "CO": {
     "name": "Colombia",
     "divisions": {
@@ -909,52 +880,6 @@
       "CO-VID": "Vichada"
     }
   },
-  "KM": {
-    "name": "Comoros",
-    "divisions": {
-      "KM-A": "Anjouan (Ndzouani)",
-      "KM-G": "Grande Comore (Ngazidja)",
-      "KM-M": "Mohéli (Moili)"
-    }
-  },
-  "CG": {
-    "name": "Congo, the",
-    "divisions": {
-      "CG-BZV": "Brazzaville",
-      "CG-11": "Bouenza",
-      "CG-8": "Cuvette",
-      "CG-15": "Cuvette-Ouest",
-      "CG-5": "Kouilou",
-      "CG-2": "Lékoumou",
-      "CG-7": "Likouala",
-      "CG-9": "Niari",
-      "CG-14": "Plateaux",
-      "CG-12": "Pool",
-      "CG-13": "Sangha"
-    }
-  },
-  "CD": {
-    "name": "Congo, Democratic Republic of the",
-    "divisions": {
-      "CD-KN": "Kinshasa",
-      "CD-BN": "Bandundu",
-      "CD-BC": "Bas-Congo",
-      "CD-EQ": "Équateur",
-      "CD-HC": "Haut-Congo",
-      "CD-KW": "Kasai-Occidental",
-      "CD-KE": "Kasai-Oriental",
-      "CD-KA": "Katanga",
-      "CD-MA": "Maniema",
-      "CD-NK": "Nord-Kivu",
-      "CD-SK": "Sud-Kivu"
-    }
-  },
-  "CK": {
-    "name": "Cook Islands",
-    "divisions": {
-      "CK-CK": "Cook Islands"
-    }
-  },
   "CR": {
     "name": "Costa Rica",
     "divisions": {
@@ -965,52 +890,6 @@
       "CR-L": "Limón",
       "CR-P": "Puntarenas",
       "CR-SJ": "San José"
-    }
-  },
-  "CI": {
-    "name": "Cote d'Ivoire",
-    "divisions": {
-      "CI-06": "18 Montagnes (Région des)",
-      "CI-16": "Agnébi (Région de l')",
-      "CI-09": "Bas-Sassandra (Région du)",
-      "CI-10": "Denguélé (Région du)",
-      "CI-02": "Haut-Sassandra (Région du)",
-      "CI-07": "Lacs (Région des)",
-      "CI-01": "Lagunes (Région des)",
-      "CI-12": "Marahoué (Région de la)",
-      "CI-05": "Moyen-Comoé (Région du)",
-      "CI-11": "Nzi-Comoé (Région)",
-      "CI-03": "Savanes (Région des)",
-      "CI-15": "Sud-Bandama (Région du)",
-      "CI-13": "Sud-Comoé (Région du)",
-      "CI-04": "Vallée du Bandama (Région de la)",
-      "CI-14": "Worodougou (Région du)",
-      "CI-08": "Zanzan (Région du)"
-    }
-  },
-  "HR": {
-    "name": "Croatia",
-    "divisions": {
-      "HR-07": "Bjelovarsko-bilogorska županija",
-      "HR-12": "Brodsko-posavska županija",
-      "HR-19": "Dubrovačko-neretvanska županija",
-      "HR-18": "Istarska županija",
-      "HR-04": "Karlovačka županija",
-      "HR-06": "Koprivničkco-križevačka županija",
-      "HR-02": "Krapinsko-zagorska županija",
-      "HR-09": "Ličko-senjska županija",
-      "HR-20": "Medjimurska županija",
-      "HR-14": "Osječko-baranjska županija",
-      "HR-11": "Požeško-slavonska županija",
-      "HR-08": "Primorsko-goranska županija",
-      "HR-03": "Sisaško-moslavačka županija",
-      "HR-17": "Splitsko-dalmatinska županija",
-      "HR-15": "Šibensko-kninska županija",
-      "HR-05": "Varaždinska županija",
-      "HR-10": "Virovitičko-podravska županija",
-      "HR-16": "Vukovarsko-srijemska županija",
-      "HR-13": "Zadarska županija",
-      "HR-01": "Zagrebačka županija"
     }
   },
   "CU": {
@@ -1029,6 +908,33 @@
       "CU-13": "Santiago de Cuba",
       "CU-05": "Villa Clara",
       "CU-99": "Isla de la Juventud"
+    }
+  },
+  "CV": {
+    "name": "Cape Verde",
+    "divisions": {
+      "CV-B": "Ilhas de Barlavento",
+      "CV-BV": "Boa Vista",
+      "CV-PA": "Paul",
+      "CV-PN": "Porto Novo",
+      "CV-RG": "Ribeira Grande",
+      "CV-SL": "Sal",
+      "CV-SN": "Sāo Nicolau",
+      "CV-SV": "Sāo Vicente",
+      "CV-S": "Ilhas de Sotavento",
+      "CV-BR": "Brava",
+      "CV-FO": "Fogo",
+      "CV-MA": "Maio",
+      "CV-PR": "Praia",
+      "CV-CA": "Santa Catarina",
+      "CV-CR": "Santa Cruz",
+      "CV-TA": "Tarrafal"
+    }
+  },
+  "CX": {
+    "name": "Christmas Island",
+    "divisions": {
+      "CX-CX": "Christmas Island"
     }
   },
   "CY": {
@@ -1055,6 +961,37 @@
       "CZ-CZC": "Západočeský kraj"
     }
   },
+  "DE": {
+    "name": "Germany",
+    "divisions": {
+      "DE-BW": "Baden-Württemberg",
+      "DE-BY": "Bayern",
+      "DE-BE": "Berlin",
+      "DE-BB": "Brandenburg",
+      "DE-HB": "Bremen",
+      "DE-HH": "Hamburg",
+      "DE-HE": "Hessen",
+      "DE-MV": "Mecklenburg-Vorpommern",
+      "DE-NI": "Niedersachsen",
+      "DE-NW": "Nordrhein-Westfalen",
+      "DE-RP": "Rheinland-Pfalz",
+      "DE-SL": "Saarland",
+      "DE-SN": "Sachsen",
+      "DE-ST": "Sachsen-Anhalt",
+      "DE-SH": "Schleswig-Holstein",
+      "DE-TH": "Thüringen"
+    }
+  },
+  "DJ": {
+    "name": "Djibouti",
+    "divisions": {
+      "DJ-AS": "Ali Sabieh",
+      "DJ-DI": "Dikhil",
+      "DJ-DJ": "Djibouti",
+      "DJ-OB": "Obock",
+      "DJ-TA": "Tadjoura"
+    }
+  },
   "DK": {
     "name": "Denmark",
     "divisions": {
@@ -1074,16 +1011,6 @@
       "DK-030": "Vestsjælland",
       "DK-076": "Viborg",
       "DK-070": "Århus"
-    }
-  },
-  "DJ": {
-    "name": "Djibouti",
-    "divisions": {
-      "DJ-AS": "Ali Sabieh",
-      "DJ-DI": "Dikhil",
-      "DJ-DJ": "Djibouti",
-      "DJ-OB": "Obock",
-      "DJ-TA": "Tadjoura"
     }
   },
   "DM": {
@@ -1126,10 +1053,56 @@
       "DO-VA": "Valverde"
     }
   },
-  "TP": {
-    "name": "East Timor",
+  "DZ": {
+    "name": "Algeria",
     "divisions": {
-      "TP-TP": "East Timor"
+      "DZ-01": "Adrar",
+      "DZ-44": "Aïn Defla",
+      "DZ-46": "Aïn Témouchent",
+      "DZ-16": "Alger",
+      "DZ-05": "Batna",
+      "DZ-08": "Béchar",
+      "DZ-06": "Béjaïa",
+      "DZ-07": "Biskra",
+      "DZ-09": "Blida",
+      "DZ-34": "Bordj Bou Arréridj",
+      "DZ-10": "Bouira",
+      "DZ-35": "Boumerdès",
+      "DZ-02": "Chlef",
+      "DZ-25": "Constantine",
+      "DZ-17": "Djelfa",
+      "DZ-32": "El Bayadh",
+      "DZ-39": "El Oued",
+      "DZ-36": "El Tarf",
+      "DZ-47": "Ghardaïa",
+      "DZ-24": "Guelma",
+      "DZ-33": "Illizi",
+      "DZ-18": "Jijel",
+      "DZ-40": "Khenchela",
+      "DZ-03": "Laghouat",
+      "DZ-29": "Mascara",
+      "DZ-26": "Médéa",
+      "DZ-43": "Mila",
+      "DZ-27": "Mostaganem",
+      "DZ-28": "Msila",
+      "DZ-45": "Naama",
+      "DZ-31": "Oran",
+      "DZ-30": "Ouargla",
+      "DZ-04": "Oum el Bouaghi",
+      "DZ-48": "Relizane",
+      "DZ-20": "Saïda",
+      "DZ-19": "Sétif",
+      "DZ-22": "Sidi Bel Abbès",
+      "DZ-21": "Skikda",
+      "DZ-41": "Souk Ahras",
+      "DZ-11": "Tamanghasset",
+      "DZ-12": "Tébessa",
+      "DZ-14": "Tiaret",
+      "DZ-37": "Tindouf",
+      "DZ-42": "Tipaza",
+      "DZ-38": "Tissemsilt",
+      "DZ-15": "Tizi Ouzou",
+      "DZ-13": "Tlemcen"
     }
   },
   "EC": {
@@ -1156,6 +1129,26 @@
       "EC-U": "Sucumbíos",
       "EC-T": "Tungurahua",
       "EC-Z": "Zarnora-Chinchipe"
+    }
+  },
+  "EE": {
+    "name": "Estonia",
+    "divisions": {
+      "EE-37": "Harjumaa",
+      "EE-39": "Hiiumaa",
+      "EE-44": "Ida-Virumaa",
+      "EE-49": "Jōgevamaa",
+      "EE-51": "Järvamaa",
+      "EE-57": "Läänemaa",
+      "EE-59": "Lääne-Virumaa",
+      "EE-65": "Pōlvamaa",
+      "EE-67": "Pärnumaa",
+      "EE-70": "Raplamaa",
+      "EE-74": "Saaremaa",
+      "EE-78": "Tartumaa",
+      "EE-82": "Valgamaa",
+      "EE-84": "Viljandimaa",
+      "EE-86": "Vōrumaa"
     }
   },
   "EG": {
@@ -1189,37 +1182,10 @@
       "EG-SHG": "Sūhāj"
     }
   },
-  "SV": {
-    "name": "El Salvador",
+  "EH": {
+    "name": "Western Sahara",
     "divisions": {
-      "SV-AH": "Ahuachapán",
-      "SV-CA": "Cabañas",
-      "SV-CU": "Cuscatlán",
-      "SV-CH": "Chalatenango",
-      "SV-LI": "La Libertad",
-      "SV-PA": "La Paz",
-      "SV-UN": "La Unión",
-      "SV-MO": "Morazán",
-      "SV-SM": "San Miguel",
-      "SV-SS": "San Salvador",
-      "SV-SA": "Santa Ana",
-      "SV-SV": "San Vicente",
-      "SV-SO": "Sonsonate",
-      "SV-SU": "Usulután"
-    }
-  },
-  "GQ": {
-    "name": "Equatorial Guinea",
-    "divisions": {
-      "GQ-C": "Región Continental",
-      "GQ-CS": "Centro Sur",
-      "GQ-KN": "Kie-Ntem",
-      "GQ-LI": "Litoral",
-      "GQ-WN": "Wele-Nzás",
-      "GQ-I": "Región Insular",
-      "GQ-AN": "Annobón",
-      "GQ-BN": "Bioko Norte",
-      "GQ-BS": "Bioko Sur"
+      "EH-EH": "Western Sahara"
     }
   },
   "ER": {
@@ -1237,24 +1203,69 @@
       "ER-SR": "Seraye [Särayé]"
     }
   },
-  "EE": {
-    "name": "Estonia",
+  "ES": {
+    "name": "Spain",
     "divisions": {
-      "EE-37": "Harjumaa",
-      "EE-39": "Hiiumaa",
-      "EE-44": "Ida-Virumaa",
-      "EE-49": "Jōgevamaa",
-      "EE-51": "Järvamaa",
-      "EE-57": "Läänemaa",
-      "EE-59": "Lääne-Virumaa",
-      "EE-65": "Pōlvamaa",
-      "EE-67": "Pärnumaa",
-      "EE-70": "Raplamaa",
-      "EE-74": "Saaremaa",
-      "EE-78": "Tartumaa",
-      "EE-82": "Valgamaa",
-      "EE-84": "Viljandimaa",
-      "EE-86": "Vōrumaa"
+      "ES-AN": "Andalucía",
+      "ES-AL": "Almería",
+      "ES-CA": "Cádiz",
+      "ES-CO": "Córdoba",
+      "ES-GR": "Granada",
+      "ES-H": "Huelva",
+      "ES-J": "Jaén",
+      "ES-MA": "Málaga",
+      "ES-SE": "Sevilla",
+      "ES-AR": "Aragón",
+      "ES-HU": "Huesca",
+      "ES-TE": "Teruel",
+      "ES-Z": "Zaragoza",
+      "ES-O": "Asturias",
+      "ES-CN": "Canarias",
+      "ES-GC": "Las Palmas",
+      "ES-TF": "Santa Cruz De Tenerife",
+      "ES-S": "Cantabria",
+      "ES-CM": "Castilla-La Mancha",
+      "ES-AB": "Albacete",
+      "ES-CR": "Ciudad Real",
+      "ES-CU": "Cuenca",
+      "ES-GU": "Guadalajara",
+      "ES-TO": "Toledo",
+      "ES-CL": "Castilla y León",
+      "ES-AV": "Ávila",
+      "ES-BU": "Burgos",
+      "ES-LE": "León",
+      "ES-P": "Palencia",
+      "ES-SA": "Salamanca",
+      "ES-SG": "Segovia",
+      "ES-SO": "Soria",
+      "ES-VA": "Valladolid",
+      "ES-ZA": "Zamora",
+      "ES-CT": "Cataluña",
+      "ES-B": "Barcelona",
+      "ES-GE": "Gerona",
+      "ES-L": "Lérida",
+      "ES-T": "Tarragona",
+      "ES-EX": "Extremadura",
+      "ES-BA": "Badajoz",
+      "ES-CC": "Cáceres",
+      "ES-GA": "Galicia",
+      "ES-C": "La Coruña",
+      "ES-LU": "Lugo",
+      "ES-OR": "Orense",
+      "ES-PO": "Pontevedra",
+      "ES-PM": "Baleares",
+      "ES-LO": "La Rioja",
+      "ES-M": "Madrid",
+      "ES-MU": "Murcia",
+      "ES-NA": "Navarra",
+      "ES-PV": "País Vasco",
+      "ES-VI": "Álava",
+      "ES-SS": "Guipúzcoa",
+      "ES-BI": "Vizcaya",
+      "ES-VC": "Valenciana, Comunidad",
+      "ES-A": "Alicante",
+      "ES-CS": "Castellón",
+      "ES-V": "Valencia"
     }
   },
   "ET": {
@@ -1272,16 +1283,15 @@
       "ET-TI": "Tigrai [Tegré]"
     }
   },
-  "FK": {
-    "name": "Falkland Islands (Malvinas)",
+  "FI": {
+    "name": "Finland",
     "divisions": {
-      "FK-FK": "Falkland Islands (Malvinas)"
-    }
-  },
-  "FO": {
-    "name": "Faroe Islands",
-    "divisions": {
-      "FO-FO": "Faroe Islands"
+      "FI-AL": "Ahvenanmaan lääni",
+      "FI-ES": "Etelä-Suomen lääni",
+      "FI-IS": "Itä-Suomen lääni",
+      "FI-LL": "Lapin lääni",
+      "FI-LS": "Länsi-Suomen lääni",
+      "FI-OL": "Oulun lääni"
     }
   },
   "FJ": {
@@ -1294,15 +1304,25 @@
       "FJ-R": "Rotuma"
     }
   },
-  "FI": {
-    "name": "Finland",
+  "FK": {
+    "name": "Falkland Islands (Malvinas)",
     "divisions": {
-      "FI-AL": "Ahvenanmaan lääni",
-      "FI-ES": "Etelä-Suomen lääni",
-      "FI-IS": "Itä-Suomen lääni",
-      "FI-LL": "Lapin lääni",
-      "FI-LS": "Länsi-Suomen lääni",
-      "FI-OL": "Oulun lääni"
+      "FK-FK": "Falkland Islands (Malvinas)"
+    }
+  },
+  "FM": {
+    "name": "Micronesia",
+    "divisions": {
+      "FM-TRK": "chuuk",
+      "FM-KSA": "Kosrae",
+      "FM-PNI": "Pohnpei",
+      "FM-YAP": "Yap"
+    }
+  },
+  "FO": {
+    "name": "Faroe Islands",
+    "divisions": {
+      "FO-FO": "Faroe Islands"
     }
   },
   "FR": {
@@ -1438,24 +1458,6 @@
       "FR-WF": "Wallis et Futuna"
     }
   },
-  "GF": {
-    "name": "French Guiana",
-    "divisions": {
-      "GF-GF": "French Guiana"
-    }
-  },
-  "PF": {
-    "name": "French Polynesia",
-    "divisions": {
-      "PF-PF": "French Polynesia"
-    }
-  },
-  "TF": {
-    "name": "French Southern Territories",
-    "divisions": {
-      "TF-TF": "French Southern Territories"
-    }
-  },
   "GA": {
     "name": "Gabon",
     "divisions": {
@@ -1468,142 +1470,6 @@
       "GA-7": "Ogooué-Lolo",
       "GA-8": "Ogooué-Maritime",
       "GA-9": "Woleu-Ntem"
-    }
-  },
-  "GM": {
-    "name": "Gambia",
-    "divisions": {
-      "GM-B": "Banjul",
-      "GM-L": "Lower River",
-      "GM-M": "MacCarthy Island",
-      "GM-N": "North Bank",
-      "GM-U": "Upper River",
-      "GM-W": "Western"
-    }
-  },
-  "GE": {
-    "name": "Georgia",
-    "divisions": {
-      "GE-AB": "Ap'khazet'is Avtonomiuri Respublika [Abkhazia]",
-      "GE-AJ": "Acharis Avtonomiuri Respublika [Ajaria]",
-      "GE-BUS": "Bat'umi",
-      "GE-CHI": "Chiat'ura",
-      "GE-GAG": "Gagra",
-      "GE-GOR": "Gori",
-      "GE-KUT": "K'ut'aisi",
-      "GE-PTI": "P'ot'i",
-      "GE-RUS": "Rust'avi",
-      "GE-SUI": "Sokhumi",
-      "GE-TBS": "T'bilisi",
-      "GE-TQI": "Tqibuli",
-      "GE-TQV": "Tqvarch'eli",
-      "GE-TSQ": "Tsqalmbo",
-      "GE-ZUG": "Zugdidi",
-      "GE-01": "Abashis Raioni",
-      "GE-02": "Adigenis Raioni",
-      "GE-03": "Akhalgoris Raioni",
-      "GE-04": "Akhalk'alak'is Raioni",
-      "GE-05": "Akhalts'ikhis Raioni",
-      "GE-06": "Akhmetis Raioni",
-      "GE-07": "Ambrolauris Raioni",
-      "GE-08": "Aspindzis Raioni",
-      "GE-09": "Baghdat'is Raioni",
-      "GE-10": "Bolnisis Raioni",
-      "GE-11": "Borjomis Raioni",
-      "GE-12": "Ch'khorotsqus Raioni",
-      "GE-13": "Ch'okhatauris Raioni",
-      "GE-14": "Dedop'listsqaros Raioni",
-      "GE-15": "Dmanisis Raioni",
-      "GE-16": "Dushet'is Raioni",
-      "GE-17": "Galis Raioni",
-      "GE-18": "Gardabnis Raioni",
-      "GE-19": "Goris Raioni",
-      "GE-20": "Gudaut'is Raioni",
-      "GE-21": "Gulrip'shis Raioni",
-      "GE-22": "Gurjaanis Raioni",
-      "GE-23": "Javis Raioni",
-      "GE-24": "K'arelis Raioni",
-      "GE-25": "Kaspis Raioni",
-      "GE-26": "K'edis Raioni",
-      "GE-27": "Kharagaulis Raioni",
-      "GE-28": "Khashuris Raioni",
-      "GE-29": "Khelvach'auris Raioni",
-      "GE-30": "Khobis Raioni",
-      "GE-31": "Khonis Raioni",
-      "GE-32": "Khulos Raioni",
-      "GE-33": "K'obuletis Raioni",
-      "GE-34": "Lagodekhis Raioni",
-      "GE-35": "Lanch'khut'is Raioni",
-      "GE-36": "Lentekhis Raioni",
-      "GE-37": "Marneulis Raioni",
-      "GE-38": "Martvilis Raioni",
-      "GE-39": "Mestiis Raioni",
-      "GE-40": "Mts'khet'is Raioni",
-      "GE-41": "Ninotsmindis Raioni",
-      "GE-42": "Och'amch'iris Raioni",
-      "GE-43": "Onis Raioni",
-      "GE-44": "Ozurget'is Raioni",
-      "GE-45": "Qazbegis Raioni",
-      "GE-46": "Qvarlis Raioni",
-      "GE-47": "Sach'kheris Raioni",
-      "GE-48": "Sagarejos Raioni",
-      "GE-49": "Samtrediis Raioni",
-      "GE-50": "Senakis Raioni",
-      "GE-51": "Shuakhevis Raioni",
-      "GE-52": "Sighnaghis Raioni",
-      "GE-53": "Sokhumis Raioni",
-      "GE-54": "T'elavis Raioni",
-      "GE-55": "T'erjolis Raioni",
-      "GE-56": "T'et'ritsqaros Raioni",
-      "GE-57": "T'ianet'is Raioni",
-      "GE-58": "Ts'ageris Raioni",
-      "GE-59": "Tsalenjikhis Raioni",
-      "GE-60": "Tsalkis Raioni",
-      "GE-61": "Vanis Raioni",
-      "GE-62": "Zestap'onis Raioni",
-      "GE-63": "Zugdidis Raioni"
-    }
-  },
-  "DE": {
-    "name": "Germany",
-    "divisions": {
-      "DE-BW": "Baden-Württemberg",
-      "DE-BY": "Bayern",
-      "DE-BE": "Berlin",
-      "DE-BB": "Brandenburg",
-      "DE-HB": "Bremen",
-      "DE-HH": "Hamburg",
-      "DE-HE": "Hessen",
-      "DE-MV": "Mecklenburg-Vorpommern",
-      "DE-NI": "Niedersachsen",
-      "DE-NW": "Nordrhein-Westfalen",
-      "DE-RP": "Rheinland-Pfalz",
-      "DE-SL": "Saarland",
-      "DE-SN": "Sachsen",
-      "DE-ST": "Sachsen-Anhalt",
-      "DE-SH": "Schleswig-Holstein",
-      "DE-TH": "Thüringen"
-    }
-  },
-  "GH": {
-    "name": "Ghana",
-    "divisions": {
-      "GH-AH": "Ashanti",
-      "GH-BA": "Brong-Ahafo",
-      "GH-CP": "Central",
-      "GH-EP": "Eastern",
-      "GH-AA": "Greater Accra",
-      "GH-NP": "Northern",
-      "GH-UE": "Upper East",
-      "GH-UW": "Upper West",
-      "GH-TV": "Volta",
-      "GH-WP": "Western"
-    }
-  },
-  "GI": {
-    "name": "Gibraltar",
-    "divisions": {
-      "GI-GI": "Gibraltar"
     }
   },
   "GB": {
@@ -1849,6 +1715,204 @@
       "GB-WRX": "Wrexham [Wrecsam GB-WRC]"
     }
   },
+  "GD": {
+    "name": "Grenada",
+    "divisions": {
+      "GD-GD": "Grenada"
+    }
+  },
+  "GE": {
+    "name": "Georgia",
+    "divisions": {
+      "GE-AB": "Ap'khazet'is Avtonomiuri Respublika [Abkhazia]",
+      "GE-AJ": "Acharis Avtonomiuri Respublika [Ajaria]",
+      "GE-BUS": "Bat'umi",
+      "GE-CHI": "Chiat'ura",
+      "GE-GAG": "Gagra",
+      "GE-GOR": "Gori",
+      "GE-KUT": "K'ut'aisi",
+      "GE-PTI": "P'ot'i",
+      "GE-RUS": "Rust'avi",
+      "GE-SUI": "Sokhumi",
+      "GE-TBS": "T'bilisi",
+      "GE-TQI": "Tqibuli",
+      "GE-TQV": "Tqvarch'eli",
+      "GE-TSQ": "Tsqalmbo",
+      "GE-ZUG": "Zugdidi",
+      "GE-01": "Abashis Raioni",
+      "GE-02": "Adigenis Raioni",
+      "GE-03": "Akhalgoris Raioni",
+      "GE-04": "Akhalk'alak'is Raioni",
+      "GE-05": "Akhalts'ikhis Raioni",
+      "GE-06": "Akhmetis Raioni",
+      "GE-07": "Ambrolauris Raioni",
+      "GE-08": "Aspindzis Raioni",
+      "GE-09": "Baghdat'is Raioni",
+      "GE-10": "Bolnisis Raioni",
+      "GE-11": "Borjomis Raioni",
+      "GE-12": "Ch'khorotsqus Raioni",
+      "GE-13": "Ch'okhatauris Raioni",
+      "GE-14": "Dedop'listsqaros Raioni",
+      "GE-15": "Dmanisis Raioni",
+      "GE-16": "Dushet'is Raioni",
+      "GE-17": "Galis Raioni",
+      "GE-18": "Gardabnis Raioni",
+      "GE-19": "Goris Raioni",
+      "GE-20": "Gudaut'is Raioni",
+      "GE-21": "Gulrip'shis Raioni",
+      "GE-22": "Gurjaanis Raioni",
+      "GE-23": "Javis Raioni",
+      "GE-24": "K'arelis Raioni",
+      "GE-25": "Kaspis Raioni",
+      "GE-26": "K'edis Raioni",
+      "GE-27": "Kharagaulis Raioni",
+      "GE-28": "Khashuris Raioni",
+      "GE-29": "Khelvach'auris Raioni",
+      "GE-30": "Khobis Raioni",
+      "GE-31": "Khonis Raioni",
+      "GE-32": "Khulos Raioni",
+      "GE-33": "K'obuletis Raioni",
+      "GE-34": "Lagodekhis Raioni",
+      "GE-35": "Lanch'khut'is Raioni",
+      "GE-36": "Lentekhis Raioni",
+      "GE-37": "Marneulis Raioni",
+      "GE-38": "Martvilis Raioni",
+      "GE-39": "Mestiis Raioni",
+      "GE-40": "Mts'khet'is Raioni",
+      "GE-41": "Ninotsmindis Raioni",
+      "GE-42": "Och'amch'iris Raioni",
+      "GE-43": "Onis Raioni",
+      "GE-44": "Ozurget'is Raioni",
+      "GE-45": "Qazbegis Raioni",
+      "GE-46": "Qvarlis Raioni",
+      "GE-47": "Sach'kheris Raioni",
+      "GE-48": "Sagarejos Raioni",
+      "GE-49": "Samtrediis Raioni",
+      "GE-50": "Senakis Raioni",
+      "GE-51": "Shuakhevis Raioni",
+      "GE-52": "Sighnaghis Raioni",
+      "GE-53": "Sokhumis Raioni",
+      "GE-54": "T'elavis Raioni",
+      "GE-55": "T'erjolis Raioni",
+      "GE-56": "T'et'ritsqaros Raioni",
+      "GE-57": "T'ianet'is Raioni",
+      "GE-58": "Ts'ageris Raioni",
+      "GE-59": "Tsalenjikhis Raioni",
+      "GE-60": "Tsalkis Raioni",
+      "GE-61": "Vanis Raioni",
+      "GE-62": "Zestap'onis Raioni",
+      "GE-63": "Zugdidis Raioni"
+    }
+  },
+  "GF": {
+    "name": "French Guiana",
+    "divisions": {
+      "GF-GF": "French Guiana"
+    }
+  },
+  "GH": {
+    "name": "Ghana",
+    "divisions": {
+      "GH-AH": "Ashanti",
+      "GH-BA": "Brong-Ahafo",
+      "GH-CP": "Central",
+      "GH-EP": "Eastern",
+      "GH-AA": "Greater Accra",
+      "GH-NP": "Northern",
+      "GH-UE": "Upper East",
+      "GH-UW": "Upper West",
+      "GH-TV": "Volta",
+      "GH-WP": "Western"
+    }
+  },
+  "GI": {
+    "name": "Gibraltar",
+    "divisions": {
+      "GI-GI": "Gibraltar"
+    }
+  },
+  "GL": {
+    "name": "Greenland",
+    "divisions": {
+      "GL-GL": "Greenland"
+    }
+  },
+  "GM": {
+    "name": "Gambia",
+    "divisions": {
+      "GM-B": "Banjul",
+      "GM-L": "Lower River",
+      "GM-M": "MacCarthy Island",
+      "GM-N": "North Bank",
+      "GM-U": "Upper River",
+      "GM-W": "Western"
+    }
+  },
+  "GN": {
+    "name": "Guinea",
+    "divisions": {
+      "GN-B": "Bake, Gouvernorat de",
+      "GN-BF": "Boffa",
+      "GN-BK": "Boké",
+      "GN-FR": "Fria",
+      "GN-GA": "Gaoual",
+      "GN-KD": "Kindia",
+      "GN-C": "Conakry, Gouvernorat de",
+      "GN-F": "Faranah, Gouvernorat de",
+      "GN-DB": "Dabola",
+      "GN-DI": "Dinguiraye",
+      "GN-FA": "Faranah",
+      "GN-KS": "Kissidougou",
+      "GN-K": "Kankan, Gouvernorat de",
+      "GN-KA": "Kankan",
+      "GN-KE": "Kérouané",
+      "GN-KO": "Kouroussa",
+      "GN-MD": "Mandiana",
+      "GN-SI": "Siguiri",
+      "GN-D": "Kindia, Gouvernorat de",
+      "GN-CO": "Coyah",
+      "GN-DU": "Dubréka",
+      "GN-FO": "Forécariah",
+      "GN-TE": "Télimélé",
+      "GN-L": "Labé, Gouvernorat de",
+      "GN-KB": "Koubia",
+      "GN-LA": "Labé",
+      "GN-LE": "Lélouma",
+      "GN-ML": "Mali",
+      "GN-TO": "Tougué",
+      "GN-M": "Mamou, Gouvernorat de",
+      "GN-DL": "Dalaba",
+      "GN-MM": "Mamou",
+      "GN-PI": "Pita",
+      "GN-N": "Nzérékoré, Gouvernorat de",
+      "GN-BE": "Beyla",
+      "GN-GU": "Guékédou",
+      "GN-LO": "Lola",
+      "GN-MC": "Macenta",
+      "GN-NZ": "Nzérékoré",
+      "GN-YO": "Yomou"
+    }
+  },
+  "GP": {
+    "name": "Guadeloupe",
+    "divisions": {
+      "GP-GP": "Guadeloupe"
+    }
+  },
+  "GQ": {
+    "name": "Equatorial Guinea",
+    "divisions": {
+      "GQ-C": "Región Continental",
+      "GQ-CS": "Centro Sur",
+      "GQ-KN": "Kie-Ntem",
+      "GQ-LI": "Litoral",
+      "GQ-WN": "Wele-Nzás",
+      "GQ-I": "Región Insular",
+      "GQ-AN": "Annobón",
+      "GQ-BN": "Bioko Norte",
+      "GQ-BS": "Bioko Sur"
+    }
+  },
   "GR": {
     "name": "Greece",
     "divisions": {
@@ -1918,28 +1982,10 @@
       "GR-84": "Samos"
     }
   },
-  "GL": {
-    "name": "Greenland",
+  "GS": {
+    "name": "South Georgia and the South Sandwich Islands",
     "divisions": {
-      "GL-GL": "Greenland"
-    }
-  },
-  "GD": {
-    "name": "Grenada",
-    "divisions": {
-      "GD-GD": "Grenada"
-    }
-  },
-  "GP": {
-    "name": "Guadeloupe",
-    "divisions": {
-      "GP-GP": "Guadeloupe"
-    }
-  },
-  "GU": {
-    "name": "Guam",
-    "divisions": {
-      "GU-GU": "Guam"
+      "GS-GS": "South Georgia and the South Sandwich Islands"
     }
   },
   "GT": {
@@ -1969,49 +2015,10 @@
       "GT-ZA": "Zacapa"
     }
   },
-  "GN": {
-    "name": "Guinea",
+  "GU": {
+    "name": "Guam",
     "divisions": {
-      "GN-B": "Bake, Gouvernorat de",
-      "GN-BF": "Boffa",
-      "GN-BK": "Boké",
-      "GN-FR": "Fria",
-      "GN-GA": "Gaoual",
-      "GN-KD": "Kindia",
-      "GN-C": "Conakry, Gouvernorat de",
-      "GN-F": "Faranah, Gouvernorat de",
-      "GN-DB": "Dabola",
-      "GN-DI": "Dinguiraye",
-      "GN-FA": "Faranah",
-      "GN-KS": "Kissidougou",
-      "GN-K": "Kankan, Gouvernorat de",
-      "GN-KA": "Kankan",
-      "GN-KE": "Kérouané",
-      "GN-KO": "Kouroussa",
-      "GN-MD": "Mandiana",
-      "GN-SI": "Siguiri",
-      "GN-D": "Kindia, Gouvernorat de",
-      "GN-CO": "Coyah",
-      "GN-DU": "Dubréka",
-      "GN-FO": "Forécariah",
-      "GN-TE": "Télimélé",
-      "GN-L": "Labé, Gouvernorat de",
-      "GN-KB": "Koubia",
-      "GN-LA": "Labé",
-      "GN-LE": "Lélouma",
-      "GN-ML": "Mali",
-      "GN-TO": "Tougué",
-      "GN-M": "Mamou, Gouvernorat de",
-      "GN-DL": "Dalaba",
-      "GN-MM": "Mamou",
-      "GN-PI": "Pita",
-      "GN-N": "Nzérékoré, Gouvernorat de",
-      "GN-BE": "Beyla",
-      "GN-GU": "Guékédou",
-      "GN-LO": "Lola",
-      "GN-MC": "Macenta",
-      "GN-NZ": "Nzérékoré",
-      "GN-YO": "Yomou"
+      "GU-GU": "Guam"
     }
   },
   "GW": {
@@ -2042,30 +2049,16 @@
       "GY-UT": "Upper Takutu-Upper Essequibo"
     }
   },
-  "HT": {
-    "name": "Haiti",
+  "HK": {
+    "name": "Hong Kong",
     "divisions": {
-      "HT-AR": "Artibonite",
-      "HT-CE": "Centre",
-      "HT-GA": "Grande-Anse",
-      "HT-ND": "Nord",
-      "HT-NE": "Nord-Est",
-      "HT-NO": "Nord-Ouest",
-      "HT-OU": "Ouest",
-      "HT-SD": "Sud",
-      "HT-SE": "Sud-Est"
+      "HK-HK": "Hong Kong"
     }
   },
   "HM": {
     "name": "Heard & McDonald Islands",
     "divisions": {
       "HM-HM": "Heard & McDonald Islands"
-    }
-  },
-  "VA": {
-    "name": "Holy See",
-    "divisions": {
-      "VA-VA": "Holy See"
     }
   },
   "HN": {
@@ -2091,10 +2084,43 @@
       "HN-YO": "Yoro"
     }
   },
-  "HK": {
-    "name": "Hong Kong",
+  "HR": {
+    "name": "Croatia",
     "divisions": {
-      "HK-HK": "Hong Kong"
+      "HR-07": "Bjelovarsko-bilogorska županija",
+      "HR-12": "Brodsko-posavska županija",
+      "HR-19": "Dubrovačko-neretvanska županija",
+      "HR-18": "Istarska županija",
+      "HR-04": "Karlovačka županija",
+      "HR-06": "Koprivničkco-križevačka županija",
+      "HR-02": "Krapinsko-zagorska županija",
+      "HR-09": "Ličko-senjska županija",
+      "HR-20": "Medjimurska županija",
+      "HR-14": "Osječko-baranjska županija",
+      "HR-11": "Požeško-slavonska županija",
+      "HR-08": "Primorsko-goranska županija",
+      "HR-03": "Sisaško-moslavačka županija",
+      "HR-17": "Splitsko-dalmatinska županija",
+      "HR-15": "Šibensko-kninska županija",
+      "HR-05": "Varaždinska županija",
+      "HR-10": "Virovitičko-podravska županija",
+      "HR-16": "Vukovarsko-srijemska županija",
+      "HR-13": "Zadarska županija",
+      "HR-01": "Zagrebačka županija"
+    }
+  },
+  "HT": {
+    "name": "Haiti",
+    "divisions": {
+      "HT-AR": "Artibonite",
+      "HT-CE": "Centre",
+      "HT-GA": "Grande-Anse",
+      "HT-ND": "Nord",
+      "HT-NE": "Nord-Est",
+      "HT-NO": "Nord-Ouest",
+      "HT-OU": "Ouest",
+      "HT-SD": "Sud",
+      "HT-SE": "Sud-Est"
     }
   },
   "HU": {
@@ -2144,57 +2170,6 @@
       "HU-ZE": "Zalaegerszeg"
     }
   },
-  "IS": {
-    "name": "Iceland",
-    "divisions": {
-      "IS-7": "Austurland",
-      "IS-1": "Höfudborgarsvædi utan Reykjavíkur",
-      "IS-6": "Nordurland eystra",
-      "IS-5": "Nordurland vestra",
-      "IS-0": "Reykjavīk",
-      "IS-8": "Sudurland",
-      "IS-2": "Sudurnes",
-      "IS-4": "Vestfirdir",
-      "IS-3": "Vesturland"
-    }
-  },
-  "IN": {
-    "name": "India",
-    "divisions": {
-      "IN-AP": "Andhra Pradesh",
-      "IN-AR": "Arunachal Pradesh",
-      "IN-AS": "Assam",
-      "IN-BR": "Bihar",
-      "IN-GA": "Goa",
-      "IN-GJ": "Gujarat",
-      "IN-HR": "Haryana",
-      "IN-HP": "Himachal Pradesh",
-      "IN-JK": "Jammu and Kashmir",
-      "IN-KA": "Karnataka",
-      "IN-KL": "Kerala",
-      "IN-MP": "Madhya Pradesh",
-      "IN-MH": "Maharashtra",
-      "IN-MN": "Manipur",
-      "IN-ML": "Meghalaya",
-      "IN-MZ": "Mizoram",
-      "IN-NL": "Nagaland",
-      "IN-OR": "Orissa",
-      "IN-PB": "Punjab",
-      "IN-RJ": "Rajasthan",
-      "IN-SK": "Sikkim",
-      "IN-TN": "Tamil Nadu",
-      "IN-TR": "Tripura",
-      "IN-UP": "Uttar Pradesh",
-      "IN-WB": "West Bengal",
-      "IN-AN": "Andaman and Nicobar Islands",
-      "IN-CH": "Chandigarh",
-      "IN-DN": "Dadra and Nagar Haveli",
-      "IN-DD": "Daman and Diu",
-      "IN-DL": "Delhi",
-      "IN-LD": "Lakshadweep",
-      "IN-PY": "Pondicherry"
-    }
-  },
   "ID": {
     "name": "Indonesia",
     "divisions": {
@@ -2232,60 +2207,6 @@
       "ID-SS": "Sumatera Selatan",
       "ID-SU": "Sumatera Utara",
       "ID-AC": "Aceh"
-    }
-  },
-  "IR": {
-    "name": "Iran",
-    "divisions": {
-      "IR-03": "Ardabīl",
-      "IR-02": "Āzarbāyjān-e-Gharbī",
-      "IR-01": "Āzarbāyjān-e-Sharqī",
-      "IR-06": "Būshehr",
-      "IR-08": "Chahār Maḩāll vā Bakhtīārī",
-      "IR-04": "Eşfahān",
-      "IR-14": "Fārs",
-      "IR-19": "Gīlān",
-      "IR-24": "Hamadān",
-      "IR-23": "Hormozgān",
-      "IR-05": "Īlām",
-      "IR-15": "Kermān",
-      "IR-17": "Kermānshāhān",
-      "IR-09": "Khorāsān",
-      "IR-10": "Khūzestān",
-      "IR-18": "Kohkīlūyeh va Būyer Aḩmadī",
-      "IR-16": "Kordestān",
-      "IR-20": "Lorestān",
-      "IR-22": "Markazī",
-      "IR-21": "Māzandarān",
-      "IR-26": "Qom",
-      "IR-12": "Semnān",
-      "IR-13": "Sīstān va Balūchestān",
-      "IR-07": "Tehrān",
-      "IR-25": "Yazd",
-      "IR-11": "Zanjān"
-    }
-  },
-  "IQ": {
-    "name": "Iraq",
-    "divisions": {
-      "IQ-AN": "Al Anbār",
-      "IQ-BA": "Al Başrah",
-      "IQ-MU": "Al Muthanná",
-      "IQ-QA": "Al Qādisīyah",
-      "IQ-NA": "An Najaf",
-      "IQ-AR": "Arbīl",
-      "IQ-SU": "As Sulaymānīyah",
-      "IQ-TS": "At Ta'mīm",
-      "IQ-BB": "Bābil",
-      "IQ-BG": "Baghdād",
-      "IQ-DA": "Dahūk",
-      "IQ-DQ": "Dhī Qār",
-      "IQ-DI": "Diyālá",
-      "IQ-KA": "Karbalā'",
-      "IQ-MA": "Maysān",
-      "IQ-NI": "Nīnawá",
-      "IQ-SD": "Şalāḩ ad Dīn",
-      "IQ-WA": "Wāsiţ"
     }
   },
   "IE": {
@@ -2326,6 +2247,117 @@
       "IL-HA": "Hefa (Heifā)",
       "IL-TA": "Tel-Aviv (Tell Abīb)",
       "IL-JM": "Yerushalayim (Al Quds)"
+    }
+  },
+  "IN": {
+    "name": "India",
+    "divisions": {
+      "IN-AP": "Andhra Pradesh",
+      "IN-AR": "Arunachal Pradesh",
+      "IN-AS": "Assam",
+      "IN-BR": "Bihar",
+      "IN-GA": "Goa",
+      "IN-GJ": "Gujarat",
+      "IN-HR": "Haryana",
+      "IN-HP": "Himachal Pradesh",
+      "IN-JK": "Jammu and Kashmir",
+      "IN-KA": "Karnataka",
+      "IN-KL": "Kerala",
+      "IN-MP": "Madhya Pradesh",
+      "IN-MH": "Maharashtra",
+      "IN-MN": "Manipur",
+      "IN-ML": "Meghalaya",
+      "IN-MZ": "Mizoram",
+      "IN-NL": "Nagaland",
+      "IN-OR": "Orissa",
+      "IN-PB": "Punjab",
+      "IN-RJ": "Rajasthan",
+      "IN-SK": "Sikkim",
+      "IN-TN": "Tamil Nadu",
+      "IN-TR": "Tripura",
+      "IN-UP": "Uttar Pradesh",
+      "IN-WB": "West Bengal",
+      "IN-AN": "Andaman and Nicobar Islands",
+      "IN-CH": "Chandigarh",
+      "IN-DN": "Dadra and Nagar Haveli",
+      "IN-DD": "Daman and Diu",
+      "IN-DL": "Delhi",
+      "IN-LD": "Lakshadweep",
+      "IN-PY": "Pondicherry"
+    }
+  },
+  "IO": {
+    "name": "British Indian Ocean Territory",
+    "divisions": {
+      "IO-IO": "British Indian Ocean Territory"
+    }
+  },
+  "IQ": {
+    "name": "Iraq",
+    "divisions": {
+      "IQ-AN": "Al Anbār",
+      "IQ-BA": "Al Başrah",
+      "IQ-MU": "Al Muthanná",
+      "IQ-QA": "Al Qādisīyah",
+      "IQ-NA": "An Najaf",
+      "IQ-AR": "Arbīl",
+      "IQ-SU": "As Sulaymānīyah",
+      "IQ-TS": "At Ta'mīm",
+      "IQ-BB": "Bābil",
+      "IQ-BG": "Baghdād",
+      "IQ-DA": "Dahūk",
+      "IQ-DQ": "Dhī Qār",
+      "IQ-DI": "Diyālá",
+      "IQ-KA": "Karbalā'",
+      "IQ-MA": "Maysān",
+      "IQ-NI": "Nīnawá",
+      "IQ-SD": "Şalāḩ ad Dīn",
+      "IQ-WA": "Wāsiţ"
+    }
+  },
+  "IR": {
+    "name": "Iran",
+    "divisions": {
+      "IR-03": "Ardabīl",
+      "IR-02": "Āzarbāyjān-e-Gharbī",
+      "IR-01": "Āzarbāyjān-e-Sharqī",
+      "IR-06": "Būshehr",
+      "IR-08": "Chahār Maḩāll vā Bakhtīārī",
+      "IR-04": "Eşfahān",
+      "IR-14": "Fārs",
+      "IR-19": "Gīlān",
+      "IR-24": "Hamadān",
+      "IR-23": "Hormozgān",
+      "IR-05": "Īlām",
+      "IR-15": "Kermān",
+      "IR-17": "Kermānshāhān",
+      "IR-09": "Khorāsān",
+      "IR-10": "Khūzestān",
+      "IR-18": "Kohkīlūyeh va Būyer Aḩmadī",
+      "IR-16": "Kordestān",
+      "IR-20": "Lorestān",
+      "IR-22": "Markazī",
+      "IR-21": "Māzandarān",
+      "IR-26": "Qom",
+      "IR-12": "Semnān",
+      "IR-13": "Sīstān va Balūchestān",
+      "IR-07": "Tehrān",
+      "IR-25": "Yazd",
+      "IR-11": "Zanjān"
+    }
+  },
+  "IS": {
+    "name": "Iceland",
+    "divisions": {
+      "IS-7": "Austurland",
+      "IS-1": "Höfudborgarsvædi utan Reykjavíkur",
+      "IS-6": "Nordurland eystra",
+      "IS-5": "Nordurland vestra",
+      "IS-0": "Reykjavīk",
+      "IS-8": "Sudurland",
+      "IS-2": "Sudurnes",
+      "IS-4": "Vestfirdir",
+      "IS-3": "Vesturland"
     }
   },
   "IT": {
@@ -2475,6 +2507,23 @@
       "JM-10": "Westmoreland"
     }
   },
+  "JO": {
+    "name": "Jordan",
+    "divisions": {
+      "JO-AJ": "‘Ajlūn",
+      "JO-AQ": "Al 'Aqaba",
+      "JO-BA": "Al Balqā'",
+      "JO-KA": "Al Karak",
+      "JO-MA": "Al Mafraq",
+      "JO-AM": "‘Ammān",
+      "JO-AT": "Aţ Ţafīlah",
+      "JO-AZ": "Az Zarqā'",
+      "JO-IR": "Irbid",
+      "JO-JA": "Jarash",
+      "JO-MN": "Ma‘ān",
+      "JO-MD": "Mādaba"
+    }
+  },
   "JP": {
     "name": "Japan",
     "divisions": {
@@ -2526,44 +2575,6 @@
       "JP-19": "Yamanasi [Yamanashi]"
     }
   },
-  "JO": {
-    "name": "Jordan",
-    "divisions": {
-      "JO-AJ": "‘Ajlūn",
-      "JO-AQ": "Al 'Aqaba",
-      "JO-BA": "Al Balqā'",
-      "JO-KA": "Al Karak",
-      "JO-MA": "Al Mafraq",
-      "JO-AM": "‘Ammān",
-      "JO-AT": "Aţ Ţafīlah",
-      "JO-AZ": "Az Zarqā'",
-      "JO-IR": "Irbid",
-      "JO-JA": "Jarash",
-      "JO-MN": "Ma‘ān",
-      "JO-MD": "Mādaba"
-    }
-  },
-  "KZ": {
-    "name": "Kazakhstan",
-    "divisions": {
-      "KZ-ALA": "Almaty",
-      "KZ-BAY": "Bayqonyr (Baykonyr)",
-      "KZ-ALM": "Almaty oblysy (Almatinskaya oblast')",
-      "KZ-AKM": "Aqmola oblysy (Akmolinskaya oblast')",
-      "KZ-AKT": "Aqtöbe oblysy (Aktyubinskaya oblast')",
-      "KZ-ATY": "Atyraü oblysy (Atyrauskaya oblast')",
-      "KZ-ZAP": "Batys Kazakstan oblysy (Zapadno-Kazakhstanskaya oblast')",
-      "KZ-MAN": "Mangghystaū oblysy (Mangystauskaya oblast')",
-      "KZ-YUZ": "Ongtüstik Kazakstan oblysy (Yuzhno-Kazakhstanskaya oblast')",
-      "KZ-PAV": "Pavlodar oblysy (Pavlodarskaya oblast')",
-      "KZ-KAR": "Qaraghandy oblysy (Karagandinskaya oblast')",
-      "KZ-KUS": "Qostanay oblysy (Kustanayskaya oblast')",
-      "KZ-KZY": "Qyzylorda oblysy (Kzylordinskaya oblast')",
-      "KZ-VOS": "Shyghys Kazakstan oblysy (Vostochno-Kazakhstanskaya oblast')",
-      "KZ-SEV": "Soltüstik Kazakstan oblysy (Severo-Kazakhstanskaya oblast')",
-      "KZ-ZHA": "Zhambyl oblysy (Zhambylskaya Oblast')"
-    }
-  },
   "KE": {
     "name": "Kenya",
     "divisions": {
@@ -2577,12 +2588,64 @@
       "KE-900": "Western (Magharibi)"
     }
   },
+  "KG": {
+    "name": "Kyrgyzstan",
+    "divisions": {
+      "KG-C": "Chu (Chuyskaya oblast')",
+      "KG-J": "Jalal-Abad (Dzhalal-Abadskaya oblast')",
+      "KG-N": "Naryn (Narynskaya Oblast’)",
+      "KG-O": "Osh (Oshskaya oblast')",
+      "KG-T": "Talas (Talasskaya oblast')",
+      "KG-Y": "Ysyk-Köl (Issyk-Kul'skaya oblast')"
+    }
+  },
+  "KH": {
+    "name": "Cambodia",
+    "divisions": {
+      "KH-23": "Krong Kaeb [Krŏng Kêb]",
+      "KH-18": "Krong Preah Sihanouk [Krŏng Preăh Sihanouk]",
+      "KH-12": "Phnom Penh [Phnum Pénh]",
+      "KH-2": "Baat Dambang [Bătdâmbâng]",
+      "KH-1": "Banteay Mean Chey [Bântéay Méanchey]",
+      "KH-3": "Kampong Chaam [Kâmpóng Cham]",
+      "KH-4": "Kampong Chhnang [Kâmpóng Chhnăng]",
+      "KH-5": "Kampong Spueu [Kâmpóng Spœ]",
+      "KH-6": "Kampong Thum [Kâmpóng Thum]",
+      "KH-7": "Kampot [Kâmpôt]",
+      "KH-8": "Kandaal [Kândal]",
+      "KH-10": "Kracheh [Krâchéh]",
+      "KH-11": "Mond01 Kiri [Môndól Kiri]",
+      "KH-22": "Otdar Mean Chey [Ŏtdâr Méanchey]",
+      "KH-15": "Pousaat [Poŭthĭsăt]",
+      "KH-13": "Preah Vihear [Preăh Vihéar]",
+      "KH-14": "Prey Veaeng [Prey Vêng]",
+      "KH-16": "Rotanak Kiri [Rôtânôkiri]",
+      "KH-17": "Siem Reab [Siĕmréab]",
+      "KH-19": "Stueng Traeng [Stœng Trêng]",
+      "KH-20": "Svaay Rieng [Svay Riĕng]",
+      "KH-21": "Taakaev [Takêv]"
+    }
+  },
   "KI": {
     "name": "Kiribati",
     "divisions": {
       "KI-G": "Gilbert Islands",
       "KI-L": "Line Islands",
       "KI-P": "Phoenix Islands"
+    }
+  },
+  "KM": {
+    "name": "Comoros",
+    "divisions": {
+      "KM-A": "Anjouan (Ndzouani)",
+      "KM-G": "Grande Comore (Ngazidja)",
+      "KM-M": "Mohéli (Moili)"
+    }
+  },
+  "KN": {
+    "name": "Saint Kitts & Nevis",
+    "divisions": {
+      "KN-KN": "Saint Kitts & Nevis"
     }
   },
   "KP": {
@@ -2633,15 +2696,31 @@
       "KW-HA": "Ḩawallī"
     }
   },
-  "KG": {
-    "name": "Kyrgyzstan",
+  "KY": {
+    "name": "Cayman Islands",
     "divisions": {
-      "KG-C": "Chu (Chuyskaya oblast')",
-      "KG-J": "Jalal-Abad (Dzhalal-Abadskaya oblast')",
-      "KG-N": "Naryn (Narynskaya Oblast’)",
-      "KG-O": "Osh (Oshskaya oblast')",
-      "KG-T": "Talas (Talasskaya oblast')",
-      "KG-Y": "Ysyk-Köl (Issyk-Kul'skaya oblast')"
+      "KY-KY": "Cayman Islands"
+    }
+  },
+  "KZ": {
+    "name": "Kazakhstan",
+    "divisions": {
+      "KZ-ALA": "Almaty",
+      "KZ-BAY": "Bayqonyr (Baykonyr)",
+      "KZ-ALM": "Almaty oblysy (Almatinskaya oblast')",
+      "KZ-AKM": "Aqmola oblysy (Akmolinskaya oblast')",
+      "KZ-AKT": "Aqtöbe oblysy (Aktyubinskaya oblast')",
+      "KZ-ATY": "Atyraü oblysy (Atyrauskaya oblast')",
+      "KZ-ZAP": "Batys Kazakstan oblysy (Zapadno-Kazakhstanskaya oblast')",
+      "KZ-MAN": "Mangghystaū oblysy (Mangystauskaya oblast')",
+      "KZ-YUZ": "Ongtüstik Kazakstan oblysy (Yuzhno-Kazakhstanskaya oblast')",
+      "KZ-PAV": "Pavlodar oblysy (Pavlodarskaya oblast')",
+      "KZ-KAR": "Qaraghandy oblysy (Karagandinskaya oblast')",
+      "KZ-KUS": "Qostanay oblysy (Kustanayskaya oblast')",
+      "KZ-KZY": "Qyzylorda oblysy (Kzylordinskaya oblast')",
+      "KZ-VOS": "Shyghys Kazakstan oblysy (Vostochno-Kazakhstanskaya oblast')",
+      "KZ-SEV": "Soltüstik Kazakstan oblysy (Severo-Kazakhstanskaya oblast')",
+      "KZ-ZHA": "Zhambyl oblysy (Zhambylskaya Oblast')"
     }
   },
   "LA": {
@@ -2664,6 +2743,124 @@
       "LA-XA": "Xaignabouli [Sayaboury]",
       "LA-XE": "Xékong [Sékong]",
       "LA-XI": "Xiangkhoang [Xieng Khouang]"
+    }
+  },
+  "LB": {
+    "name": "Lebanon",
+    "divisions": {
+      "LB-BA": "Beiroût (Bayrūt)",
+      "LB-BI": "El Béqaa (Al Biqā')",
+      "LB-JL": "Jabal Loubnâne (Jabal Lubnān)",
+      "LB-AS": "Loubnâne ech Chemâli (Ash Shamāl)",
+      "LB-JA": "Loubnâne ej Jnoûbi (Al Janūb)",
+      "LB-NA": "Nabatîyé (An Nabaţīyah"
+    }
+  },
+  "LC": {
+    "name": "Saint Lucia",
+    "divisions": {
+      "LC-LC": "Saint Lucia"
+    }
+  },
+  "LI": {
+    "name": "Liechtenstein",
+    "divisions": {
+      "LI-LI": "Liechtenstein"
+    }
+  },
+  "LK": {
+    "name": "Sri Lanka",
+    "divisions": {
+      "LK-1": "Basnahira Palata (Western Province)",
+      "LK-11": "Colombo",
+      "LK-12": "Gampaha",
+      "LK-13": "Kalutara",
+      "LK-3": "Dakunu Palata (Southern Province)",
+      "LK-31": "Galle",
+      "LK-33": "Hambantota",
+      "LK-32": "Matara",
+      "LK-2": "Madhyama Palata (Central Province)",
+      "LK-21": "Kandy",
+      "LK-22": "Matale",
+      "LK-23": "Nuwara Eliya",
+      "LK-5": "Negenahira Palata (Eastern Province)",
+      "LK-52": "Arnpara",
+      "LK-51": "Batticaloa",
+      "LK-53": "Trincomalee",
+      "LK-9": "Sabaragamuwa Palata",
+      "LK-92": "Kegalla",
+      "LK-91": "Ratnapura",
+      "LK-7": "Uturumeda Palata (North Central Province)",
+      "LK-71": "Anuradhapura",
+      "LK-72": "Polonnaruwa",
+      "LK-4": "Uturu Palata (Northern Province)",
+      "LK-41": "Jaffna",
+      "LK-42": "Kilinochchi",
+      "LK-43": "Mannar",
+      "LK-45": "Mullaittivu",
+      "LK-44": "Vavuniya",
+      "LK-8": "Uva Palata",
+      "LK-81": "Badulla",
+      "LK-82": "Monaragala",
+      "LK-6": "Wayamba Palata (North Western Province)",
+      "LK-61": "Kurunegala",
+      "LK-62": "Puttalam"
+    }
+  },
+  "LR": {
+    "name": "Liberia",
+    "divisions": {
+      "LR-BM": "Bomi",
+      "LR-BG": "Bong",
+      "LR-GB": "Grand Bassa",
+      "LR-CM": "Grand Cape Mount",
+      "LR-GG": "Grand Gedeh",
+      "LR-GK": "Grand Kru",
+      "LR-LO": "Lofa",
+      "LR-MG": "Margibi",
+      "LR-MY": "Maryland",
+      "LR-MO": "Montserrado",
+      "LR-NI": "Nimba",
+      "LR-RI": "Rivercess",
+      "LR-SI": "Sinoe"
+    }
+  },
+  "LS": {
+    "name": "Lesotho",
+    "divisions": {
+      "LS-D": "Berea",
+      "LS-B": "Butha-Buthe",
+      "LS-C": "Leribe",
+      "LS-E": "Mafeteng",
+      "LS-A": "Maseru",
+      "LS-F": "Mohale's Hoek",
+      "LS-J": "Mokhotlong",
+      "LS-H": "Qacha's Nek",
+      "LS-G": "Quthing",
+      "LS-K": "Thaba-Tseka"
+    }
+  },
+  "LT": {
+    "name": "Lithuania",
+    "divisions": {
+      "LT-AL": "Alytaus Apskritis",
+      "LT-KU": "Kauno Apskritis",
+      "LT-KL": "Klaipėdos Apskritis",
+      "LT-MR": "Marijampolės Apskritis",
+      "LT-PN": "Panevėžio Apskritis",
+      "LT-SA": "Šiauliu Apskritis",
+      "LT-TA": "Tauragės Apskritis",
+      "LT-TE": "Telšiu Apskritis",
+      "LT-UT": "Utenos Apskritis",
+      "LT-VL": "Vilniaus Apskritis"
+    }
+  },
+  "LU": {
+    "name": "Luxembourg",
+    "divisions": {
+      "LU-D": "Diekirch",
+      "LU-G": "Grevenmacher",
+      "LU-L": "Luxembourg (Luxemburg)"
     }
   },
   "LV": {
@@ -2704,50 +2901,6 @@
       "LV-VEN": "Ventspils"
     }
   },
-  "LB": {
-    "name": "Lebanon",
-    "divisions": {
-      "LB-BA": "Beiroût (Bayrūt)",
-      "LB-BI": "El Béqaa (Al Biqā')",
-      "LB-JL": "Jabal Loubnâne (Jabal Lubnān)",
-      "LB-AS": "Loubnâne ech Chemâli (Ash Shamāl)",
-      "LB-JA": "Loubnâne ej Jnoûbi (Al Janūb)",
-      "LB-NA": "Nabatîyé (An Nabaţīyah"
-    }
-  },
-  "LS": {
-    "name": "Lesotho",
-    "divisions": {
-      "LS-D": "Berea",
-      "LS-B": "Butha-Buthe",
-      "LS-C": "Leribe",
-      "LS-E": "Mafeteng",
-      "LS-A": "Maseru",
-      "LS-F": "Mohale's Hoek",
-      "LS-J": "Mokhotlong",
-      "LS-H": "Qacha's Nek",
-      "LS-G": "Quthing",
-      "LS-K": "Thaba-Tseka"
-    }
-  },
-  "LR": {
-    "name": "Liberia",
-    "divisions": {
-      "LR-BM": "Bomi",
-      "LR-BG": "Bong",
-      "LR-GB": "Grand Bassa",
-      "LR-CM": "Grand Cape Mount",
-      "LR-GG": "Grand Gedeh",
-      "LR-GK": "Grand Kru",
-      "LR-LO": "Lofa",
-      "LR-MG": "Margibi",
-      "LR-MY": "Maryland",
-      "LR-MO": "Montserrado",
-      "LR-NI": "Nimba",
-      "LR-RI": "Rivercess",
-      "LR-SI": "Sinoe"
-    }
-  },
   "LY": {
     "name": "Libya",
     "divisions": {
@@ -2764,377 +2917,6 @@
       "LY-NA": "Naggaza",
       "LY-SF": "Sawfajjin",
       "LY-TB": "Ţarābulus"
-    }
-  },
-  "LI": {
-    "name": "Liechtenstein",
-    "divisions": {
-      "LI-LI": "Liechtenstein"
-    }
-  },
-  "LT": {
-    "name": "Lithuania",
-    "divisions": {
-      "LT-AL": "Alytaus Apskritis",
-      "LT-KU": "Kauno Apskritis",
-      "LT-KL": "Klaipėdos Apskritis",
-      "LT-MR": "Marijampolės Apskritis",
-      "LT-PN": "Panevėžio Apskritis",
-      "LT-SA": "Šiauliu Apskritis",
-      "LT-TA": "Tauragės Apskritis",
-      "LT-TE": "Telšiu Apskritis",
-      "LT-UT": "Utenos Apskritis",
-      "LT-VL": "Vilniaus Apskritis"
-    }
-  },
-  "LU": {
-    "name": "Luxembourg",
-    "divisions": {
-      "LU-D": "Diekirch",
-      "LU-G": "Grevenmacher",
-      "LU-L": "Luxembourg (Luxemburg)"
-    }
-  },
-  "MO": {
-    "name": "Macau",
-    "divisions": {
-      "MO-MO": "Macau"
-    }
-  },
-  "MK": {
-    "name": "Macedonia",
-    "divisions": {
-      "MK-MK": "Macedonia"
-    }
-  },
-  "MG": {
-    "name": "Madagascar",
-    "divisions": {
-      "MG-T": "Antananarivo",
-      "MG-D": "Antsiranana",
-      "MG-F": "Fianarantsoa",
-      "MG-M": "Mahajanga",
-      "MG-A": "Toamasina",
-      "MG-U": "Toliara"
-    }
-  },
-  "MW": {
-    "name": "Malawi",
-    "divisions": {
-      "MW-C": "Central",
-      "MW-DE": "Dedza",
-      "MW-DO": "Dowa",
-      "MW-KS": "Kasungu",
-      "MW-LI": "Lilongwe",
-      "MW-MC": "Mchinji",
-      "MW-NK": "Nkhotakota",
-      "MW-NU": "Ntcheu",
-      "MW-NI": "Ntchisi",
-      "MW-SA": "Salima",
-      "MW-N": "Northern",
-      "MW-CT": "Chitipa",
-      "MW-KR": "Karonga",
-      "MW-MZ": "Mzimba",
-      "MW-NB": "Nkhata Bay",
-      "MW-RU": "Rumphi",
-      "MW-S": "Southern",
-      "MW-BL": "Blantyre",
-      "MW-CK": "Chikwawa",
-      "MW-CR": "Chiradzulu",
-      "MW-MH": "Machinga",
-      "MW-MG": "Mangochi",
-      "MW-MU": "Mulanje",
-      "MW-MW": "Mwanza",
-      "MW-NS": "Nsanje",
-      "MW-TH": "Thyolo",
-      "MW-ZO": "Zomba"
-    }
-  },
-  "MY": {
-    "name": "Malaysia",
-    "divisions": {
-      "MY-W": "Wilayah Persekutuan Kuala Lumpur",
-      "MY-L": "Wilayah Persekutuan Labuan",
-      "MY-J": "Johor",
-      "MY-K": "Kedah",
-      "MY-D": "Kelantan",
-      "MY-M": "Melaka",
-      "MY-N": "Negeri Sembilan",
-      "MY-C": "Pahang",
-      "MY-A": "Perak",
-      "MY-R": "Perlis",
-      "MY-P": "Pulau Pinang",
-      "MY-SA": "Sabah",
-      "MY-SK": "Sarawak",
-      "MY-B": "Selangor",
-      "MY-T": "Terengganu"
-    }
-  },
-  "MV": {
-    "name": "Maldives",
-    "divisions": {
-      "MV-MLE": "Male",
-      "MV-02": "Alif",
-      "MV-20": "Baa",
-      "MV-17": "Dhaalu",
-      "MV-14": "Faafu",
-      "MV-27": "Gaaf Alif",
-      "MV-28": "Gaafu Dhaalu",
-      "MV-29": "Gnaviyani",
-      "MV-07": "Haa Alif",
-      "MV-23": "Haa Dhaalu",
-      "MV-26": "Kaafu",
-      "MV-05": "Laamu",
-      "MV-03": "Lhaviyani",
-      "MV-12": "Meemu",
-      "MV-25": "Noonu",
-      "MV-13": "Raa",
-      "MV-01": "Seenu",
-      "MV-24": "Shaviyani",
-      "MV-08": "Thaa",
-      "MV-04": "Vaavu"
-    }
-  },
-  "ML": {
-    "name": "Mali",
-    "divisions": {
-      "ML-BKO": "Bamako",
-      "ML-7": "Gao",
-      "ML-1": "Kayes",
-      "ML-8": "Kidal",
-      "ML-2": "Koulikoro",
-      "ML-5": "Mopti",
-      "ML-4": "Ségou",
-      "ML-3": "Sikasso",
-      "ML-6": "Tombouctou"
-    }
-  },
-  "MT": {
-    "name": "Malta",
-    "divisions": {
-      "MT-MT": "Malta"
-    }
-  },
-  "MH": {
-    "name": "Marshall Islands",
-    "divisions": {
-      "MH-L": "Ralik chain",
-      "MH-ALL": "Ailinglapalap",
-      "MH-EBO": "Ebon",
-      "MH-ENI": "Eniwetok",
-      "MH-JAL": "Jaluit",
-      "MH-KIL": "Kili",
-      "MH-KWA": "Kwajalein",
-      "MH-LAE": "Lae",
-      "MH-LIB": "Lib",
-      "MH-NMK": "Namorik",
-      "MH-NMU": "Namu",
-      "MH-RON": "Rongelap",
-      "MH-UJA": "Ujae",
-      "MH-UJL": "Ujelang",
-      "MH-WTH": "Wotho",
-      "MH-T": "Ratak chain",
-      "MH-ALK": "Ailuk",
-      "MH-ARN": "Arno",
-      "MH-AUR": "Aur",
-      "MH-LIK": "Likiep",
-      "MH-MAJ": "Majuro",
-      "MH-MAL": "Maloelap",
-      "MH-MEJ": "Mejit",
-      "MH-MIL": "Mili",
-      "MH-UTI": "Utirik",
-      "MH-WTJ": "Wotje"
-    }
-  },
-  "MQ": {
-    "name": "Martinique",
-    "divisions": {
-      "MQ-MQ": "Martinique"
-    }
-  },
-  "MR": {
-    "name": "Mauritania",
-    "divisions": {
-      "MR-NKC": "Nouakchott",
-      "MR-07": "Adrar",
-      "MR-03": "Assaba",
-      "MR-05": "Brakna",
-      "MR-08": "Dakhlet Nouādhibou",
-      "MR-04": "Gorgol",
-      "MR-10": "Guidimaka",
-      "MR-01": "Hodh ech Chargui",
-      "MR-02": "Hodh el Gharbi",
-      "MR-12": "Inchiri",
-      "MR-09": "Tagant",
-      "MR-11": "Tiris Zemmour",
-      "MR-06": "Trarza"
-    }
-  },
-  "MU": {
-    "name": "Mauritius",
-    "divisions": {
-      "MU-BR": "Beau Bassin-Rose Hill",
-      "MU-CU": "Curepipe",
-      "MU-PL": "Port Louis",
-      "MU-QB": "Quatre Bornes",
-      "MU-VP": "Vacoas-Phoenix",
-      "MU-BL": "Black River",
-      "MU-FL": "Flacq",
-      "MU-GP": "Grand Port",
-      "MU-MO": "Moka",
-      "MU-PA": "Pamplemousses",
-      "MU-PW": "Plaines Wilhems",
-      "MU-RR": "Rivière du Rempart",
-      "MU-SA": "Savanne",
-      "MU-AG": "Agalega Islands",
-      "MU-CC": "Cargados Carajos Shoals [Saint Brandon Islands]",
-      "MU-RO": "Rodrigues Island"
-    }
-  },
-  "YT": {
-    "name": "Mayotte",
-    "divisions": {
-      "YT-YT": "Mayotte"
-    }
-  },
-  "MX": {
-    "name": "Mexico",
-    "divisions": {
-      "MX-DIF": "Distrito Federal",
-      "MX-AGU": "Aguascalientes",
-      "MX-BCN": "Baja California",
-      "MX-BCS": "Baja California Sur",
-      "MX-CAM": "Campeche",
-      "MX-COA": "Coahuila",
-      "MX-COL": "Colima",
-      "MX-CHP": "Chiapas",
-      "MX-CHH": "Chihuahua",
-      "MX-DUR": "Durango",
-      "MX-GRO": "Guerrero",
-      "MX-GUA": "Guanajuato",
-      "MX-HID": "Hidalgo",
-      "MX-JAL": "Jalisco",
-      "MX-MEX": "México",
-      "MX-MIC": "Michoacán",
-      "MX-MOR": "Morelos",
-      "MX-NAY": "Nayarit",
-      "MX-NLE": "Nuevo León",
-      "MX-OAX": "Oaxaca",
-      "MX-PUE": "Puebla",
-      "MX-QUE": "Queretaro",
-      "MX-ROO": "Quintana Roo",
-      "MX-SLP": "San Luis Potosí",
-      "MX-SIN": "Sinaloa",
-      "MX-SON": "Sonora",
-      "MX-TAB": "Tabasco",
-      "MX-TAM": "Tamaulipas",
-      "MX-TLA": "Tlaxcala",
-      "MX-VER": "Veracruz",
-      "MX-YUC": "Yucatán",
-      "MX-ZAC": "Zacatecas"
-    }
-  },
-  "FM": {
-    "name": "Micronesia",
-    "divisions": {
-      "FM-TRK": "chuuk",
-      "FM-KSA": "Kosrae",
-      "FM-PNI": "Pohnpei",
-      "FM-YAP": "Yap"
-    }
-  },
-  "MD": {
-    "name": "Moldova",
-    "divisions": {
-      "MD-BAL": "Bălţi",
-      "MD-CAH": "Cahul",
-      "MD-CHI": "Chişinău",
-      "MD-DUB": "Dubăsari",
-      "MD-ORH": "Orhei",
-      "MD-RIB": "Rîbniţa",
-      "MD-SOC": "Soroca",
-      "MD-TIG": "Tighina",
-      "MD-TIR": "Tiraspol",
-      "MD-UNG": "Ungheni",
-      "MD-ANE": "Anenii Noi",
-      "MD-BAS": "Basarabeasca",
-      "MD-BRI": "Brinceni",
-      "MD-CHL": "Cahul",
-      "MD-CAM": "Camenca",
-      "MD-CAN": "Cantemir",
-      "MD-CAI": "Căinari",
-      "MD-CAL": "Călăraşi",
-      "MD-CAS": "Căuşeni",
-      "MD-CIA": "Ciadîr-Lunga",
-      "MD-CIM": "Cimişlia",
-      "MD-COM": "Comrat",
-      "MD-CRI": "Criuleni",
-      "MD-DON": "Donduşeni",
-      "MD-DRO": "Drochia",
-      "MD-DBI": "Dubăsari",
-      "MD-EDI": "Edineţ",
-      "MD-FAL": "Făleşti",
-      "MD-FLO": "Floreşti",
-      "MD-GLO": "Glodeni",
-      "MD-GRI": "Grigoriopol",
-      "MD-HIN": "Hînceşti",
-      "MD-IAL": "Ialoveni",
-      "MD-LEO": "Leova",
-      "MD-NIS": "Nisporeni",
-      "MD-OCN": "Ocniţa",
-      "MD-OHI": "Orhei",
-      "MD-REZ": "Rezina",
-      "MD-RIT": "Rîbniţa",
-      "MD-RIS": "Rîşcani",
-      "MD-SIN": "Sîngerei",
-      "MD-SLO": "Slobozia",
-      "MD-SOA": "Soroca",
-      "MD-STR": "Străşeni",
-      "MD-SOL": "Şoldăneşti",
-      "MD-STE": "Ştefan Vodă",
-      "MD-TAR": "Taraclia",
-      "MD-TEL": "Teleneşti",
-      "MD-UGI": "Ungheni",
-      "MD-VUL": "Vulcăneşti"
-    }
-  },
-  "MC": {
-    "name": "Monaco",
-    "divisions": {
-      "MC-MC": "Monaco"
-    }
-  },
-  "MN": {
-    "name": "Mongolia",
-    "divisions": {
-      "MN-1": "Ulaanbaatar",
-      "MN-073": "Arhangay",
-      "MN-069": "Bayanhongor",
-      "MN-071": "Bayan-Ölgiy",
-      "MN-067": "Bulgan",
-      "MN-037": "Darhan uul",
-      "MN-061": "Dornod",
-      "MN-063": "Dornogovĭ",
-      "MN-059": "Dundgovĭ",
-      "MN-057": "Dzavhan",
-      "MN-065": "Govĭ-Altay",
-      "MN-064": "Govĭ-Sümber",
-      "MN-039": "Hentiy",
-      "MN-043": "Hovd",
-      "MN-041": "Hövsgöl",
-      "MN-053": "Ömnögovĭ",
-      "MN-035": "Orhon",
-      "MN-055": "Övörhangay",
-      "MN-049": "Selenge",
-      "MN-051": "Sühbaatar",
-      "MN-047": "Töv",
-      "MN-046": "Uvs"
-    }
-  },
-  "MS": {
-    "name": "Montserrat",
-    "divisions": {
-      "MS-MS": "Montserrat"
     }
   },
   "MA": {
@@ -3200,20 +2982,127 @@
       "MA-SAF": "Safi"
     }
   },
-  "MZ": {
-    "name": "Mozambique",
+  "MC": {
+    "name": "Monaco",
     "divisions": {
-      "MZ-MPM": "Maputo",
-      "MZ-P": "Cabo Delgado",
-      "MZ-G": "Gaza",
-      "MZ-I": "Inhambane",
-      "MZ-B": "Manica",
-      "MZ-L": "Maputo",
-      "MZ-N": "Nampula",
-      "MZ-A": "Niassa",
-      "MZ-S": "Sofala",
-      "MZ-T": "Tete",
-      "MZ-Q": "Zambézia"
+      "MC-MC": "Monaco"
+    }
+  },
+  "MD": {
+    "name": "Moldova",
+    "divisions": {
+      "MD-BAL": "Bălţi",
+      "MD-CAH": "Cahul",
+      "MD-CHI": "Chişinău",
+      "MD-DUB": "Dubăsari",
+      "MD-ORH": "Orhei",
+      "MD-RIB": "Rîbniţa",
+      "MD-SOC": "Soroca",
+      "MD-TIG": "Tighina",
+      "MD-TIR": "Tiraspol",
+      "MD-UNG": "Ungheni",
+      "MD-ANE": "Anenii Noi",
+      "MD-BAS": "Basarabeasca",
+      "MD-BRI": "Brinceni",
+      "MD-CHL": "Cahul",
+      "MD-CAM": "Camenca",
+      "MD-CAN": "Cantemir",
+      "MD-CAI": "Căinari",
+      "MD-CAL": "Călăraşi",
+      "MD-CAS": "Căuşeni",
+      "MD-CIA": "Ciadîr-Lunga",
+      "MD-CIM": "Cimişlia",
+      "MD-COM": "Comrat",
+      "MD-CRI": "Criuleni",
+      "MD-DON": "Donduşeni",
+      "MD-DRO": "Drochia",
+      "MD-DBI": "Dubăsari",
+      "MD-EDI": "Edineţ",
+      "MD-FAL": "Făleşti",
+      "MD-FLO": "Floreşti",
+      "MD-GLO": "Glodeni",
+      "MD-GRI": "Grigoriopol",
+      "MD-HIN": "Hînceşti",
+      "MD-IAL": "Ialoveni",
+      "MD-LEO": "Leova",
+      "MD-NIS": "Nisporeni",
+      "MD-OCN": "Ocniţa",
+      "MD-OHI": "Orhei",
+      "MD-REZ": "Rezina",
+      "MD-RIT": "Rîbniţa",
+      "MD-RIS": "Rîşcani",
+      "MD-SIN": "Sîngerei",
+      "MD-SLO": "Slobozia",
+      "MD-SOA": "Soroca",
+      "MD-STR": "Străşeni",
+      "MD-SOL": "Şoldăneşti",
+      "MD-STE": "Ştefan Vodă",
+      "MD-TAR": "Taraclia",
+      "MD-TEL": "Teleneşti",
+      "MD-UGI": "Ungheni",
+      "MD-VUL": "Vulcăneşti"
+    }
+  },
+  "MG": {
+    "name": "Madagascar",
+    "divisions": {
+      "MG-T": "Antananarivo",
+      "MG-D": "Antsiranana",
+      "MG-F": "Fianarantsoa",
+      "MG-M": "Mahajanga",
+      "MG-A": "Toamasina",
+      "MG-U": "Toliara"
+    }
+  },
+  "MH": {
+    "name": "Marshall Islands",
+    "divisions": {
+      "MH-L": "Ralik chain",
+      "MH-ALL": "Ailinglapalap",
+      "MH-EBO": "Ebon",
+      "MH-ENI": "Eniwetok",
+      "MH-JAL": "Jaluit",
+      "MH-KIL": "Kili",
+      "MH-KWA": "Kwajalein",
+      "MH-LAE": "Lae",
+      "MH-LIB": "Lib",
+      "MH-NMK": "Namorik",
+      "MH-NMU": "Namu",
+      "MH-RON": "Rongelap",
+      "MH-UJA": "Ujae",
+      "MH-UJL": "Ujelang",
+      "MH-WTH": "Wotho",
+      "MH-T": "Ratak chain",
+      "MH-ALK": "Ailuk",
+      "MH-ARN": "Arno",
+      "MH-AUR": "Aur",
+      "MH-LIK": "Likiep",
+      "MH-MAJ": "Majuro",
+      "MH-MAL": "Maloelap",
+      "MH-MEJ": "Mejit",
+      "MH-MIL": "Mili",
+      "MH-UTI": "Utirik",
+      "MH-WTJ": "Wotje"
+    }
+  },
+  "MK": {
+    "name": "Macedonia",
+    "divisions": {
+      "MK-MK": "Macedonia"
+    }
+  },
+  "ML": {
+    "name": "Mali",
+    "divisions": {
+      "ML-BKO": "Bamako",
+      "ML-7": "Gao",
+      "ML-1": "Kayes",
+      "ML-8": "Kidal",
+      "ML-2": "Koulikoro",
+      "ML-5": "Mopti",
+      "ML-4": "Ségou",
+      "ML-3": "Sikasso",
+      "ML-6": "Tombouctou"
     }
   },
   "MM": {
@@ -3235,6 +3124,232 @@
       "MM-17": "Shan"
     }
   },
+  "MN": {
+    "name": "Mongolia",
+    "divisions": {
+      "MN-1": "Ulaanbaatar",
+      "MN-073": "Arhangay",
+      "MN-069": "Bayanhongor",
+      "MN-071": "Bayan-Ölgiy",
+      "MN-067": "Bulgan",
+      "MN-037": "Darhan uul",
+      "MN-061": "Dornod",
+      "MN-063": "Dornogovĭ",
+      "MN-059": "Dundgovĭ",
+      "MN-057": "Dzavhan",
+      "MN-065": "Govĭ-Altay",
+      "MN-064": "Govĭ-Sümber",
+      "MN-039": "Hentiy",
+      "MN-043": "Hovd",
+      "MN-041": "Hövsgöl",
+      "MN-053": "Ömnögovĭ",
+      "MN-035": "Orhon",
+      "MN-055": "Övörhangay",
+      "MN-049": "Selenge",
+      "MN-051": "Sühbaatar",
+      "MN-047": "Töv",
+      "MN-046": "Uvs"
+    }
+  },
+  "MO": {
+    "name": "Macau",
+    "divisions": {
+      "MO-MO": "Macau"
+    }
+  },
+  "MP": {
+    "name": "Northern Mariana Islands",
+    "divisions": {
+      "MP-MP": "Northern Mariana Islands"
+    }
+  },
+  "MQ": {
+    "name": "Martinique",
+    "divisions": {
+      "MQ-MQ": "Martinique"
+    }
+  },
+  "MR": {
+    "name": "Mauritania",
+    "divisions": {
+      "MR-NKC": "Nouakchott",
+      "MR-07": "Adrar",
+      "MR-03": "Assaba",
+      "MR-05": "Brakna",
+      "MR-08": "Dakhlet Nouādhibou",
+      "MR-04": "Gorgol",
+      "MR-10": "Guidimaka",
+      "MR-01": "Hodh ech Chargui",
+      "MR-02": "Hodh el Gharbi",
+      "MR-12": "Inchiri",
+      "MR-09": "Tagant",
+      "MR-11": "Tiris Zemmour",
+      "MR-06": "Trarza"
+    }
+  },
+  "MS": {
+    "name": "Montserrat",
+    "divisions": {
+      "MS-MS": "Montserrat"
+    }
+  },
+  "MT": {
+    "name": "Malta",
+    "divisions": {
+      "MT-MT": "Malta"
+    }
+  },
+  "MU": {
+    "name": "Mauritius",
+    "divisions": {
+      "MU-BR": "Beau Bassin-Rose Hill",
+      "MU-CU": "Curepipe",
+      "MU-PL": "Port Louis",
+      "MU-QB": "Quatre Bornes",
+      "MU-VP": "Vacoas-Phoenix",
+      "MU-BL": "Black River",
+      "MU-FL": "Flacq",
+      "MU-GP": "Grand Port",
+      "MU-MO": "Moka",
+      "MU-PA": "Pamplemousses",
+      "MU-PW": "Plaines Wilhems",
+      "MU-RR": "Rivière du Rempart",
+      "MU-SA": "Savanne",
+      "MU-AG": "Agalega Islands",
+      "MU-CC": "Cargados Carajos Shoals [Saint Brandon Islands]",
+      "MU-RO": "Rodrigues Island"
+    }
+  },
+  "MV": {
+    "name": "Maldives",
+    "divisions": {
+      "MV-MLE": "Male",
+      "MV-02": "Alif",
+      "MV-20": "Baa",
+      "MV-17": "Dhaalu",
+      "MV-14": "Faafu",
+      "MV-27": "Gaaf Alif",
+      "MV-28": "Gaafu Dhaalu",
+      "MV-29": "Gnaviyani",
+      "MV-07": "Haa Alif",
+      "MV-23": "Haa Dhaalu",
+      "MV-26": "Kaafu",
+      "MV-05": "Laamu",
+      "MV-03": "Lhaviyani",
+      "MV-12": "Meemu",
+      "MV-25": "Noonu",
+      "MV-13": "Raa",
+      "MV-01": "Seenu",
+      "MV-24": "Shaviyani",
+      "MV-08": "Thaa",
+      "MV-04": "Vaavu"
+    }
+  },
+  "MW": {
+    "name": "Malawi",
+    "divisions": {
+      "MW-C": "Central",
+      "MW-DE": "Dedza",
+      "MW-DO": "Dowa",
+      "MW-KS": "Kasungu",
+      "MW-LI": "Lilongwe",
+      "MW-MC": "Mchinji",
+      "MW-NK": "Nkhotakota",
+      "MW-NU": "Ntcheu",
+      "MW-NI": "Ntchisi",
+      "MW-SA": "Salima",
+      "MW-N": "Northern",
+      "MW-CT": "Chitipa",
+      "MW-KR": "Karonga",
+      "MW-MZ": "Mzimba",
+      "MW-NB": "Nkhata Bay",
+      "MW-RU": "Rumphi",
+      "MW-S": "Southern",
+      "MW-BL": "Blantyre",
+      "MW-CK": "Chikwawa",
+      "MW-CR": "Chiradzulu",
+      "MW-MH": "Machinga",
+      "MW-MG": "Mangochi",
+      "MW-MU": "Mulanje",
+      "MW-MW": "Mwanza",
+      "MW-NS": "Nsanje",
+      "MW-TH": "Thyolo",
+      "MW-ZO": "Zomba"
+    }
+  },
+  "MX": {
+    "name": "Mexico",
+    "divisions": {
+      "MX-DIF": "Distrito Federal",
+      "MX-AGU": "Aguascalientes",
+      "MX-BCN": "Baja California",
+      "MX-BCS": "Baja California Sur",
+      "MX-CAM": "Campeche",
+      "MX-COA": "Coahuila",
+      "MX-COL": "Colima",
+      "MX-CHP": "Chiapas",
+      "MX-CHH": "Chihuahua",
+      "MX-DUR": "Durango",
+      "MX-GRO": "Guerrero",
+      "MX-GUA": "Guanajuato",
+      "MX-HID": "Hidalgo",
+      "MX-JAL": "Jalisco",
+      "MX-MEX": "México",
+      "MX-MIC": "Michoacán",
+      "MX-MOR": "Morelos",
+      "MX-NAY": "Nayarit",
+      "MX-NLE": "Nuevo León",
+      "MX-OAX": "Oaxaca",
+      "MX-PUE": "Puebla",
+      "MX-QUE": "Queretaro",
+      "MX-ROO": "Quintana Roo",
+      "MX-SLP": "San Luis Potosí",
+      "MX-SIN": "Sinaloa",
+      "MX-SON": "Sonora",
+      "MX-TAB": "Tabasco",
+      "MX-TAM": "Tamaulipas",
+      "MX-TLA": "Tlaxcala",
+      "MX-VER": "Veracruz",
+      "MX-YUC": "Yucatán",
+      "MX-ZAC": "Zacatecas"
+    }
+  },
+  "MY": {
+    "name": "Malaysia",
+    "divisions": {
+      "MY-W": "Wilayah Persekutuan Kuala Lumpur",
+      "MY-L": "Wilayah Persekutuan Labuan",
+      "MY-J": "Johor",
+      "MY-K": "Kedah",
+      "MY-D": "Kelantan",
+      "MY-M": "Melaka",
+      "MY-N": "Negeri Sembilan",
+      "MY-C": "Pahang",
+      "MY-A": "Perak",
+      "MY-R": "Perlis",
+      "MY-P": "Pulau Pinang",
+      "MY-SA": "Sabah",
+      "MY-SK": "Sarawak",
+      "MY-B": "Selangor",
+      "MY-T": "Terengganu"
+    }
+  },
+  "MZ": {
+    "name": "Mozambique",
+    "divisions": {
+      "MZ-MPM": "Maputo",
+      "MZ-P": "Cabo Delgado",
+      "MZ-G": "Gaza",
+      "MZ-I": "Inhambane",
+      "MZ-B": "Manica",
+      "MZ-L": "Maputo",
+      "MZ-N": "Nampula",
+      "MZ-A": "Niassa",
+      "MZ-S": "Sofala",
+      "MZ-T": "Tete",
+      "MZ-Q": "Zambézia"
+    }
+  },
   "NA": {
     "name": "Namibia",
     "divisions": {
@@ -3253,107 +3368,10 @@
       "NA-OD": "Otjozondjupa"
     }
   },
-  "NR": {
-    "name": "Nauru",
-    "divisions": {
-      "NR-NR": "Nauru"
-    }
-  },
-  "NP": {
-    "name": "Nepal",
-    "divisions": {
-      "NP-1": "Madhyamanchal",
-      "NP-BA": "Bagmati",
-      "NP-JA": "Janakpur",
-      "NP-NA": "Narayani",
-      "NP-2": "Madhya Pashchimanchal",
-      "NP-BH": "Bheri",
-      "NP-KA": "Karnali",
-      "NP-RA": "Rapti",
-      "NP-3": "Pashchimanchal",
-      "NP-DH": "Dhawalagiri",
-      "NP-GA": "Gandaki",
-      "NP-LU": "Lumbini",
-      "NP-4": "Purwanchal",
-      "NP-KO": "Kosi [Koshi]",
-      "NP-ME": "Mechi",
-      "NP-SA": "Sagarmatha",
-      "NP-5": "Sudur Pashchimanchal",
-      "NP-MA": "Mahakali",
-      "NP-SE": "Seti"
-    }
-  },
-  "NL": {
-    "name": "Netherlands",
-    "divisions": {
-      "NL-DR": "Drenthe",
-      "NL-FL": "Flevoland",
-      "NL-FR": "Friesland",
-      "NL-GE": "Gelderland",
-      "NL-GR": "Groningen",
-      "NL-LI": "Limburg",
-      "NL-NB": "Noord-Brabant",
-      "NL-NH": "Noord-Holland",
-      "NL-OV": "Overijssel",
-      "NL-UT": "Utrecht",
-      "NL-ZE": "Zeeland",
-      "NL-ZH": "Zuid-Holland"
-    }
-  },
-  "AN": {
-    "name": "Netherlands Antilles",
-    "divisions": {
-      "AN-AN": "Netherlands Antilles"
-    }
-  },
   "NC": {
     "name": "New Caledonia",
     "divisions": {
       "NC-NC": "New Caledonia"
-    }
-  },
-  "NZ": {
-    "name": "New Zealand",
-    "divisions": {
-      "NZ-N": "North Island",
-      "NZ-AUK": "Auckland",
-      "NZ-BOP": "Bay of Plenty",
-      "NZ-GIS": "Gisborne",
-      "NZ-HKB": "Hawkes's Bay",
-      "NZ-MWT": "Manawatu-Wanganui",
-      "NZ-NTL": "Northland",
-      "NZ-TKI": "Taranaki",
-      "NZ-WKO": "Waikato",
-      "NZ-WGN": "Wellington",
-      "NZ-S": "South Island",
-      "NZ-CAN": "Canterbury",
-      "NZ-MBH": "Marlborough",
-      "NZ-NSN": "Nelson",
-      "NZ-OTA": "Otago",
-      "NZ-STL": "Southland",
-      "NZ-TAS": "Tasman",
-      "NZ-WTC": "West Coast"
-    }
-  },
-  "NI": {
-    "name": "Nicaragua",
-    "divisions": {
-      "NI-BO": "Boaco",
-      "NI-CA": "Carazo",
-      "NI-CI": "Chinandega",
-      "NI-CO": "Chontales",
-      "NI-ES": "Estelí",
-      "NI-GR": "Granada",
-      "NI-JI": "Jinotega",
-      "NI-LE": "León",
-      "NI-MD": "Madriz",
-      "NI-MN": "Manaqua",
-      "NI-MS": "Masaya",
-      "NI-MT": "Matagalpa",
-      "NI-NS": "Nueva Segovia",
-      "NI-SJ": "Río San Juan",
-      "NI-RI": "Rivas",
-      "NI-ZE": "Zelaya"
     }
   },
   "NE": {
@@ -3367,6 +3385,12 @@
       "NE-5": "Tahoua",
       "NE-6": "Tillaberi",
       "NE-7": "Zinder"
+    }
+  },
+  "NF": {
+    "name": "Norfolk Island",
+    "divisions": {
+      "NF-NF": "Norfolk Island"
     }
   },
   "NG": {
@@ -3405,22 +3429,42 @@
       "NG-YO": "Yobe"
     }
   },
-  "NU": {
-    "name": "Niue",
+  "NI": {
+    "name": "Nicaragua",
     "divisions": {
-      "NU-NU": "Niue"
+      "NI-BO": "Boaco",
+      "NI-CA": "Carazo",
+      "NI-CI": "Chinandega",
+      "NI-CO": "Chontales",
+      "NI-ES": "Estelí",
+      "NI-GR": "Granada",
+      "NI-JI": "Jinotega",
+      "NI-LE": "León",
+      "NI-MD": "Madriz",
+      "NI-MN": "Manaqua",
+      "NI-MS": "Masaya",
+      "NI-MT": "Matagalpa",
+      "NI-NS": "Nueva Segovia",
+      "NI-SJ": "Río San Juan",
+      "NI-RI": "Rivas",
+      "NI-ZE": "Zelaya"
     }
   },
-  "NF": {
-    "name": "Norfolk Island",
+  "NL": {
+    "name": "Netherlands",
     "divisions": {
-      "NF-NF": "Norfolk Island"
-    }
-  },
-  "MP": {
-    "name": "Northern Mariana Islands",
-    "divisions": {
-      "MP-MP": "Northern Mariana Islands"
+      "NL-DR": "Drenthe",
+      "NL-FL": "Flevoland",
+      "NL-FR": "Friesland",
+      "NL-GE": "Gelderland",
+      "NL-GR": "Groningen",
+      "NL-LI": "Limburg",
+      "NL-NB": "Noord-Brabant",
+      "NL-NH": "Noord-Holland",
+      "NL-OV": "Overijssel",
+      "NL-UT": "Utrecht",
+      "NL-ZE": "Zeeland",
+      "NL-ZH": "Zuid-Holland"
     }
   },
   "NO": {
@@ -3449,6 +3493,65 @@
       "NO-21": "Svalbard (Arctic Region)"
     }
   },
+  "NP": {
+    "name": "Nepal",
+    "divisions": {
+      "NP-1": "Madhyamanchal",
+      "NP-BA": "Bagmati",
+      "NP-JA": "Janakpur",
+      "NP-NA": "Narayani",
+      "NP-2": "Madhya Pashchimanchal",
+      "NP-BH": "Bheri",
+      "NP-KA": "Karnali",
+      "NP-RA": "Rapti",
+      "NP-3": "Pashchimanchal",
+      "NP-DH": "Dhawalagiri",
+      "NP-GA": "Gandaki",
+      "NP-LU": "Lumbini",
+      "NP-4": "Purwanchal",
+      "NP-KO": "Kosi [Koshi]",
+      "NP-ME": "Mechi",
+      "NP-SA": "Sagarmatha",
+      "NP-5": "Sudur Pashchimanchal",
+      "NP-MA": "Mahakali",
+      "NP-SE": "Seti"
+    }
+  },
+  "NR": {
+    "name": "Nauru",
+    "divisions": {
+      "NR-NR": "Nauru"
+    }
+  },
+  "NU": {
+    "name": "Niue",
+    "divisions": {
+      "NU-NU": "Niue"
+    }
+  },
+  "NZ": {
+    "name": "New Zealand",
+    "divisions": {
+      "NZ-N": "North Island",
+      "NZ-AUK": "Auckland",
+      "NZ-BOP": "Bay of Plenty",
+      "NZ-GIS": "Gisborne",
+      "NZ-HKB": "Hawkes's Bay",
+      "NZ-MWT": "Manawatu-Wanganui",
+      "NZ-NTL": "Northland",
+      "NZ-TKI": "Taranaki",
+      "NZ-WKO": "Waikato",
+      "NZ-WGN": "Wellington",
+      "NZ-S": "South Island",
+      "NZ-CAN": "Canterbury",
+      "NZ-MBH": "Marlborough",
+      "NZ-NSN": "Nelson",
+      "NZ-OTA": "Otago",
+      "NZ-STL": "Southland",
+      "NZ-TAS": "Tasman",
+      "NZ-WTC": "West Coast"
+    }
+  },
   "OM": {
     "name": "Oman",
     "divisions": {
@@ -3460,25 +3563,6 @@
       "OM-ZA": "Az Zāhirah",
       "OM-MA": "Masqaţ",
       "OM-MU": "Musandam"
-    }
-  },
-  "PK": {
-    "name": "Pakistan",
-    "divisions": {
-      "PK-IS": "Islamabad",
-      "PK-BA": "Baluchistan (Balochistān)",
-      "PK-NW": "North-West Frontier",
-      "PK-PB": "Punjab",
-      "PK-SD": "Sind (Sindh)",
-      "PK-TA": "Federally Administered Tribal Areas",
-      "PK-JK": "Azad Kashmir",
-      "PK-NA": "Northern Areas"
-    }
-  },
-  "PW": {
-    "name": "Palau",
-    "divisions": {
-      "PW-PW": "Palau"
     }
   },
   "PA": {
@@ -3494,54 +3578,6 @@
       "PA-8": "Panamá",
       "PA-9": "Veraguas",
       "PA-0": "Comarca de San Blas"
-    }
-  },
-  "PG": {
-    "name": "Papua New Guinea",
-    "divisions": {
-      "PG-NCD": "National Capital District (Port Moresby)",
-      "PG-CPM": "Central",
-      "PG-CPK": "Chimbu",
-      "PG-EHG": "Eastern Highlands",
-      "PG-EBR": "East New Britain",
-      "PG-ESW": "East Sepik",
-      "PG-EPW": "Enga",
-      "PG-GPK": "Gulf",
-      "PG-MPM": "Madang",
-      "PG-MRL": "Manus",
-      "PG-MBA": "Milne Bay",
-      "PG-MPL": "Morobe",
-      "PG-NIK": "New Ireland",
-      "PG-NPP": "Northern",
-      "PG-NSA": "North Solomons",
-      "PG-SAN": "Sandaun [West Sepik]",
-      "PG-SHM": "Southern Highlands",
-      "PG-WPD": "Western",
-      "PG-WHM": "Western Highlands",
-      "PG-WBK": "West New Britain"
-    }
-  },
-  "PY": {
-    "name": "Paraguay",
-    "divisions": {
-      "PY-ASU": "Asunción",
-      "PY-16": "Alto Paraguay",
-      "PY-10": "Alto Parang",
-      "PY-13": "Amambay",
-      "PY-19": "Boquerón",
-      "PY-5": "Caaguazú",
-      "PY-6": "Caazapá",
-      "PY-14": "Canindeyú",
-      "PY-11": "Central",
-      "PY-1": "Concepción",
-      "PY-3": "Cordillera",
-      "PY-4": "Guairá",
-      "PY-7": "Itapúa",
-      "PY-8": "Misiones",
-      "PY-12": "Neembucú",
-      "PY-9": "Paraguarī",
-      "PY-15": "Presidente Hayes",
-      "PY-2": "San Pedro"
     }
   },
   "PE": {
@@ -3574,16 +3610,54 @@
       "PE-UCA": "Ucayali"
     }
   },
+  "PF": {
+    "name": "French Polynesia",
+    "divisions": {
+      "PF-PF": "French Polynesia"
+    }
+  },
+  "PG": {
+    "name": "Papua New Guinea",
+    "divisions": {
+      "PG-NCD": "National Capital District (Port Moresby)",
+      "PG-CPM": "Central",
+      "PG-CPK": "Chimbu",
+      "PG-EHG": "Eastern Highlands",
+      "PG-EBR": "East New Britain",
+      "PG-ESW": "East Sepik",
+      "PG-EPW": "Enga",
+      "PG-GPK": "Gulf",
+      "PG-MPM": "Madang",
+      "PG-MRL": "Manus",
+      "PG-MBA": "Milne Bay",
+      "PG-MPL": "Morobe",
+      "PG-NIK": "New Ireland",
+      "PG-NPP": "Northern",
+      "PG-NSA": "North Solomons",
+      "PG-SAN": "Sandaun [West Sepik]",
+      "PG-SHM": "Southern Highlands",
+      "PG-WPD": "Western",
+      "PG-WHM": "Western Highlands",
+      "PG-WBK": "West New Britain"
+    }
+  },
   "PH": {
     "name": "Philippines",
     "divisions": {
       "PH-PH": "Philippines"
     }
   },
-  "PN": {
-    "name": "Pitcairn",
+  "PK": {
+    "name": "Pakistan",
     "divisions": {
-      "PN-PN": "Pitcairn"
+      "PK-IS": "Islamabad",
+      "PK-BA": "Baluchistan (Balochistān)",
+      "PK-NW": "North-West Frontier",
+      "PK-PB": "Punjab",
+      "PK-SD": "Sind (Sindh)",
+      "PK-TA": "Federally Administered Tribal Areas",
+      "PK-JK": "Azad Kashmir",
+      "PK-NA": "Northern Areas"
     }
   },
   "PL": {
@@ -3640,6 +3714,24 @@
       "PL-ZG": "Zielona Góra"
     }
   },
+  "PM": {
+    "name": "St. Pierre & Miquelon",
+    "divisions": {
+      "PM-PM": "St. Pierre & Miquelon"
+    }
+  },
+  "PN": {
+    "name": "Pitcairn",
+    "divisions": {
+      "PN-PN": "Pitcairn"
+    }
+  },
+  "PR": {
+    "name": "Puerto Rico",
+    "divisions": {
+      "PR-PR": "Puerto Rico"
+    }
+  },
   "PT": {
     "name": "Portugal",
     "divisions": {
@@ -3665,10 +3757,33 @@
       "PT-30": "Regiāo Autónoma da Madeira"
     }
   },
-  "PR": {
-    "name": "Puerto Rico",
+  "PW": {
+    "name": "Palau",
     "divisions": {
-      "PR-PR": "Puerto Rico"
+      "PW-PW": "Palau"
+    }
+  },
+  "PY": {
+    "name": "Paraguay",
+    "divisions": {
+      "PY-ASU": "Asunción",
+      "PY-16": "Alto Paraguay",
+      "PY-10": "Alto Parang",
+      "PY-13": "Amambay",
+      "PY-19": "Boquerón",
+      "PY-5": "Caaguazú",
+      "PY-6": "Caazapá",
+      "PY-14": "Canindeyú",
+      "PY-11": "Central",
+      "PY-1": "Concepción",
+      "PY-3": "Cordillera",
+      "PY-4": "Guairá",
+      "PY-7": "Itapúa",
+      "PY-8": "Misiones",
+      "PY-12": "Neembucú",
+      "PY-9": "Paraguarī",
+      "PY-15": "Presidente Hayes",
+      "PY-2": "San Pedro"
     }
   },
   "QA": {
@@ -3848,67 +3963,6 @@
       "RW-H": "Ruhengeri"
     }
   },
-  "SH": {
-    "name": "St. Helena",
-    "divisions": {
-      "SH-SH": "Saint Helena",
-      "SH-AC": "Ascension",
-      "SH-TA": "Tristan da Cunha"
-    }
-  },
-  "KN": {
-    "name": "Saint Kitts & Nevis",
-    "divisions": {
-      "KN-KN": "Saint Kitts & Nevis"
-    }
-  },
-  "LC": {
-    "name": "Saint Lucia",
-    "divisions": {
-      "LC-LC": "Saint Lucia"
-    }
-  },
-  "PM": {
-    "name": "St. Pierre & Miquelon",
-    "divisions": {
-      "PM-PM": "St. Pierre & Miquelon"
-    }
-  },
-  "VC": {
-    "name": "St. Vincent & the Grenadines",
-    "divisions": {
-      "VC-VC": "St. Vincent & the Grenadines"
-    }
-  },
-  "WS": {
-    "name": "Samoa",
-    "divisions": {
-      "WS-AA": "A'ana",
-      "WS-AL": "Aiga-i-le-Tai",
-      "WS-AT": "Atua",
-      "WS-FA": "Fa'asaleleaga",
-      "WS-GE": "Gaga'emauga",
-      "WS-GI": "Gagaifomauga",
-      "WS-PA": "Palauli",
-      "WS-SA": "Satupa'itea",
-      "WS-TU": "Tuamasaga",
-      "WS-VF": "Va'a-o-Fonoti",
-      "WS-VS": "Vaisigano"
-    }
-  },
-  "SM": {
-    "name": "San Marino",
-    "divisions": {
-      "SM-SM": "San Marino"
-    }
-  },
-  "ST": {
-    "name": "Sao Tome & Principe",
-    "divisions": {
-      "ST-P": "Príncipe",
-      "ST-S": "Sāo Tomé"
-    }
-  },
   "SA": {
     "name": "Saudi Arabia",
     "divisions": {
@@ -3927,72 +3981,6 @@
       "SA-07": "Tabūk"
     }
   },
-  "SN": {
-    "name": "Senegal",
-    "divisions": {
-      "SN-DK": "Dakar",
-      "SN-DB": "Diourbel",
-      "SN-FK": "Fatick",
-      "SN-KL": "Kaolack",
-      "SN-KD": "Kolda",
-      "SN-LG": "Louga",
-      "SN-SL": "Saint-Louis",
-      "SN-TC": "Tambacounda",
-      "SN-TH": "Thiès",
-      "SN-ZG": "Ziguinchor"
-    }
-  },
-  "SC": {
-    "name": "Seychelles",
-    "divisions": {
-      "SC-SC": "Seychelles"
-    }
-  },
-  "SL": {
-    "name": "Sierra Leone",
-    "divisions": {
-      "SL-W": "Western Area (Freetown)",
-      "SL-E": "Eastern",
-      "SL-N": "Northern",
-      "SL-S": "Southern"
-    }
-  },
-  "SG": {
-    "name": "Singapore",
-    "divisions": {
-      "SG-SG": "Singapore"
-    }
-  },
-  "SK": {
-    "name": "Slovak Republic",
-    "divisions": {
-      "SK-BC": "Banskobystrický kraj",
-      "SK-BL": "Bratislavský kraj",
-      "SK-KI": "Košický kraj",
-      "SK-NI": "Nitriansky kraj",
-      "SK-PV": "Prešovský kraj",
-      "SK-TC": "Trenčiansky kraj",
-      "SK-TA": "Trnavský kraj",
-      "SK-ZI": "Žilinský kraj"
-    }
-  },
-  "SI": {
-    "name": "Slovenia",
-    "divisions": {
-      "SI-07": "Dolenjska",
-      "SI-09": "Gorenjska",
-      "SI-11": "Goriška",
-      "SI-03": "Koroška",
-      "SI-10": "Notranjsko-kraška",
-      "SI-12": "Obalno-kraška",
-      "SI-08": "Osrednjeslovenska",
-      "SI-02": "Podravska",
-      "SI-01": "Pomurska",
-      "SI-04": "Savinjska",
-      "SI-06": "Spodnjeposavska",
-      "SI-05": "Zasavska"
-    }
-  },
   "SB": {
     "name": "Solomon Islands",
     "divisions": {
@@ -4006,151 +3994,10 @@
       "SB-WE": "Western"
     }
   },
-  "SO": {
-    "name": "Somalia",
+  "SC": {
+    "name": "Seychelles",
     "divisions": {
-      "SO-AW": "Awdal",
-      "SO-BK": "Bakool",
-      "SO-BN": "Banaadir",
-      "SO-BR": "Bari",
-      "SO-BY": "BaY",
-      "SO-GA": "Galguduud",
-      "SO-GE": "Gedo",
-      "SO-HI": "Hiiraan",
-      "SO-JD": "Jubbada Dhexe",
-      "SO-JH": "Jubbada Hoose",
-      "SO-MU": "Mudug",
-      "SO-NU": "Nugaal",
-      "SO-SA": "Sanaag",
-      "SO-SD": "Shabeellaha Dhexe",
-      "SO-SH": "Shabeellaha Hoose",
-      "SO-SO": "Sool",
-      "SO-TO": "Togdheer",
-      "SO-WO": "Woqooyi Galbeed"
-    }
-  },
-  "ZA": {
-    "name": "South Africa",
-    "divisions": {
-      "ZA-EC": "Eastern Cape (Oos-Kaap)",
-      "ZA-FS": "Free State (Vrystaat)",
-      "ZA-GT": "Gauteng",
-      "ZA-NL": "Kwazulu-Natal",
-      "ZA-MP": "Mpumalanga",
-      "ZA-NC": "Northern Cape (Noord-Kaap)",
-      "ZA-NP": "Northern Province (Noordelike Provinsie)",
-      "ZA-NW": "North-West (Noord-Wes)",
-      "ZA-WC": "Western Cape (Wes-Kaap)"
-    }
-  },
-  "GS": {
-    "name": "South Georgia and the South Sandwich Islands",
-    "divisions": {
-      "GS-GS": "South Georgia and the South Sandwich Islands"
-    }
-  },
-  "ES": {
-    "name": "Spain",
-    "divisions": {
-      "ES-AN": "Andalucía",
-      "ES-AL": "Almería",
-      "ES-CA": "Cádiz",
-      "ES-CO": "Córdoba",
-      "ES-GR": "Granada",
-      "ES-H": "Huelva",
-      "ES-J": "Jaén",
-      "ES-MA": "Málaga",
-      "ES-SE": "Sevilla",
-      "ES-AR": "Aragón",
-      "ES-HU": "Huesca",
-      "ES-TE": "Teruel",
-      "ES-Z": "Zaragoza",
-      "ES-O": "Asturias",
-      "ES-CN": "Canarias",
-      "ES-GC": "Las Palmas",
-      "ES-TF": "Santa Cruz De Tenerife",
-      "ES-S": "Cantabria",
-      "ES-CM": "Castilla-La Mancha",
-      "ES-AB": "Albacete",
-      "ES-CR": "Ciudad Real",
-      "ES-CU": "Cuenca",
-      "ES-GU": "Guadalajara",
-      "ES-TO": "Toledo",
-      "ES-CL": "Castilla y León",
-      "ES-AV": "Ávila",
-      "ES-BU": "Burgos",
-      "ES-LE": "León",
-      "ES-P": "Palencia",
-      "ES-SA": "Salamanca",
-      "ES-SG": "Segovia",
-      "ES-SO": "Soria",
-      "ES-VA": "Valladolid",
-      "ES-ZA": "Zamora",
-      "ES-CT": "Cataluña",
-      "ES-B": "Barcelona",
-      "ES-GE": "Gerona",
-      "ES-L": "Lérida",
-      "ES-T": "Tarragona",
-      "ES-EX": "Extremadura",
-      "ES-BA": "Badajoz",
-      "ES-CC": "Cáceres",
-      "ES-GA": "Galicia",
-      "ES-C": "La Coruña",
-      "ES-LU": "Lugo",
-      "ES-OR": "Orense",
-      "ES-PO": "Pontevedra",
-      "ES-PM": "Baleares",
-      "ES-LO": "La Rioja",
-      "ES-M": "Madrid",
-      "ES-MU": "Murcia",
-      "ES-NA": "Navarra",
-      "ES-PV": "País Vasco",
-      "ES-VI": "Álava",
-      "ES-SS": "Guipúzcoa",
-      "ES-BI": "Vizcaya",
-      "ES-VC": "Valenciana, Comunidad",
-      "ES-A": "Alicante",
-      "ES-CS": "Castellón",
-      "ES-V": "Valencia"
-    }
-  },
-  "LK": {
-    "name": "Sri Lanka",
-    "divisions": {
-      "LK-1": "Basnahira Palata (Western Province)",
-      "LK-11": "Colombo",
-      "LK-12": "Gampaha",
-      "LK-13": "Kalutara",
-      "LK-3": "Dakunu Palata (Southern Province)",
-      "LK-31": "Galle",
-      "LK-33": "Hambantota",
-      "LK-32": "Matara",
-      "LK-2": "Madhyama Palata (Central Province)",
-      "LK-21": "Kandy",
-      "LK-22": "Matale",
-      "LK-23": "Nuwara Eliya",
-      "LK-5": "Negenahira Palata (Eastern Province)",
-      "LK-52": "Arnpara",
-      "LK-51": "Batticaloa",
-      "LK-53": "Trincomalee",
-      "LK-9": "Sabaragamuwa Palata",
-      "LK-92": "Kegalla",
-      "LK-91": "Ratnapura",
-      "LK-7": "Uturumeda Palata (North Central Province)",
-      "LK-71": "Anuradhapura",
-      "LK-72": "Polonnaruwa",
-      "LK-4": "Uturu Palata (Northern Province)",
-      "LK-41": "Jaffna",
-      "LK-42": "Kilinochchi",
-      "LK-43": "Mannar",
-      "LK-45": "Mullaittivu",
-      "LK-44": "Vavuniya",
-      "LK-8": "Uva Palata",
-      "LK-81": "Badulla",
-      "LK-82": "Monaragala",
-      "LK-6": "Wayamba Palata (North Western Province)",
-      "LK-61": "Kurunegala",
-      "LK-62": "Puttalam"
+      "SC-SC": "Seychelles"
     }
   },
   "SD": {
@@ -4184,36 +4031,6 @@
       "SD-21": "Wārāb"
     }
   },
-  "SR": {
-    "name": "Suriname",
-    "divisions": {
-      "SR-BR": "Brokopondo",
-      "SR-CM": "Commewijne",
-      "SR-CR": "Coronie",
-      "SR-MA": "Marowijne",
-      "SR-NI": "Nickerie",
-      "SR-PR": "Para",
-      "SR-PM": "Paramaribo",
-      "SR-SA": "Saramacca",
-      "SR-SI": "Sipaliwini",
-      "SR-WA": "Wanica"
-    }
-  },
-  "SJ": {
-    "name": "Svalbard & Jan Mayen Islands",
-    "divisions": {
-      "SJ-SJ": "Svalbard & Jan Mayen Islands"
-    }
-  },
-  "SZ": {
-    "name": "Swaziland",
-    "divisions": {
-      "SZ-HH": "Hhohho",
-      "SZ-LU": "Lubombo",
-      "SZ-MA": "Manzini",
-      "SZ-SH": "Shiselweni"
-    }
-  },
   "SE": {
     "name": "Sweden",
     "divisions": {
@@ -4240,35 +4057,148 @@
       "SE-E": "Östergötlands län"
     }
   },
-  "CH": {
-    "name": "Switzerland",
+  "SG": {
+    "name": "Singapore",
     "divisions": {
-      "CH-AG": "Aargau",
-      "CH-AR": "Appenzell Ausser-Rhoden",
-      "CH-AI": "Appenzell Inner-Rhoden",
-      "CH-BL": "Basel-Landschaft",
-      "CH-BS": "Basel-Stadt",
-      "CH-BE": "Bern",
-      "CH-FR": "Freiburg",
-      "CH-GE": "Geneve",
-      "CH-GL": "Glarus",
-      "CH-GR": "Graubünden",
-      "CH-JU": "Jura",
-      "CH-LU": "Luzern",
-      "CH-NE": "Neuchatel",
-      "CH-NW": "Nidwalden",
-      "CH-OW": "Obwalden",
-      "CH-SG": "Sankt Gallen",
-      "CH-SH": "Schaffhausen",
-      "CH-SZ": "Schwyz",
-      "CH-SO": "Solothurn",
-      "CH-TG": "Thurgau",
-      "CH-TI": "Ticino",
-      "CH-UR": "Uri",
-      "CH-VS": "Wallis",
-      "CH-VD": "Vaud",
-      "CH-ZG": "Zug",
-      "CH-ZH": "Zürich"
+      "SG-SG": "Singapore"
+    }
+  },
+  "SH": {
+    "name": "St. Helena",
+    "divisions": {
+      "SH-SH": "Saint Helena",
+      "SH-AC": "Ascension",
+      "SH-TA": "Tristan da Cunha"
+    }
+  },
+  "SI": {
+    "name": "Slovenia",
+    "divisions": {
+      "SI-07": "Dolenjska",
+      "SI-09": "Gorenjska",
+      "SI-11": "Goriška",
+      "SI-03": "Koroška",
+      "SI-10": "Notranjsko-kraška",
+      "SI-12": "Obalno-kraška",
+      "SI-08": "Osrednjeslovenska",
+      "SI-02": "Podravska",
+      "SI-01": "Pomurska",
+      "SI-04": "Savinjska",
+      "SI-06": "Spodnjeposavska",
+      "SI-05": "Zasavska"
+    }
+  },
+  "SJ": {
+    "name": "Svalbard & Jan Mayen Islands",
+    "divisions": {
+      "SJ-SJ": "Svalbard & Jan Mayen Islands"
+    }
+  },
+  "SK": {
+    "name": "Slovak Republic",
+    "divisions": {
+      "SK-BC": "Banskobystrický kraj",
+      "SK-BL": "Bratislavský kraj",
+      "SK-KI": "Košický kraj",
+      "SK-NI": "Nitriansky kraj",
+      "SK-PV": "Prešovský kraj",
+      "SK-TC": "Trenčiansky kraj",
+      "SK-TA": "Trnavský kraj",
+      "SK-ZI": "Žilinský kraj"
+    }
+  },
+  "SL": {
+    "name": "Sierra Leone",
+    "divisions": {
+      "SL-W": "Western Area (Freetown)",
+      "SL-E": "Eastern",
+      "SL-N": "Northern",
+      "SL-S": "Southern"
+    }
+  },
+  "SM": {
+    "name": "San Marino",
+    "divisions": {
+      "SM-SM": "San Marino"
+    }
+  },
+  "SN": {
+    "name": "Senegal",
+    "divisions": {
+      "SN-DK": "Dakar",
+      "SN-DB": "Diourbel",
+      "SN-FK": "Fatick",
+      "SN-KL": "Kaolack",
+      "SN-KD": "Kolda",
+      "SN-LG": "Louga",
+      "SN-SL": "Saint-Louis",
+      "SN-TC": "Tambacounda",
+      "SN-TH": "Thiès",
+      "SN-ZG": "Ziguinchor"
+    }
+  },
+  "SO": {
+    "name": "Somalia",
+    "divisions": {
+      "SO-AW": "Awdal",
+      "SO-BK": "Bakool",
+      "SO-BN": "Banaadir",
+      "SO-BR": "Bari",
+      "SO-BY": "BaY",
+      "SO-GA": "Galguduud",
+      "SO-GE": "Gedo",
+      "SO-HI": "Hiiraan",
+      "SO-JD": "Jubbada Dhexe",
+      "SO-JH": "Jubbada Hoose",
+      "SO-MU": "Mudug",
+      "SO-NU": "Nugaal",
+      "SO-SA": "Sanaag",
+      "SO-SD": "Shabeellaha Dhexe",
+      "SO-SH": "Shabeellaha Hoose",
+      "SO-SO": "Sool",
+      "SO-TO": "Togdheer",
+      "SO-WO": "Woqooyi Galbeed"
+    }
+  },
+  "SR": {
+    "name": "Suriname",
+    "divisions": {
+      "SR-BR": "Brokopondo",
+      "SR-CM": "Commewijne",
+      "SR-CR": "Coronie",
+      "SR-MA": "Marowijne",
+      "SR-NI": "Nickerie",
+      "SR-PR": "Para",
+      "SR-PM": "Paramaribo",
+      "SR-SA": "Saramacca",
+      "SR-SI": "Sipaliwini",
+      "SR-WA": "Wanica"
+    }
+  },
+  "ST": {
+    "name": "Sao Tome & Principe",
+    "divisions": {
+      "ST-P": "Príncipe",
+      "ST-S": "Sāo Tomé"
+    }
+  },
+  "SV": {
+    "name": "El Salvador",
+    "divisions": {
+      "SV-AH": "Ahuachapán",
+      "SV-CA": "Cabañas",
+      "SV-CU": "Cuscatlán",
+      "SV-CH": "Chalatenango",
+      "SV-LI": "La Libertad",
+      "SV-PA": "La Paz",
+      "SV-UN": "La Unión",
+      "SV-MO": "Morazán",
+      "SV-SM": "San Miguel",
+      "SV-SS": "San Salvador",
+      "SV-SA": "Santa Ana",
+      "SV-SV": "San Vicente",
+      "SV-SO": "Sonsonate",
+      "SV-SU": "Usulután"
     }
   },
   "SY": {
@@ -4290,65 +4220,54 @@
       "SY-TA": "Ţarţūs"
     }
   },
-  "TW": {
-    "name": "Taiwan",
+  "SZ": {
+    "name": "Swaziland",
     "divisions": {
-      "TW-KHH": "Kaohsiung",
-      "TW-TPE": "Taipei",
-      "TW-CYI": "Chiayi",
-      "TW-HSZ": "Hsinchu",
-      "TW-KEE": "Keelung",
-      "TW-TXG": "Taichung",
-      "TW-TNN": "Tainan",
-      "TW-CHA": "Changhua",
-      "TW-HUA": "Hualien",
-      "TW-ILA": "Ilan",
-      "TW-MIA": "Miaoli",
-      "TW-NAN": "Nantou",
-      "TW-PEN": "Penghu",
-      "TW-PIF": "Pingtung",
-      "TW-TTT": "Taitung",
-      "TW-TAO": "Taoyuan",
-      "TW-YUN": "Yunlin"
+      "SZ-HH": "Hhohho",
+      "SZ-LU": "Lubombo",
+      "SZ-MA": "Manzini",
+      "SZ-SH": "Shiselweni"
     }
   },
-  "TJ": {
-    "name": "Tajikistan",
+  "TC": {
+    "name": "Turks & Caicos Islands",
     "divisions": {
-      "TJ-KR": "Karategin",
-      "TJ-KT": "Khatlon",
-      "TJ-LN": "Leninabad",
-      "TJ-GB": "Gorno-Badakhshan"
+      "TC-TC": "Turks & Caicos Islands"
     }
   },
-  "TZ": {
-    "name": "Tanzania",
+  "TD": {
+    "name": "Chad",
     "divisions": {
-      "TZ-01": "Arusha",
-      "TZ-02": "Dar-es-Salaam",
-      "TZ-03": "Dodoma",
-      "TZ-04": "Iringa",
-      "TZ-05": "Kagera",
-      "TZ-06": "Kaskazini Pemba (Pemba North)",
-      "TZ-07": "Kaskazini Unguja (Zanzibar North)",
-      "TZ-08": "Kigoma",
-      "TZ-09": "Kilimanjaro",
-      "TZ-10": "Kusini Pemba (Pemba South)",
-      "TZ-11": "Kusini Unguja (Zanzibar South)",
-      "TZ-12": "Lindi",
-      "TZ-13": "Mara",
-      "TZ-14": "Mbeya",
-      "TZ-15": "Mjini Magharibi (Zanzibar West)",
-      "TZ-16": "Morogoro",
-      "TZ-17": "Mtwara",
-      "TZ-18": "Mwanza",
-      "TZ-19": "Pwani (Coast)",
-      "TZ-20": "Rukwa",
-      "TZ-21": "Ruvuma",
-      "TZ-22": "Shinyanga",
-      "TZ-23": "Singida",
-      "TZ-24": "Tabora",
-      "TZ-25": "Tanga"
+      "TD-BA": "Batha",
+      "TD-BI": "Biltine",
+      "TD-BET": "Borkou-Ennedi-Tibesti",
+      "TD-CB": "Chari-Baguirmi",
+      "TD-GR": "Guéra",
+      "TD-KA": "Kanem",
+      "TD-LC": "Lac",
+      "TD-LO": "Logone-Occidental",
+      "TD-LR": "Logone-Oriental",
+      "TD-MK": "Mayo-Kébbi",
+      "TD-MC": "Moyen-Chari",
+      "TD-OD": "Ouaddaï",
+      "TD-SA": "Salamat",
+      "TD-TA": "Tandjilé"
+    }
+  },
+  "TF": {
+    "name": "French Southern Territories",
+    "divisions": {
+      "TF-TF": "French Southern Territories"
+    }
+  },
+  "TG": {
+    "name": "Togo",
+    "divisions": {
+      "TG-C": "Centre",
+      "TG-K": "Kara",
+      "TG-M": "Maritime (Région)",
+      "TG-P": "Plateaux",
+      "TG-S": "Savannes"
     }
   },
   "TH": {
@@ -4433,14 +4352,13 @@
       "TH-35": "Yasothon"
     }
   },
-  "TG": {
-    "name": "Togo",
+  "TJ": {
+    "name": "Tajikistan",
     "divisions": {
-      "TG-C": "Centre",
-      "TG-K": "Kara",
-      "TG-M": "Maritime (Région)",
-      "TG-P": "Plateaux",
-      "TG-S": "Savannes"
+      "TJ-KR": "Karategin",
+      "TJ-KT": "Khatlon",
+      "TJ-LN": "Leninabad",
+      "TJ-GB": "Gorno-Badakhshan"
     }
   },
   "TK": {
@@ -4449,31 +4367,14 @@
       "TK-TK": "Tokelau"
     }
   },
-  "TO": {
-    "name": "Tonga",
+  "TM": {
+    "name": "Turkmenistan",
     "divisions": {
-      "TO-TO": "Tonga"
-    }
-  },
-  "TT": {
-    "name": "Trinidad & Tobago",
-    "divisions": {
-      "TT-CTT": "Couva-Tabaquite-Talparo",
-      "TT-DMN": "Diego Martin",
-      "TT-ETO": "Eastern Tobago",
-      "TT-PED": "Penal-Debe",
-      "TT-PRT": "Princes Town",
-      "TT-RCM": "Rio Claro-Mayaro",
-      "TT-SGE": "Sangre Grande",
-      "TT-SJL": "San Juan-Laventille",
-      "TT-SIP": "Siparia",
-      "TT-TUP": "Tunapuna-Piarco",
-      "TT-WTO": "Western Tobago",
-      "TT-ARI": "Arima",
-      "TT-CHA": "Chaguanas",
-      "TT-PTF": "Point Fortin",
-      "TT-POS": "Port of Spain",
-      "TT-SFO": "San Fernando"
+      "TM-A": "Ahal",
+      "TM-B": "Balkan",
+      "TM-D": "Daşhowuz",
+      "TM-L": "Lebap",
+      "TM-M": "Mary"
     }
   },
   "TN": {
@@ -4502,6 +4403,18 @@
       "TN-72": "Tozeur",
       "TN-11": "Tunis",
       "TN-22": "Zaghouan"
+    }
+  },
+  "TO": {
+    "name": "Tonga",
+    "divisions": {
+      "TO-TO": "Tonga"
+    }
+  },
+  "TP": {
+    "name": "East Timor",
+    "divisions": {
+      "TP-TP": "East Timor"
     }
   },
   "TR": {
@@ -4588,26 +4501,115 @@
       "TR-67": "Zonguldak"
     }
   },
-  "TM": {
-    "name": "Turkmenistan",
+  "TT": {
+    "name": "Trinidad & Tobago",
     "divisions": {
-      "TM-A": "Ahal",
-      "TM-B": "Balkan",
-      "TM-D": "Daşhowuz",
-      "TM-L": "Lebap",
-      "TM-M": "Mary"
-    }
-  },
-  "TC": {
-    "name": "Turks & Caicos Islands",
-    "divisions": {
-      "TC-TC": "Turks & Caicos Islands"
+      "TT-CTT": "Couva-Tabaquite-Talparo",
+      "TT-DMN": "Diego Martin",
+      "TT-ETO": "Eastern Tobago",
+      "TT-PED": "Penal-Debe",
+      "TT-PRT": "Princes Town",
+      "TT-RCM": "Rio Claro-Mayaro",
+      "TT-SGE": "Sangre Grande",
+      "TT-SJL": "San Juan-Laventille",
+      "TT-SIP": "Siparia",
+      "TT-TUP": "Tunapuna-Piarco",
+      "TT-WTO": "Western Tobago",
+      "TT-ARI": "Arima",
+      "TT-CHA": "Chaguanas",
+      "TT-PTF": "Point Fortin",
+      "TT-POS": "Port of Spain",
+      "TT-SFO": "San Fernando"
     }
   },
   "TV": {
     "name": "Tuvalu",
     "divisions": {
       "TV-TV": "Tuvalu"
+    }
+  },
+  "TW": {
+    "name": "Taiwan",
+    "divisions": {
+      "TW-KHH": "Kaohsiung",
+      "TW-TPE": "Taipei",
+      "TW-CYI": "Chiayi",
+      "TW-HSZ": "Hsinchu",
+      "TW-KEE": "Keelung",
+      "TW-TXG": "Taichung",
+      "TW-TNN": "Tainan",
+      "TW-CHA": "Changhua",
+      "TW-HUA": "Hualien",
+      "TW-ILA": "Ilan",
+      "TW-MIA": "Miaoli",
+      "TW-NAN": "Nantou",
+      "TW-PEN": "Penghu",
+      "TW-PIF": "Pingtung",
+      "TW-TTT": "Taitung",
+      "TW-TAO": "Taoyuan",
+      "TW-YUN": "Yunlin"
+    }
+  },
+  "TZ": {
+    "name": "Tanzania",
+    "divisions": {
+      "TZ-01": "Arusha",
+      "TZ-02": "Dar-es-Salaam",
+      "TZ-03": "Dodoma",
+      "TZ-04": "Iringa",
+      "TZ-05": "Kagera",
+      "TZ-06": "Kaskazini Pemba (Pemba North)",
+      "TZ-07": "Kaskazini Unguja (Zanzibar North)",
+      "TZ-08": "Kigoma",
+      "TZ-09": "Kilimanjaro",
+      "TZ-10": "Kusini Pemba (Pemba South)",
+      "TZ-11": "Kusini Unguja (Zanzibar South)",
+      "TZ-12": "Lindi",
+      "TZ-13": "Mara",
+      "TZ-14": "Mbeya",
+      "TZ-15": "Mjini Magharibi (Zanzibar West)",
+      "TZ-16": "Morogoro",
+      "TZ-17": "Mtwara",
+      "TZ-18": "Mwanza",
+      "TZ-19": "Pwani (Coast)",
+      "TZ-20": "Rukwa",
+      "TZ-21": "Ruvuma",
+      "TZ-22": "Shinyanga",
+      "TZ-23": "Singida",
+      "TZ-24": "Tabora",
+      "TZ-25": "Tanga"
+    }
+  },
+  "UA": {
+    "name": "Ukraine",
+    "divisions": {
+      "UA-71": "Cherkas'ka Oblast'",
+      "UA-74": "Chernihivs'ka Oblast'",
+      "UA-77": "Chernivets'ka Oblast'",
+      "UA-12": "Dnipropetrovs'ka Oblast'",
+      "UA-14": "Donets'ka Oblast'",
+      "UA-26": "Ivano-Frankivs'ka Oblast'",
+      "UA-63": "Kharkivs'ka Oblast'",
+      "UA-65": "Khersons'ka Oblast'",
+      "UA-68": "Khmel'nyts'ka Oblast'",
+      "UA-35": "Kirovohrads'ka Oblast'",
+      "UA-32": "Kyïvs'ka Oblast'",
+      "UA-09": "Luhans'ka Oblast'",
+      "UA-46": "L'vivs'ka Oblast'",
+      "UA-48": "Mykolaïvs'ka Oblast'",
+      "UA-51": "Odes'ka Oblast'",
+      "UA-53": "Poltavs'ka Oblast'",
+      "UA-56": "Rivnens'ka Oblast'",
+      "UA-59": "Sums'ka Oblast'",
+      "UA-61": "Ternopil's'ka Oblast'",
+      "UA-05": "Vinnyts'ka Oblast'",
+      "UA-07": "Volyns'ka Oblast'",
+      "UA-21": "Zakarpats'ka Oblast'",
+      "UA-23": "Zaporiz'ka Oblast'",
+      "UA-18": "Zhytomyrs'ka Oblast'",
+      "UA-43": "Respublika Krym",
+      "UA-30": "Kyïv",
+      "UA-40": "Sevastopol'"
     }
   },
   "UG": {
@@ -4652,50 +4654,6 @@
       "UG-RUK": "Rukungiri",
       "UG-SOR": "Soroti",
       "UG-TOR": "Tororo"
-    }
-  },
-  "UA": {
-    "name": "Ukraine",
-    "divisions": {
-      "UA-71": "Cherkas'ka Oblast'",
-      "UA-74": "Chernihivs'ka Oblast'",
-      "UA-77": "Chernivets'ka Oblast'",
-      "UA-12": "Dnipropetrovs'ka Oblast'",
-      "UA-14": "Donets'ka Oblast'",
-      "UA-26": "Ivano-Frankivs'ka Oblast'",
-      "UA-63": "Kharkivs'ka Oblast'",
-      "UA-65": "Khersons'ka Oblast'",
-      "UA-68": "Khmel'nyts'ka Oblast'",
-      "UA-35": "Kirovohrads'ka Oblast'",
-      "UA-32": "Kyïvs'ka Oblast'",
-      "UA-09": "Luhans'ka Oblast'",
-      "UA-46": "L'vivs'ka Oblast'",
-      "UA-48": "Mykolaïvs'ka Oblast'",
-      "UA-51": "Odes'ka Oblast'",
-      "UA-53": "Poltavs'ka Oblast'",
-      "UA-56": "Rivnens'ka Oblast'",
-      "UA-59": "Sums'ka Oblast'",
-      "UA-61": "Ternopil's'ka Oblast'",
-      "UA-05": "Vinnyts'ka Oblast'",
-      "UA-07": "Volyns'ka Oblast'",
-      "UA-21": "Zakarpats'ka Oblast'",
-      "UA-23": "Zaporiz'ka Oblast'",
-      "UA-18": "Zhytomyrs'ka Oblast'",
-      "UA-43": "Respublika Krym",
-      "UA-30": "Kyïv",
-      "UA-40": "Sevastopol'"
-    }
-  },
-  "AE": {
-    "name": "United Arab Emirates",
-    "divisions": {
-      "AE-AZ": "Abū Zaby (Abu Dhabi)",
-      "AE-AJ": "‘Ajmān",
-      "AE-FU": "Al Fujayrah",
-      "AE-SH": "Ash Shāriqah (Sharjah)",
-      "AE-DU": "Dubayy (Dubai)",
-      "AE-RK": "R'as al Khaymah",
-      "AE-UQ": "Umm al Qaywayn"
     }
   },
   "US": {
@@ -4802,15 +4760,16 @@
       "UZ-TO": "Toshkent (Tashkent)"
     }
   },
-  "VU": {
-    "name": "Vanuatu",
+  "VA": {
+    "name": "Holy See",
     "divisions": {
-      "VU-MAP": "Malampa",
-      "VU-PAM": "Pénama",
-      "VU-SAM": "Sanma",
-      "VU-SEE": "Shéfa",
-      "VU-TAE": "Taféa",
-      "VU-TOB": "Torba"
+      "VA-VA": "Holy See"
+    }
+  },
+  "VC": {
+    "name": "St. Vincent & the Grenadines",
+    "divisions": {
+      "VC-VC": "St. Vincent & the Grenadines"
     }
   },
   "VE": {
@@ -4840,6 +4799,18 @@
       "VE-Z": "Amazonas",
       "VE-Y": "Delta Amacuro",
       "VE-W": "Dependencias Federales"
+    }
+  },
+  "VG": {
+    "name": "Virgin Islands (British)",
+    "divisions": {
+      "VG-VG": "Virgin Islands (British)"
+    }
+  },
+  "VI": {
+    "name": "Virgin Islands (U.S.)",
+    "divisions": {
+      "VI-VI": "Virgin Islands (U.S.)"
     }
   },
   "VN": {
@@ -4907,16 +4878,15 @@
       "VN-06": "Yen Bai"
     }
   },
-  "VG": {
-    "name": "Virgin Islands (British)",
+  "VU": {
+    "name": "Vanuatu",
     "divisions": {
-      "VG-VG": "Virgin Islands (British)"
-    }
-  },
-  "VI": {
-    "name": "Virgin Islands (U.S.)",
-    "divisions": {
-      "VI-VI": "Virgin Islands (U.S.)"
+      "VU-MAP": "Malampa",
+      "VU-PAM": "Pénama",
+      "VU-SAM": "Sanma",
+      "VU-SEE": "Shéfa",
+      "VU-TAE": "Taféa",
+      "VU-TOB": "Torba"
     }
   },
   "WF": {
@@ -4925,10 +4895,20 @@
       "WF-WF": "Wallis & Futuna Islands"
     }
   },
-  "EH": {
-    "name": "Western Sahara",
+  "WS": {
+    "name": "Samoa",
     "divisions": {
-      "EH-EH": "Western Sahara"
+      "WS-AA": "A'ana",
+      "WS-AL": "Aiga-i-le-Tai",
+      "WS-AT": "Atua",
+      "WS-FA": "Fa'asaleleaga",
+      "WS-GE": "Gaga'emauga",
+      "WS-GI": "Gagaifomauga",
+      "WS-PA": "Palauli",
+      "WS-SA": "Satupa'itea",
+      "WS-TU": "Tuamasaga",
+      "WS-VF": "Va'a-o-Fonoti",
+      "WS-VS": "Vaisigano"
     }
   },
   "YE": {
@@ -4953,6 +4933,12 @@
       "YE-TA": "Ta‘izz"
     }
   },
+  "YT": {
+    "name": "Mayotte",
+    "divisions": {
+      "YT-YT": "Mayotte"
+    }
+  },
   "YU": {
     "name": "Yugoslavia",
     "divisions": {
@@ -4960,6 +4946,20 @@
       "YU-SR": "Srbija",
       "YU-KM": "Kosovo-Metohija",
       "YU-VO": "Vojvodina"
+    }
+  },
+  "ZA": {
+    "name": "South Africa",
+    "divisions": {
+      "ZA-EC": "Eastern Cape (Oos-Kaap)",
+      "ZA-FS": "Free State (Vrystaat)",
+      "ZA-GT": "Gauteng",
+      "ZA-NL": "Kwazulu-Natal",
+      "ZA-MP": "Mpumalanga",
+      "ZA-NC": "Northern Cape (Noord-Kaap)",
+      "ZA-NP": "Northern Province (Noordelike Provinsie)",
+      "ZA-NW": "North-West (Noord-Wes)",
+      "ZA-WC": "Western Cape (Wes-Kaap)"
     }
   },
   "ZM": {

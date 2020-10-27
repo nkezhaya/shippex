@@ -29,7 +29,14 @@ defmodule Shippex.Mixfile do
   defp package do
     [
       name: :shippex,
-      files: ["lib", "priv", "mix.exs", "README.md", "LICENSE"],
+      files: [
+        "lib/shippex.ex",
+        "lib/shippex",
+        "priv/iso-3166-2.json",
+        "mix.exs",
+        "README.md",
+        "LICENSE"
+      ],
       maintainers: ["Nick Kezhaya"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/whitepaperclip/shippex"}
@@ -43,7 +50,8 @@ defmodule Shippex.Mixfile do
       {:sweet_xml, ">= 0.0.0"},
       {:html_entities, ">= 0.0.0"},
       {:jason, "~> 1.2", optional: true},
-      {:decimal, "~> 1.3"}
+      {:decimal, "~> 1.3"},
+      {:csv, "~> 2.4", optional: true, only: [:dev]}
     ]
   end
 end

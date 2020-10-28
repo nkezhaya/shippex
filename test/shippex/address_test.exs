@@ -55,7 +55,7 @@ defmodule Shippex.AddressTest do
         "address" => "260 Kim Keat Ave",
         "address_line_2" => "#01-01",
         "city" => "Singapore",
-        "state" => "SG-SG",
+        "state" => "SG-01",
         "country" => "SG",
         "zip" => "310260"
       })
@@ -79,7 +79,7 @@ defmodule Shippex.AddressTest do
         "address" => "260 Kim Keat Ave",
         "address_line_2" => "#01-01",
         "city" => "Singapore",
-        "state" => "SG-SG",
+        "state" => "SG-01",
         "country" => "SGG",
         "zip" => "310260"
       })

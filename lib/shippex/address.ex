@@ -231,8 +231,11 @@ defmodule Shippex.Address do
         state = filter_for_comparison(state)
 
         divisions
-        |> Enum.find(fn {_state_code, full_state} ->
-          filter_for_comparison(full_state) == state
+        |> Enum.find(fn {_state_code, %{"name" => full_state} = s} ->
+          variation = s["variation"]
+
+          filter_for_comparison(full_state) == state or
+            (is_binary(variation) and filter_for_comparison(variation) == state)
         end)
         |> case do
           nil -> nil
@@ -261,15 +264,26 @@ defmodule Shippex.Address do
   """
   @spec country_code(String.t()) :: nil | String.t()
   def country_code(country) do
+    country = String.upcase(country)
     iso = ISO.data()
 
-    if Map.has_key?(iso, country) do
-      country
-    else
-      Enum.find_value(iso, fn
-        {code, %{"name" => ^country}} -> code
-        _ -> nil
-      end)
+    cond do
+      String.starts_with?(country, "UNITED STATES") ->
+        "US"
+
+      true ->
+        Enum.find_value(iso, fn
+          {code, %{"short_name" => ^country}} ->
+            code
+
+          {code, %{"name" => name, "full_name" => full_name}} ->
+            if String.upcase(name) == country or String.upcase(full_name) == country do
+              code
+            end
+
+          _ ->
+            nil
+        end)
     end
   end
 
@@ -294,10 +308,11 @@ defmodule Shippex.Address do
       iex> Address.validated_state_and_country("SG-Invalid", "SG")
       {:error, "Invalid state 'SG-Invalid' for country: SG (SG)"}
   """
+  @default_country "US"
   @spec validated_state_and_country(any, any) ::
           {:ok, String.t(), String.t()} | {:error, String.t()}
-  def validated_state_and_country(state, country \\ nil) do
-    country_code = country_code(country || "US")
+  def validated_state_and_country(state, country \\ @default_country) do
+    country_code = to_country_code(country || @default_country)
 
     cond do
       is_nil(country_code) ->
@@ -308,6 +323,14 @@ defmodule Shippex.Address do
 
       true ->
         {:error, "Invalid state '#{state}' for country: #{country} (#{country_code})"}
+    end
+  end
+
+  defp to_country_code(name_or_code) do
+    if ISO.data()[name_or_code] do
+      name_or_code
+    else
+      country_code(name_or_code)
     end
   end
 
@@ -340,13 +363,17 @@ defmodule Shippex.Address do
   @doc """
   Returns the country code for the given common name, or nil if none was found.
 
-      iex> Address.common_country_name("United States")
+      iex> Address.common_country_code("United States")
       "US"
-      iex> Address.common_country_name("United States of America")
-      nil
+      iex> Address.common_country_code("United States of America")
+      "US"
   """
   @spec common_country_code(String.t()) :: nil | String.t()
   for {code, name} <- @common_names do
     def common_country_code(unquote(name)), do: unquote(code)
+  end
+
+  def common_country_code(common_name) do
+    country_code(common_name)
   end
 end

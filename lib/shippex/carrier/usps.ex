@@ -391,25 +391,19 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
-  defp country(%Address{country: code}) do
-    ISO.abbreviation_to_country_name(code)
-    |> replace_name()
+  @usps_names Shippex.json_library().decode!(
+                File.read!(:code.priv_dir(:shippex) ++ '/usps-countries.json')
+              )
+  def country(%Address{country: code}) do
+    country(code)
   end
 
-  defp replace_name("Russian Federation"), do: "Russia"
-  defp replace_name("Korea (South)"), do: "South Korea"
-  defp replace_name("Korea (North)"), do: "North Korea"
-  defp replace_name("Congo, the"), do: "Congo, Republic of the"
-  defp replace_name("Falkland Islands (Malvinas)"), do: "Falkland Islands"
-  defp replace_name("Holy See"), do: "Vatican City"
-  defp replace_name("Cocos (Keeling) Islands"), do: "Cocos Island (Australia)"
-  defp replace_name("Cote d'Ivoire"), do: "Ivory Coast"
-  defp replace_name("Bosnia & Herzegovina"), do: "Bosnia-Herzegovina"
-
-  defp replace_name("South Georgia and the South Sandwich Islands"),
-    do: "South Georgia (Falkland Islands)"
-
-  defp replace_name(name), do: String.replace(name, "&", "and")
+  def country(code) when is_binary(code) do
+    cond do
+      name = @usps_names[code] -> name
+      name = ISO.country_code_to_name(code) -> name
+    end
+  end
 
   defp container(%Shipment{package: package}) do
     case Package.usps_containers()[package.container] do

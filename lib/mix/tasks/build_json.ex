@@ -32,8 +32,22 @@ if Code.ensure_loaded?(CSV) do
 
     defp list_subdivisions(all_subdivisions, country_code) do
       Enum.reduce(all_subdivisions, %{}, fn
-        [^country_code, _, _, _, division_code, _, _, name | _], acc ->
-          Map.put_new(acc, division_code, remove_notes(name))
+        [^country_code, _, _, _, division_code, _, _, name, variation | _], acc ->
+          variation =
+            case remove_notes(variation) do
+              "" -> nil
+              v -> v
+            end
+
+          division = %{"name" => remove_notes(name)}
+
+          division =
+            case variation do
+              nil -> division
+              v -> Map.put(division, "variation", v)
+            end
+
+          Map.put_new(acc, division_code, division)
 
         _, acc ->
           acc

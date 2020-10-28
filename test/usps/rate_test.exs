@@ -95,7 +95,7 @@ defmodule Shippex.USPS.RateTest do
             assert rate
 
           {:error, %{message: message}} ->
-            raise "#{@code} #{@full} #{message}"
+            raise "#{@code} (#{Shippex.Carrier.USPS.country(@code)}) #{message}"
         end
       end
     end

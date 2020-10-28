@@ -32,10 +32,10 @@ defmodule Shippex.ISO do
   code.
 
       iex> states = ISO.states("US")
-      ...> match? %{"TX" => "Texas", "PR" => "Puerto Rico"}, states
+      ...> match? %{"TX" => %{"name" => "Texas"}, "PR" => %{"name" => "Puerto Rico"}}, states
       true
       iex> states = ISO.states("MX")
-      ...> match? %{"AGU" => "Aguascalientes"}, states
+      ...> match? %{"AGU" => %{"name" => "Aguascalientes"}}, states
       true
       iex> ISO.states("Not a country.")
       %{}

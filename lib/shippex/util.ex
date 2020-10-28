@@ -120,6 +120,8 @@ defmodule Shippex.Util do
       "Curacao"
       iex> Util.unaccent("Republic of Foo (the)")
       "Republic of Foo (the)"
+      iex> Util.unaccent("Åland Islands")
+      "Aland Islands"
   """
   @spec unaccent(String.t()) :: String.t()
   def unaccent(string) do

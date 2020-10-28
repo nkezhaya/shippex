@@ -55,7 +55,7 @@ defmodule Helper do
       phone: "123-123-1234",
       address: "Ferrol 4",
       city: "Ciudad de México",
-      state: "DIF",
+      state: "CMX",
       zip: "03100",
       country: "MX"
     })

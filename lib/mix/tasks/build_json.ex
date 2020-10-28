@@ -13,9 +13,11 @@ defmodule Mix.Tasks.BuildJson do
     File.stream!(csv("country-codes.csv"))
     |> CSV.decode!(strip_fields: true)
     |> Enum.reduce(%{}, fn
-      [code_2, _, _, _, "officially-assigned", name | _], acc ->
+      [code_2, _, _, _, "officially-assigned", name, short_name_caps, full_name], acc ->
         Map.put_new(acc, code_2, %{
           "name" => name,
+          "full_name" => full_name,
+          "short_name" => short_name_caps,
           "divisions" => list_subdivisions(all_subdivisions, code_2)
         })
 

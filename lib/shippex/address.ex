@@ -332,7 +332,7 @@ defmodule Shippex.Address do
 
   def common_country_name(code) do
     code
-    |> ISO.abbreviation_to_country_name()
+    |> ISO.country_code_to_name()
     |> String.replace("(the)", "")
     |> String.trim()
   end

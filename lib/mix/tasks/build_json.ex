@@ -33,11 +33,21 @@ if Code.ensure_loaded?(CSV) do
     defp list_subdivisions(all_subdivisions, country_code) do
       Enum.reduce(all_subdivisions, %{}, fn
         [^country_code, _, _, _, division_code, _, _, name | _], acc ->
-          Map.put_new(acc, division_code, name)
+          Map.put_new(acc, division_code, remove_notes(name))
 
         _, acc ->
           acc
       end)
+    end
+
+    defp remove_notes(name) do
+      if String.contains?(name, "(see also") do
+        name
+        |> String.replace(~r/(.*)(\s*)\(see also.*\)$/, "\\1")
+        |> String.trim()
+      else
+        name
+      end
     end
 
     defp write_json(json) do

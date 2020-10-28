@@ -112,4 +112,21 @@ defmodule Shippex.Util do
   def cm_to_inches(cm) do
     Float.round(cm * 0.393701, 1)
   end
+
+  @doc """
+  Removes accents/ligatures from letters.
+
+      iex> Util.unaccent("Curaçao")
+      "Curacao"
+      iex> Util.unaccent("Republic of Foo (the)")
+      "Republic of Foo (the)"
+  """
+  @spec unaccent(String.t()) :: String.t()
+  def unaccent(string) do
+    diacritics = Regex.compile!("[\u0300-\u036f]")
+
+    string
+    |> String.normalize(:nfd)
+    |> String.replace(diacritics, "")
+  end
 end

@@ -17,7 +17,7 @@ defmodule Shippex.ISO do
   Returns a map of country codes and their full names.
 
       iex> countries = ISO.countries()
-      ...> match? %{"US" => "United States"}, countries
+      ...> match? %{"US" => "United States of America (the)"}, countries
       true
   """
   @spec countries() :: %{String.t() => String.t()}
@@ -62,7 +62,7 @@ defmodule Shippex.ISO do
   Converts a country's 2-letter code to its full name.
 
       iex> ISO.country_code_to_name("US")
-      "United States"
+      "United States of America (the)"
       iex> ISO.country_code_to_name("TN")
       "Tunisia"
       iex> ISO.country_code_to_name("TX")

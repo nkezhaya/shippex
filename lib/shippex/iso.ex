@@ -61,15 +61,15 @@ defmodule Shippex.ISO do
   @doc """
   Converts a country's 2-letter code to its full name.
 
-      iex> ISO.abbreviation_to_country_name("US")
+      iex> ISO.country_code_to_name("US")
       "United States"
-      iex> ISO.abbreviation_to_country_name("TN")
+      iex> ISO.country_code_to_name("TN")
       "Tunisia"
-      iex> ISO.abbreviation_to_country_name("TX")
+      iex> ISO.country_code_to_name("TX")
       nil
   """
-  @spec abbreviation_to_country_name(String.t()) :: nil | String.t()
-  def abbreviation_to_country_name(abbr) when is_bitstring(abbr) do
+  @spec country_code_to_name(String.t()) :: nil | String.t()
+  def country_code_to_name(abbr) when is_bitstring(abbr) do
     countries()[abbr]
   end
 end

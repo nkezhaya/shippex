@@ -41,40 +41,6 @@ defmodule Shippex.ISO do
   end
 
   @doc """
-  Returns a map of subdivision codes and full names for the given 2-letter
-  country code.
-
-      iex> get_in(ISO.subdivisions("US"), ["TX", "name"])
-      "Texas"
-
-      iex> get_in(ISO.subdivisions("US"), ["PR", "name"])
-      "Puerto Rico"
-
-      iex> get_in(ISO.subdivisions("MX"), ["AGU", "name"])
-      "Aguascalientes"
-
-      iex> ISO.subdivisions("Not a country.")
-      %{}
-  """
-  @spec subdivisions(String.t()) :: %{String.t() => String.t()}
-  def subdivisions(country \\ "US") do
-    subdivisions = @iso[country] || %{}
-
-    case subdivisions["subdivisions"] do
-      nil ->
-        %{}
-
-      divisions ->
-        divisions
-        |> Enum.map(fn {code, name} ->
-          code = String.replace_prefix(code, "#{country}-", "")
-          {code, name}
-        end)
-        |> Map.new()
-    end
-  end
-
-  @doc """
   Converts a country's 2-letter code to its full name.
 
       iex> ISO.country_code_to_name("US")
@@ -245,10 +211,10 @@ defmodule Shippex.ISO do
   Returns the subdivision data for the ISO-3166-compliant subdivision code.
 
       iex> ISO.get_subdivision("US-TX")
-      %{"name" => "Texas"} 
+      {:ok, %{"category" => "state", "name" => "Texas"}}
 
       iex> ISO.get_subdivision("MX-CMX")
-      %{"name" => "Ciudad de México"} 
+      {:ok, %{"category" => "federal district", "name" => "Ciudad de México"}}
 
       iex> ISO.get_subdivision("11-SG")
       {:error, :not_found}

@@ -6,6 +6,20 @@ if Code.ensure_loaded?(CSV) and Code.ensure_loaded?(Jason) do
     use Mix.Task
 
     def run(_) do
+      all_subdivision_categories =
+        File.stream!(csv("subdivision-categories.csv"))
+        |> CSV.decode!(strip_fields: true)
+        |> Enum.to_list()
+        |> Enum.reduce(%{}, fn
+          [country_code, _, _, category_code, _, "eng", category_name, _], acc ->
+            Map.update(acc, country_code, %{category_code => category_name}, fn cats ->
+              Map.put(cats, category_code, category_name)
+            end)
+
+          _, acc ->
+            acc
+        end)
+
       all_subdivisions =
         File.stream!(csv("subdivision-names.csv"))
         |> CSV.decode!(strip_fields: true)
@@ -19,7 +33,8 @@ if Code.ensure_loaded?(CSV) and Code.ensure_loaded?(Jason) do
             "name" => name,
             "full_name" => full_name,
             "short_name" => short_name_caps,
-            "subdivisions" => list_subdivisions(all_subdivisions, code_2)
+            "subdivisions" =>
+              list_subdivisions(all_subdivisions, code_2, all_subdivision_categories[code_2])
           })
 
         _row, acc ->
@@ -30,16 +45,16 @@ if Code.ensure_loaded?(CSV) and Code.ensure_loaded?(Jason) do
       |> write_json()
     end
 
-    defp list_subdivisions(all_subdivisions, country_code) do
+    defp list_subdivisions(all_subdivisions, country_code, categories) do
       Enum.reduce(all_subdivisions, %{}, fn
-        [^country_code, _, _, _, division_code, _, _, name, variation | _], acc ->
+        [^country_code, _, _, category_code, division_code, _, _, name, variation | _], acc ->
           variation =
             case remove_notes(variation) do
               "" -> nil
               v -> v
             end
 
-          division = %{"name" => remove_notes(name)}
+          division = %{"name" => remove_notes(name), "category" => categories[category_code]}
 
           division =
             case variation do

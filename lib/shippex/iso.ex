@@ -31,7 +31,7 @@ defmodule Shippex.ISO do
 
     Enum.reduce(@iso, %{}, fn {code, %{"name" => name} = country}, acc ->
       cond do
-        with_subdivisions? and country["divisions"] == %{} -> acc
+        with_subdivisions? and country["subdivisions"] == %{} -> acc
         true -> Map.put(acc, code, name)
       end
     end)
@@ -56,7 +56,7 @@ defmodule Shippex.ISO do
   def states(country \\ "US") do
     states = @iso[country] || %{}
 
-    case states["divisions"] do
+    case states["subdivisions"] do
       nil ->
         %{}
 

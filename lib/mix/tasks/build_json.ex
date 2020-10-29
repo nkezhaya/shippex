@@ -19,7 +19,7 @@ if Code.ensure_loaded?(CSV) do
             "name" => name,
             "full_name" => full_name,
             "short_name" => short_name_caps,
-            "divisions" => list_subdivisions(all_subdivisions, code_2)
+            "subdivisions" => list_subdivisions(all_subdivisions, code_2)
           })
 
         _row, acc ->

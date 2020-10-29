@@ -27,16 +27,52 @@ defmodule Shippex.ISO do
       iex> countries = ISO.countries([:with_subdivisions])
       iex> countries["PR"]
       nil
+
+      iex> countries = ISO.countries([:exclude_territories])
+      iex> countries["PR"]
+      nil
   """
   @spec countries([atom()]) :: %{String.t() => String.t()}
   def countries(opts \\ []) do
     with_subdivisions? = :with_subdivisions in opts
+    exclude_territories? = :exclude_territories in opts
 
     Enum.reduce(@iso, %{}, fn {code, %{"name" => name} = country}, acc ->
       cond do
         with_subdivisions? and country["subdivisions"] == %{} -> acc
+        exclude_territories? and territory?(code) -> acc
         true -> Map.put(acc, code, name)
       end
+    end)
+  end
+
+  @doc """
+  Returns true if the country with the given code is a territory of another
+  country.
+
+      iex> ISO.territory?("PR")
+      true
+      iex> ISO.territory?("US")
+      false
+  """
+  @spec territory?(String.t()) :: boolean()
+  def territory?(code) do
+    country = @iso[code]
+
+    Enum.any?(@iso, fn
+      {a_code, %{"subdivisions" => subdivisions}} ->
+        case Map.get(subdivisions, "#{a_code}-#{code}") do
+          %{"name" => name} ->
+            equal_names?(name, country["name"]) or
+              equal_names?(name, country["full_name"]) or
+              equal_names?(name, country["short_name"])
+
+          _ ->
+            false
+        end
+
+      _ ->
+        false
     end)
   end
 
@@ -147,8 +183,8 @@ defmodule Shippex.ISO do
         |> Enum.find(fn {_subdivision_code, %{"name" => full_subdivision} = s} ->
           variation = s["variation"]
 
-          filter_for_comparison(full_subdivision) == subdivision or
-            (is_binary(variation) and filter_for_comparison(variation) == subdivision)
+          equal_names?(full_subdivision, subdivision) or
+            (is_binary(variation) and equal_names?(variation, subdivision))
         end)
         |> case do
           nil -> nil
@@ -157,10 +193,14 @@ defmodule Shippex.ISO do
     end
   end
 
+  defp equal_names?(a, b) do
+    filter_for_comparison(a) == filter_for_comparison(b)
+  end
+
   defp filter_for_comparison(string) do
     string
     |> String.trim()
-    |> String.downcase()
+    |> String.upcase()
     |> String.normalize(:nfd)
     |> String.replace(~r/[^A-z\s]/u, "")
   end

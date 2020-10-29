@@ -86,12 +86,9 @@ defmodule Shippex.Address do
       end
 
     {state, country} =
-      case ISO.find_subdivision(params["country"] || @default_country, params["state"]) do
-        {:ok, state} ->
-          {state, String.slice(state, 0, 2)}
-
-        {:error, error} ->
-          throw({:invalid_state_and_country, error})
+      case ISO.find_subdivision_code(params["country"] || @default_country, params["state"]) do
+        {:ok, state} -> {state, String.slice(state, 0, 2)}
+        {:error, error} -> throw({:invalid_state_and_country, error})
       end
 
     address = %Address{

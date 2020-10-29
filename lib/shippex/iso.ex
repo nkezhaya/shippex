@@ -201,29 +201,28 @@ defmodule Shippex.ISO do
 
   @doc """
   Takes a subdivision and country input and returns the validated,
-  ISO-3166-compliant results in a tuple.
+  ISO-3166-compliant subdivision code in a tuple.
 
-      iex> ISO.find_subdivision("US", "TX")
+      iex> ISO.find_subdivision_code("US", "TX")
       {:ok, "US-TX"}
 
-      iex> ISO.find_subdivision("US", "US-TX")
+      iex> ISO.find_subdivision_code("US", "US-TX")
       {:ok, "US-TX"}
 
-      iex> ISO.find_subdivision("US", "Texas")
+      iex> ISO.find_subdivision_code("US", "Texas")
       {:ok, "US-TX"}
 
-      iex> ISO.find_subdivision("United States", "Texas")
+      iex> ISO.find_subdivision_code("United States", "Texas")
       {:ok, "US-TX"}
 
-      iex> ISO.find_subdivision("SomeCountry", "SG-SG")
+      iex> ISO.find_subdivision_code("SomeCountry", "SG-SG")
       {:error, "Invalid country: SomeCountry"}
 
-      iex> ISO.find_subdivision("SG", "SG-Invalid")
+      iex> ISO.find_subdivision_code("SG", "SG-Invalid")
       {:error, "Invalid subdivision 'SG-Invalid' for country: SG (SG)"}
   """
-  @spec find_subdivision(any, any) ::
-          {:ok, String.t(), String.t()} | {:error, String.t()}
-  def find_subdivision(country, subdivision) do
+  @spec find_subdivision_code(String.t(), String.t()) :: {:ok, String.t()} | {:error, String.t()}
+  def find_subdivision_code(country, subdivision) do
     country_code =
       case @iso do
         %{^country => %{}} -> country
@@ -239,6 +238,34 @@ defmodule Shippex.ISO do
 
       true ->
         {:error, "Invalid subdivision '#{subdivision}' for country: #{country} (#{country_code})"}
+    end
+  end
+
+  @doc """
+  Returns the subdivision data for the ISO-3166-compliant subdivision code.
+
+      iex> ISO.get_subdivision("US-TX")
+      %{"name" => "Texas"} 
+
+      iex> ISO.get_subdivision("MX-CMX")
+      %{"name" => "Ciudad de México"} 
+
+      iex> ISO.get_subdivision("11-SG")
+      {:error, :not_found}
+
+      iex> ISO.get_subdivision("SG-Invalid")
+      {:error, :not_found}
+
+      iex> ISO.get_subdivision("Invalid")
+      {:error, :not_found}
+  """
+  @spec get_subdivision(String.t()) :: {:ok, map()} | {:error, :invalid_country | :not_found}
+  def get_subdivision(subdivision_code) do
+    with <<country_code::binary-size(2), "-", _::binary>> <- subdivision_code,
+         %{} = sub <- get_in(@iso, [country_code, "subdivisions", subdivision_code]) do
+      sub
+    else
+      _ -> {:error, :not_found}
     end
   end
 end

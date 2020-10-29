@@ -263,7 +263,7 @@ defmodule Shippex.ISO do
   def get_subdivision(subdivision_code) do
     with <<country_code::binary-size(2), "-", _::binary>> <- subdivision_code,
          %{} = sub <- get_in(@iso, [country_code, "subdivisions", subdivision_code]) do
-      sub
+      {:ok, sub}
     else
       _ -> {:error, :not_found}
     end

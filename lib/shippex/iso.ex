@@ -14,16 +14,26 @@ defmodule Shippex.ISO do
   end
 
   @doc """
-  Returns a map of country codes and their full names.
+  Returns a map of country codes and their full names. Takes in a list of optional atoms to tailor the results. For example, `:with_subdivisions` only includes countries with subdivisions.
 
       iex> countries = ISO.countries()
-      ...> match? %{"US" => "United States of America (the)"}, countries
-      true
+      ...> countries["US"]
+      "United States of America (the)"
+      ...> countries["PR"]
+      "Puerto Rico"
+      iex> countries = ISO.countries([:with_subdivisions])
+      ...> countries["PR"]
+      nil
   """
-  @spec countries() :: %{String.t() => String.t()}
-  def countries() do
-    Enum.reduce(@iso, %{}, fn {code, %{"name" => name}}, acc ->
-      Map.put(acc, code, name)
+  @spec countries([atom()]) :: %{String.t() => String.t()}
+  def countries(opts \\ []) do
+    with_subdivisions? = :with_subdivisions in opts
+
+    Enum.reduce(@iso, %{}, fn {code, %{"name" => name} = country}, acc ->
+      cond do
+        with_subdivisions? and country["divisions"] == %{} -> acc
+        true -> Map.put(acc, code, name)
+      end
     end)
   end
 
@@ -32,11 +42,13 @@ defmodule Shippex.ISO do
   code.
 
       iex> states = ISO.states("US")
-      ...> match? %{"TX" => %{"name" => "Texas"}, "PR" => %{"name" => "Puerto Rico"}}, states
-      true
+      ...> get_in(states, ["TX", "name"])
+      "Texas"
+      ...> get_in(states, ["PR", "name"])
+      "Puerto Rico"
       iex> states = ISO.states("MX")
-      ...> match? %{"AGU" => %{"name" => "Aguascalientes"}}, states
-      true
+      ...> get_in(states, ["AGU", "name"])
+      "Aguascalientes"
       iex> ISO.states("Not a country.")
       %{}
   """

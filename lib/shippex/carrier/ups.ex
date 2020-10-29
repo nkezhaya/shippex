@@ -402,33 +402,5 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
-  defp config do
-    with cfg when is_list(cfg) <- Keyword.get(Shippex.config(), :ups, {:error, :not_found}),
-         sk when is_bitstring(sk) <-
-           Keyword.get(cfg, :secret_key, {:error, :not_found, :secret_key}),
-         sh when is_map(sh) <- Keyword.get(cfg, :shipper, {:error, :not_found, :shipper}),
-         an when is_bitstring(an) <-
-           Keyword.get(cfg, :shipper)
-           |> Map.get(:account_number, {:error, :not_found, :account_number}),
-         un when is_bitstring(an) <- Keyword.get(cfg, :username, {:error, :not_found, :username}),
-         pw when is_bitstring(pw) <- Keyword.get(cfg, :password, {:error, :not_found, :password}) do
-      %{
-        username: un,
-        password: pw,
-        secret_key: sk,
-        shipper: sh
-      }
-    else
-      {:error, :not_found, :shipper} ->
-        raise Shippex.InvalidConfigError,
-          message:
-            "UPS shipper config key missing. This could be because was provided as a keyword list instead of a map."
-
-      {:error, :not_found, token} ->
-        raise Shippex.InvalidConfigError, message: "UPS config key missing: #{token}"
-
-      {:error, :not_found} ->
-        raise Shippex.InvalidConfigError, message: "UPS config is either invalid or not found."
-    end
-  end
+  defdelegate config(), to: Shippex.Config, as: :ups_config
 end

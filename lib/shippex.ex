@@ -81,73 +81,9 @@ defmodule Shippex do
       File.write!("\#{label.tracking_number}.gif", Base.decode64!(label.image))
   """
 
-  alias Shippex.{Address, Carrier, Rate, Service, Shipment, Transaction}
+  alias Shippex.{Address, Carrier, Config, Rate, Service, Shipment, Transaction}
 
-  @type response :: %{code: String.t(), message: String.t()}
-
-  defmodule InvalidConfigError do
-    defexception [:message]
-
-    def exception(message) do
-      %InvalidConfigError{message: message}
-    end
-  end
-
-  @doc false
-  @spec config() :: Keyword.t() | none()
-  def config() do
-    case Application.get_env(:shippex, :carriers, :not_found) do
-      :not_found ->
-        raise InvalidConfigError, "Shippex config not found"
-
-      config ->
-        if not Keyword.keyword?(config) do
-          raise InvalidConfigError,
-                "Shippex config was found, but doesn't contain a keyword list."
-        end
-
-        config
-    end
-  end
-
-  @doc """
-  Provides a method of returning all available carriers. This is based on
-  the config and does not include validation.
-
-      Shippex.carriers #=> [:ups]
-  """
-  @spec carriers() :: [Carrier.t()]
-  def carriers() do
-    cfg = Shippex.config()
-
-    ups = if Keyword.get(cfg, :ups), do: :ups
-    fedex = if Keyword.get(cfg, :fedex), do: :fedex
-    usps = if Keyword.get(cfg, :usps), do: :usps
-    dummy = if Keyword.get(cfg, :dummy), do: :dummy
-
-    Enum.reject([ups, fedex, usps, dummy], &is_nil/1)
-  end
-
-  @doc false
-  @spec currency_code() :: String.t() | none()
-  def currency_code() do
-    case Application.get_env(:shippex, :currency, :usd) do
-      code when code in [:usd, :can, :mxn] ->
-        code |> Atom.to_string() |> String.upcase()
-
-      _ ->
-        raise InvalidConfigError, "Shippex currency must be either :usd, :can, or :mxn"
-    end
-  end
-
-  @doc false
-  @spec env() :: :dev | :prod | none()
-  def env() do
-    case Application.get_env(:shippex, :env, :dev) do
-      e when e in [:dev, :prod] -> e
-      _ -> raise InvalidConfigError, "Shippex env must be either :dev or :prod"
-    end
-  end
+  @type response() :: %{code: String.t(), message: String.t()}
 
   @doc """
   Fetches rates for a given `shipment`. Possible options:
@@ -344,21 +280,18 @@ defmodule Shippex do
           # Present candidates to user for selection
       end
   """
-  @spec validate_address(Address.t(), Keyword.t()) :: {atom, response | [Address.t()]}
-  def validate_address(%Shippex.Address{} = address, opts \\ []) do
-    carrier = Keyword.get(opts, :carrier, :usps)
-
-    case address.country do
-      "US" ->
-        Carrier.module(carrier).validate_address(address)
-
-      _country ->
-        {:ok, [address]}
-    end
-  end
+  @spec validate_address(Address.t(), Keyword.t()) :: {atom(), response() | [Address.t()]}
+  defdelegate validate_address(address, opts \\ []), to: Address, as: :validate
 
   @doc false
-  def json_library() do
-    Application.get_env(:shippex, :json_library, Jason)
-  end
+  defdelegate json_library(), to: Config
+
+  @doc false
+  defdelegate carriers(), to: Config
+
+  @doc false
+  defdelegate currency_code(), to: Config
+
+  @doc false
+  defdelegate env(), to: Config
 end

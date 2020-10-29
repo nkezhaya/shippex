@@ -158,6 +158,19 @@ defmodule Shippex.Address do
     end
   end
 
+  @doc false
+  def validate(%__MODULE__{} = address, opts) do
+    carrier = Keyword.get(opts, :carrier, :usps)
+
+    case address.country do
+      "US" ->
+        Carrier.module(carrier).validate_address(address)
+
+      _country ->
+        {:ok, [address]}
+    end
+  end
+
   @doc """
   Returns the list of non-`nil` address lines. If no `address_line_2` is
   present, it returns a list of a single `String`.

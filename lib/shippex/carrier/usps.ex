@@ -438,17 +438,5 @@ defmodule Shippex.Carrier.USPS do
     |> String.replace(~r/<\/?\w+>.*<\/\w+>/, "")
   end
 
-  defp config do
-    with cfg when is_list(cfg) <- Keyword.get(Shippex.config(), :usps, {:error, :not_found}),
-         un <- Keyword.get(cfg, :username, {:error, :not_found, :username}),
-         pw <- Keyword.get(cfg, :password, {:error, :not_found, :password}) do
-      %{username: un, password: pw}
-    else
-      {:error, :not_found, token} ->
-        raise Shippex.InvalidConfigError, message: "USPS config key missing: #{token}"
-
-      {:error, :not_found} ->
-        raise Shippex.InvalidConfigError, message: "USPS config is either invalid or not found."
-    end
-  end
+  defdelegate config(), to: Shippex.Config, as: :usps_config
 end

@@ -84,9 +84,9 @@ defmodule Shippex.Address do
       end
 
     {state, country} =
-      case validated_state_and_country(params["state"], params["country"]) do
-        {:ok, state, country} ->
-          {state, country}
+      case ISO.find_subdivision(params["country"], params["state"]) do
+        {:ok, state} ->
+          {state, String.slice(state, 0, 2)}
 
         {:error, error} ->
           throw({:invalid_state_and_country, error})
@@ -183,60 +183,6 @@ defmodule Shippex.Address do
   end
 
   @doc """
-  Takes a state and country input and returns the validated, ISO-3166-compliant
-  results in a tuple.
-
-      iex> Address.validated_state_and_country("TX")
-      {:ok, "US-TX", "US"}
-
-      iex> Address.validated_state_and_country("TX", "US")
-      {:ok, "US-TX", "US"}
-
-      iex> Address.validated_state_and_country("US-TX", "US")
-      {:ok, "US-TX", "US"}
-
-      iex> Address.validated_state_and_country("Texas", "US")
-      {:ok, "US-TX", "US"}
-
-      iex> Address.validated_state_and_country("Texas", "United States")
-      {:ok, "US-TX", "US"}
-
-      iex> Address.validated_state_and_country("Texas", "United States")
-      {:ok, "US-TX", "US"}
-
-      iex> Address.validated_state_and_country("SG-SG", "SomeCountry")
-      {:error, "Invalid country: SomeCountry"}
-
-      iex> Address.validated_state_and_country("SG-Invalid", "SG")
-      {:error, "Invalid state 'SG-Invalid' for country: SG (SG)"}
-  """
-  @default_country "US"
-  @spec validated_state_and_country(any, any) ::
-          {:ok, String.t(), String.t()} | {:error, String.t()}
-  def validated_state_and_country(state, country \\ @default_country) do
-    country_code = to_country_code(country || @default_country)
-
-    cond do
-      is_nil(country_code) ->
-        {:error, "Invalid country: #{country}"}
-
-      not is_nil(abbr = ISO.subdivision_code(state, country_code)) ->
-        {:ok, abbr, country_code}
-
-      true ->
-        {:error, "Invalid state '#{state}' for country: #{country} (#{country_code})"}
-    end
-  end
-
-  defp to_country_code(name_or_code) do
-    if ISO.data()[name_or_code] do
-      name_or_code
-    else
-      ISO.country_code(name_or_code)
-    end
-  end
-
-  @doc """
   Returns a common country name for the given country code.  This removes
   occurrences of `"(the)"` that may be present in the ISO-3166-2 data. For
   example, the code "US" normally maps to "United States of America (the)". We
@@ -276,6 +222,6 @@ defmodule Shippex.Address do
   end
 
   def common_country_code(common_name) do
-    country_code(common_name)
+    ISO.country_code(common_name)
   end
 end

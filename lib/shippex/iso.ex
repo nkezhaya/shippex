@@ -8,6 +8,8 @@ defmodule Shippex.ISO do
          File.read!(:code.priv_dir(:shippex) ++ '/iso-3166-2.json')
        )
 
+  @default_country "US"
+
   @doc """
   Returns all ISO-3166-2 data.
   """
@@ -21,7 +23,6 @@ defmodule Shippex.ISO do
       iex> countries = ISO.countries()
       iex> countries["US"]
       "United States of America (the)"
-
       iex> countries["PR"]
       "Puerto Rico"
 
@@ -88,26 +89,31 @@ defmodule Shippex.ISO do
       nil
   """
   @spec country_code_to_name(String.t()) :: nil | String.t()
-  def country_code_to_name(abbr) when is_bitstring(abbr) do
-    countries()[abbr]
+  def country_code_to_name(code) when is_bitstring(code) do
+    countries()[code]
   end
 
   @doc """
   Converts a full country name to its 2-letter ISO-3166-2 code.
 
-      iex> Address.country_code("United States")
+      iex> ISO.country_code("United States")
       "US"
-      iex> Address.country_code("Mexico")
+      iex> ISO.country_code("Mexico")
       "MX"
-      iex> Address.country_code("Not a country.")
+      iex> ISO.country_code("Not a country.")
       nil
   """
   @spec country_code(String.t()) :: nil | String.t()
-  def country_code("UNITED STATES" <> _), do: "US"
 
   def country_code(country) do
-    country = String.upcase(country)
+    country
+    |> String.upcase()
+    |> do_country_code()
+  end
 
+  defp do_country_code("UNITED STATES" <> _), do: "US"
+
+  defp do_country_code(country) do
     Enum.find_value(@iso, fn
       {code, %{"short_name" => ^country}} ->
         code
@@ -123,64 +129,67 @@ defmodule Shippex.ISO do
   end
 
   @doc """
-  Converts a full state name to its 2-letter ISO-3166-2 code. The country MUST
-  be an ISO-compliant 2-letter country code.
+  Converts a full subdivision name to its 2-letter ISO-3166-2 code. The country
+  MUST be an ISO-compliant 2-letter country code.
 
-      iex> Address.subdivision_code("Texas")
+      iex> ISO.subdivision_code("Texas")
       "US-TX"
 
-      iex> Address.subdivision_code("teXaS")
+      iex> ISO.subdivision_code("teXaS")
       "US-TX"
 
-      iex> Address.subdivision_code("TX")
+      iex> ISO.subdivision_code("TX")
       "US-TX"
 
-      iex> Address.subdivision_code("US-TX")
+      iex> ISO.subdivision_code("US-TX")
       "US-TX"
 
-      iex> Address.subdivision_code("AlberTa", "CA")
+      iex> ISO.subdivision_code("CA", "US-TX")
+      nil
+
+      iex> ISO.subdivision_code("CA", "AlberTa")
       "CA-AB"
 
-      iex> Address.subdivision_code("Veracruz", "MX")
+      iex> ISO.subdivision_code("MX", "Veracruz")
       "MX-VER"
 
-      iex> Address.subdivision_code("Yucatán", "MX")
+      iex> ISO.subdivision_code("MX", "Yucatán")
       "MX-YUC"
 
-      iex> Address.subdivision_code("Yucatan", "MX")
+      iex> ISO.subdivision_code("MX", "Yucatan")
       "MX-YUC"
 
-      iex> Address.subdivision_code("YucatAN", "MX")
+      iex> ISO.subdivision_code("MX", "YucatAN")
       "MX-YUC"
 
-      iex> Address.subdivision_code("Not a state.")
+      iex> ISO.subdivision_code("Not a subdivision.")
       nil
   """
   @spec subdivision_code(String.t(), String.t()) :: nil | String.t()
-  def subdivision_code(country, state)
-      when is_bitstring(state) and is_bitstring(country) do
+  def subdivision_code(country \\ @default_country, subdivision)
+      when is_bitstring(subdivision) and is_bitstring(country) do
     divisions = @iso[country]["subdivisions"]
 
     cond do
-      Map.has_key?(divisions, "#{country}-#{state}") ->
-        "#{country}-#{state}"
+      Map.has_key?(divisions, "#{country}-#{subdivision}") ->
+        "#{country}-#{subdivision}"
 
-      Map.has_key?(divisions, state) ->
-        state
+      Map.has_key?(divisions, subdivision) ->
+        subdivision
 
       true ->
-        state = filter_for_comparison(state)
+        subdivision = filter_for_comparison(subdivision)
 
         divisions
-        |> Enum.find(fn {_subdivision_code, %{"name" => full_state} = s} ->
+        |> Enum.find(fn {_subdivision_code, %{"name" => full_subdivision} = s} ->
           variation = s["variation"]
 
-          filter_for_comparison(full_state) == state or
-            (is_binary(variation) and filter_for_comparison(variation) == state)
+          filter_for_comparison(full_subdivision) == subdivision or
+            (is_binary(variation) and filter_for_comparison(variation) == subdivision)
         end)
         |> case do
           nil -> nil
-          {subdivision_code, _full_state} -> subdivision_code
+          {subdivision_code, _full_subdivision} -> subdivision_code
         end
     end
   end
@@ -191,5 +200,51 @@ defmodule Shippex.ISO do
     |> String.downcase()
     |> String.normalize(:nfd)
     |> String.replace(~r/[^A-z\s]/u, "")
+  end
+
+  @doc """
+  Takes a subdivision and country input and returns the validated,
+  ISO-3166-compliant results in a tuple.
+
+      iex> ISO.find_subdivision("TX")
+      {:ok, "US-TX"}
+
+      iex> ISO.find_subdivision("US", "TX")
+      {:ok, "US-TX"}
+
+      iex> ISO.find_subdivision("US", "US-TX")
+      {:ok, "US-TX"}
+
+      iex> ISO.find_subdivision("US", "Texas")
+      {:ok, "US-TX"}
+
+      iex> ISO.find_subdivision("United States", "Texas")
+      {:ok, "US-TX"}
+
+      iex> ISO.find_subdivision("SomeCountry", "SG-SG")
+      {:error, "Invalid country: SomeCountry"}
+
+      iex> ISO.find_subdivision("SG", "SG-Invalid")
+      {:error, "Invalid subdivision 'SG-Invalid' for country: SG (SG)"}
+  """
+  @spec find_subdivision(any, any) ::
+          {:ok, String.t(), String.t()} | {:error, String.t()}
+  def find_subdivision(country \\ @default_country, subdivision) do
+    country_code =
+      case @iso do
+        %{^country => %{}} -> country
+        _ -> country_code(country)
+      end
+
+    cond do
+      is_nil(country_code) ->
+        {:error, "Invalid country: #{country}"}
+
+      code = subdivision_code(country_code, subdivision) ->
+        {:ok, code}
+
+      true ->
+        {:error, "Invalid subdivision '#{subdivision}' for country: #{country} (#{country_code})"}
+    end
   end
 end

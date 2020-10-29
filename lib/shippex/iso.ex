@@ -4,25 +4,29 @@ defmodule Shippex.ISO do
   compliance with the ISO-3166-2 standard.
   """
 
-  @iso Shippex.json_library().decode!(File.read!(:code.priv_dir(:shippex) ++ '/iso-3166-2.json'))
+  @iso Shippex.Config.json_library().decode!(
+         File.read!(:code.priv_dir(:shippex) ++ '/iso-3166-2.json')
+       )
 
   @doc """
   Returns all ISO-3166-2 data.
   """
-  def data() do
-    @iso
-  end
+  def data(), do: @iso
 
   @doc """
-  Returns a map of country codes and their full names. Takes in a list of optional atoms to tailor the results. For example, `:with_subdivisions` only includes countries with subdivisions.
+  Returns a map of country codes and their full names. Takes in a list of
+  optional atoms to tailor the results. For example, `:with_subdivisions` only
+  includes countries with subdivisions.
 
       iex> countries = ISO.countries()
-      ...> countries["US"]
+      iex> countries["US"]
       "United States of America (the)"
-      ...> countries["PR"]
+
+      iex> countries["PR"]
       "Puerto Rico"
+
       iex> countries = ISO.countries([:with_subdivisions])
-      ...> countries["PR"]
+      iex> countries["PR"]
       nil
   """
   @spec countries([atom()]) :: %{String.t() => String.t()}
@@ -38,25 +42,26 @@ defmodule Shippex.ISO do
   end
 
   @doc """
-  Returns a map of state codes and full names for the given 2-letter country
-  code.
+  Returns a map of subdivision codes and full names for the given 2-letter
+  country code.
 
-      iex> states = ISO.states("US")
-      ...> get_in(states, ["TX", "name"])
+      iex> get_in(ISO.subdivisions("US"), ["TX", "name"])
       "Texas"
-      ...> get_in(states, ["PR", "name"])
+
+      iex> get_in(ISO.subdivisions("US"), ["PR", "name"])
       "Puerto Rico"
-      iex> states = ISO.states("MX")
-      ...> get_in(states, ["AGU", "name"])
+
+      iex> get_in(ISO.subdivisions("MX"), ["AGU", "name"])
       "Aguascalientes"
-      iex> ISO.states("Not a country.")
+
+      iex> ISO.subdivisions("Not a country.")
       %{}
   """
-  @spec states(String.t()) :: %{String.t() => String.t()}
-  def states(country \\ "US") do
-    states = @iso[country] || %{}
+  @spec subdivisions(String.t()) :: %{String.t() => String.t()}
+  def subdivisions(country \\ "US") do
+    subdivisions = @iso[country] || %{}
 
-    case states["subdivisions"] do
+    case subdivisions["subdivisions"] do
       nil ->
         %{}
 
@@ -75,13 +80,116 @@ defmodule Shippex.ISO do
 
       iex> ISO.country_code_to_name("US")
       "United States of America (the)"
+
       iex> ISO.country_code_to_name("TN")
       "Tunisia"
+
       iex> ISO.country_code_to_name("TX")
       nil
   """
   @spec country_code_to_name(String.t()) :: nil | String.t()
   def country_code_to_name(abbr) when is_bitstring(abbr) do
     countries()[abbr]
+  end
+
+  @doc """
+  Converts a full country name to its 2-letter ISO-3166-2 code.
+
+      iex> Address.country_code("United States")
+      "US"
+      iex> Address.country_code("Mexico")
+      "MX"
+      iex> Address.country_code("Not a country.")
+      nil
+  """
+  @spec country_code(String.t()) :: nil | String.t()
+  def country_code("UNITED STATES" <> _), do: "US"
+
+  def country_code(country) do
+    country = String.upcase(country)
+
+    Enum.find_value(@iso, fn
+      {code, %{"short_name" => ^country}} ->
+        code
+
+      {code, %{"name" => name, "full_name" => full_name}} ->
+        if String.upcase(name) == country or String.upcase(full_name) == country do
+          code
+        end
+
+      _ ->
+        nil
+    end)
+  end
+
+  @doc """
+  Converts a full state name to its 2-letter ISO-3166-2 code. The country MUST
+  be an ISO-compliant 2-letter country code.
+
+      iex> Address.subdivision_code("Texas")
+      "US-TX"
+
+      iex> Address.subdivision_code("teXaS")
+      "US-TX"
+
+      iex> Address.subdivision_code("TX")
+      "US-TX"
+
+      iex> Address.subdivision_code("US-TX")
+      "US-TX"
+
+      iex> Address.subdivision_code("AlberTa", "CA")
+      "CA-AB"
+
+      iex> Address.subdivision_code("Veracruz", "MX")
+      "MX-VER"
+
+      iex> Address.subdivision_code("Yucatán", "MX")
+      "MX-YUC"
+
+      iex> Address.subdivision_code("Yucatan", "MX")
+      "MX-YUC"
+
+      iex> Address.subdivision_code("YucatAN", "MX")
+      "MX-YUC"
+
+      iex> Address.subdivision_code("Not a state.")
+      nil
+  """
+  @spec subdivision_code(String.t(), String.t()) :: nil | String.t()
+  def subdivision_code(country, state)
+      when is_bitstring(state) and is_bitstring(country) do
+    divisions = @iso[country]["subdivisions"]
+
+    cond do
+      Map.has_key?(divisions, "#{country}-#{state}") ->
+        "#{country}-#{state}"
+
+      Map.has_key?(divisions, state) ->
+        state
+
+      true ->
+        state = filter_for_comparison(state)
+
+        divisions
+        |> Enum.find(fn {_subdivision_code, %{"name" => full_state} = s} ->
+          variation = s["variation"]
+
+          filter_for_comparison(full_state) == state or
+            (is_binary(variation) and filter_for_comparison(variation) == state)
+        end)
+        |> case do
+          nil -> nil
+          {subdivision_code, _full_state} -> subdivision_code
+        end
+    end
+  end
+
+  defp filter_for_comparison(string) do
+    string
+    |> String.trim()
+    |> String.downcase()
+    |> String.normalize(:nfd)
+    |> String.replace(~r/[^A-z\s]/u, "")
   end
 end

@@ -1,4 +1,4 @@
-if Code.ensure_loaded?(Floki) do
+if Code.ensure_loaded?(Floki) and Code.ensure_loaded?(Jason) do
   defmodule Mix.Tasks.BuildUsps do
     import Shippex.Util, only: [unaccent: 1]
     require Logger

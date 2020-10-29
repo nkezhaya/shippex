@@ -1,4 +1,4 @@
-if Code.ensure_loaded?(CSV) do
+if Code.ensure_loaded?(CSV) and Code.ensure_loaded?(Jason) do
   defmodule Mix.Tasks.BuildJson do
     # Compiles the CSVs into a usable JSON file.
     @moduledoc false

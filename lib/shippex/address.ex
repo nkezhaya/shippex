@@ -4,33 +4,13 @@ defmodule Shippex.Address do
   *not* initialize this struct directly. Instead, use `address/1`.
   """
 
-  @enforce_keys [
-    :first_name,
-    :last_name,
-    :name,
-    :phone,
-    :address,
-    :address_line_2,
-    :city,
-    :state,
-    :zip,
-    :country
-  ]
-  defstruct [
-    :first_name,
-    :last_name,
-    :name,
-    :company_name,
-    :phone,
-    :address,
-    :address_line_2,
-    :city,
-    :state,
-    :zip,
-    :country
-  ]
+  @enforce_keys ~w(first_name last_name name phone address address_line_2 city
+                   state zip country)a
 
-  @type t :: %__MODULE__{
+  defstruct ~w(first_name last_name name company_name phone address
+               address_line_2 city state zip country)a
+
+  @type t() :: %__MODULE__{
           first_name: nil | String.t(),
           last_name: nil | String.t(),
           name: nil | String.t(),
@@ -143,8 +123,7 @@ defmodule Shippex.Address do
 
     {:ok, address}
   catch
-    {:invalid_state_and_country, error} ->
-      {:error, error}
+    {:invalid_state_and_country, error} -> {:error, error}
   end
 
   @doc """
@@ -204,120 +183,30 @@ defmodule Shippex.Address do
   end
 
   @doc """
-  Converts a full state name to its 2-letter ISO-3166-2 code. The country MUST
-  be an ISO-compliant 2-letter country code.
-
-      iex> Address.state_code("Texas")
-      "US-TX"
-      iex> Address.state_code("teXaS")
-      "US-TX"
-      iex> Address.state_code("TX")
-      "US-TX"
-      iex> Address.state_code("US-TX")
-      "US-TX"
-      iex> Address.state_code("AlberTa", "CA")
-      "CA-AB"
-      iex> Address.state_code("Veracruz", "MX")
-      "MX-VER"
-      iex> Address.state_code("Yucatán", "MX")
-      "MX-YUC"
-      iex> Address.state_code("Yucatan", "MX")
-      "MX-YUC"
-      iex> Address.state_code("YucatAN", "MX")
-      "MX-YUC"
-      iex> Address.state_code("Not a state.")
-      nil
-  """
-  @spec state_code(String.t(), String.t()) :: nil | String.t()
-  def state_code(state, country \\ "US") when is_bitstring(state) and is_bitstring(country) do
-    iso = ISO.data()
-    divisions = iso[country]["divisions"]
-
-    cond do
-      Map.has_key?(divisions, "#{country}-#{state}") ->
-        "#{country}-#{state}"
-
-      Map.has_key?(divisions, state) ->
-        state
-
-      true ->
-        state = filter_for_comparison(state)
-
-        divisions
-        |> Enum.find(fn {_state_code, %{"name" => full_state} = s} ->
-          variation = s["variation"]
-
-          filter_for_comparison(full_state) == state or
-            (is_binary(variation) and filter_for_comparison(variation) == state)
-        end)
-        |> case do
-          nil -> nil
-          {state_code, _full_state} -> state_code
-        end
-    end
-  end
-
-  defp filter_for_comparison(string) do
-    string
-    |> String.trim()
-    |> String.downcase()
-    |> String.normalize(:nfd)
-    |> String.replace(~r/[^A-z\s]/u, "")
-  end
-
-  @doc """
-  Converts a full country name to its 2-letter ISO-3166-2 code.
-
-      iex> Address.country_code("United States")
-      "US"
-      iex> Address.country_code("Mexico")
-      "MX"
-      iex> Address.country_code("Not a country.")
-      nil
-  """
-  @spec country_code(String.t()) :: nil | String.t()
-  def country_code(country) do
-    country = String.upcase(country)
-    iso = ISO.data()
-
-    cond do
-      String.starts_with?(country, "UNITED STATES") ->
-        "US"
-
-      true ->
-        Enum.find_value(iso, fn
-          {code, %{"short_name" => ^country}} ->
-            code
-
-          {code, %{"name" => name, "full_name" => full_name}} ->
-            if String.upcase(name) == country or String.upcase(full_name) == country do
-              code
-            end
-
-          _ ->
-            nil
-        end)
-    end
-  end
-
-  @doc """
   Takes a state and country input and returns the validated, ISO-3166-compliant
   results in a tuple.
 
       iex> Address.validated_state_and_country("TX")
       {:ok, "US-TX", "US"}
+
       iex> Address.validated_state_and_country("TX", "US")
       {:ok, "US-TX", "US"}
+
       iex> Address.validated_state_and_country("US-TX", "US")
       {:ok, "US-TX", "US"}
+
       iex> Address.validated_state_and_country("Texas", "US")
       {:ok, "US-TX", "US"}
+
       iex> Address.validated_state_and_country("Texas", "United States")
       {:ok, "US-TX", "US"}
+
       iex> Address.validated_state_and_country("Texas", "United States")
       {:ok, "US-TX", "US"}
+
       iex> Address.validated_state_and_country("SG-SG", "SomeCountry")
       {:error, "Invalid country: SomeCountry"}
+
       iex> Address.validated_state_and_country("SG-Invalid", "SG")
       {:error, "Invalid state 'SG-Invalid' for country: SG (SG)"}
   """
@@ -331,7 +220,7 @@ defmodule Shippex.Address do
       is_nil(country_code) ->
         {:error, "Invalid country: #{country}"}
 
-      not is_nil(abbr = state_code(state, country_code)) ->
+      not is_nil(abbr = ISO.subdivision_code(state, country_code)) ->
         {:ok, abbr, country_code}
 
       true ->
@@ -343,7 +232,7 @@ defmodule Shippex.Address do
     if ISO.data()[name_or_code] do
       name_or_code
     else
-      country_code(name_or_code)
+      ISO.country_code(name_or_code)
     end
   end
 

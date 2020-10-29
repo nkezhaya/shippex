@@ -27,6 +27,8 @@ defmodule Shippex.Address do
   alias __MODULE__, as: Address
   alias Shippex.ISO
 
+  @default_country "US"
+
   @doc """
   Initializes an `Address` struct from the given `params`, and performs minor
   validations that do not require any service requests.
@@ -84,7 +86,7 @@ defmodule Shippex.Address do
       end
 
     {state, country} =
-      case ISO.find_subdivision(params["country"], params["state"]) do
+      case ISO.find_subdivision(params["country"] || @default_country, params["state"]) do
         {:ok, state} ->
           {state, String.slice(state, 0, 2)}
 

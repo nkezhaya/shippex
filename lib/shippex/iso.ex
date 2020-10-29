@@ -8,8 +8,6 @@ defmodule Shippex.ISO do
          File.read!(:code.priv_dir(:shippex) ++ '/iso-3166-2.json')
        )
 
-  @default_country "US"
-
   @doc """
   Returns all ISO-3166-2 data.
   """
@@ -98,8 +96,13 @@ defmodule Shippex.ISO do
 
       iex> ISO.country_code("United States")
       "US"
+
+      iex> ISO.country_code("UNITED STATES")
+      "US"
+
       iex> ISO.country_code("Mexico")
       "MX"
+
       iex> ISO.country_code("Not a country.")
       nil
   """
@@ -132,20 +135,11 @@ defmodule Shippex.ISO do
   Converts a full subdivision name to its 2-letter ISO-3166-2 code. The country
   MUST be an ISO-compliant 2-letter country code.
 
-      iex> ISO.subdivision_code("Texas")
+      iex> ISO.subdivision_code("US", "Texas")
       "US-TX"
 
-      iex> ISO.subdivision_code("teXaS")
+      iex> ISO.subdivision_code("US", "US-TX")
       "US-TX"
-
-      iex> ISO.subdivision_code("TX")
-      "US-TX"
-
-      iex> ISO.subdivision_code("US-TX")
-      "US-TX"
-
-      iex> ISO.subdivision_code("CA", "US-TX")
-      nil
 
       iex> ISO.subdivision_code("CA", "AlberTa")
       "CA-AB"
@@ -162,11 +156,14 @@ defmodule Shippex.ISO do
       iex> ISO.subdivision_code("MX", "YucatAN")
       "MX-YUC"
 
-      iex> ISO.subdivision_code("Not a subdivision.")
+      iex> ISO.subdivision_code("CA", "US-TX")
+      nil
+
+      iex> ISO.subdivision_code("MX", "Not a subdivision.")
       nil
   """
   @spec subdivision_code(String.t(), String.t()) :: nil | String.t()
-  def subdivision_code(country \\ @default_country, subdivision)
+  def subdivision_code(country, subdivision)
       when is_bitstring(subdivision) and is_bitstring(country) do
     divisions = @iso[country]["subdivisions"]
 
@@ -206,9 +203,6 @@ defmodule Shippex.ISO do
   Takes a subdivision and country input and returns the validated,
   ISO-3166-compliant results in a tuple.
 
-      iex> ISO.find_subdivision("TX")
-      {:ok, "US-TX"}
-
       iex> ISO.find_subdivision("US", "TX")
       {:ok, "US-TX"}
 
@@ -229,7 +223,7 @@ defmodule Shippex.ISO do
   """
   @spec find_subdivision(any, any) ::
           {:ok, String.t(), String.t()} | {:error, String.t()}
-  def find_subdivision(country \\ @default_country, subdivision) do
+  def find_subdivision(country, subdivision) do
     country_code =
       case @iso do
         %{^country => %{}} -> country

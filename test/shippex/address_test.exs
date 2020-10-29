@@ -71,7 +71,7 @@ defmodule Shippex.AddressTest do
         "zip" => "310260"
       })
 
-    assert error =~ ~r/invalid state/i
+    assert error =~ ~r/invalid subdivision/i
 
     # Invalid country, valid state
     {:error, error} =

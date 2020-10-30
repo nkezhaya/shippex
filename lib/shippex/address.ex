@@ -21,7 +21,7 @@ defmodule Shippex.Address do
           city: String.t(),
           state: String.t(),
           zip: String.t(),
-          country: String.t()
+          country: ISO.country_code()
         }
 
   alias __MODULE__, as: Address
@@ -222,5 +222,28 @@ defmodule Shippex.Address do
 
   def common_country_code(common_name) do
     ISO.country_code(common_name)
+  end
+
+  @doc """
+  Returns `true` if addresses for the country require a province, state, or
+  other subdivision to be specified to validate addresses.
+
+      iex> Address.subdivision_required?("US")
+      true
+
+      iex> Address.subdivision_required?("CN")
+      true
+
+      iex> Address.subdivision_required?("SG")
+      false
+  """
+  @spec subdivision_required?(ISO.country_code()) :: boolean()
+
+  for country_code <- ~w(AU CA CN ES IT MX MY US) do
+    def subdivision_required?(unquote(country_code)), do: true
+  end
+
+  def subdivision_required?(_) do
+    false
   end
 end

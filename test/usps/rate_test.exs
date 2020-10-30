@@ -75,10 +75,7 @@ defmodule Shippex.USPS.RateTest do
       assert rate2.price < rate3.price
     end
 
-    @us_territories Shippex.Carrier.USPS.us_territories()
-    @invalid_destinations Shippex.Carrier.USPS.invalid_destinations()
     for {code, full} <- ISO.countries(),
-        code not in (@us_territories ++ @invalid_destinations),
         code != "US" do
       @tag String.to_atom(code)
       @code code
@@ -90,12 +87,12 @@ defmodule Shippex.USPS.RateTest do
         address = %{shipment.to | country: @code}
         shipment = %{shipment | to: address}
 
-        case Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority) do
-          {:ok, rate} ->
-            assert rate
+        rate = Shippex.Carrier.USPS.fetch_rate(shipment, :usps_priority)
 
-          {:error, %{message: message}} ->
-            raise "#{@code} (#{Shippex.Carrier.USPS.country(@code)}) #{message}"
+        if Shippex.services_country?(:usps, @code) do
+          assert {:ok, rate} = rate
+        else
+          assert {:error, %{message: _}} = rate
         end
       end
     end

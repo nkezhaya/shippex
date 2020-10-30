@@ -8,9 +8,12 @@ defmodule Shippex.ISO do
          File.read!(:code.priv_dir(:shippex) ++ '/iso-3166-2.json')
        )
 
+  @type country_code() :: binary()
+
   @doc """
   Returns all ISO-3166-2 data.
   """
+  @spec data() :: %{country_code() => map()}
   def data(), do: @iso
 
   @doc """
@@ -55,7 +58,7 @@ defmodule Shippex.ISO do
       iex> ISO.territory?("US")
       false
   """
-  @spec territory?(String.t()) :: boolean()
+  @spec territory?(country_code()) :: boolean()
   def territory?(code) do
     country = @iso[code]
 
@@ -88,7 +91,7 @@ defmodule Shippex.ISO do
       iex> ISO.country_code_to_name("TX")
       nil
   """
-  @spec country_code_to_name(String.t()) :: nil | String.t()
+  @spec country_code_to_name(country_code()) :: nil | String.t()
   def country_code_to_name(code) when is_bitstring(code) do
     countries()[code]
   end
@@ -108,7 +111,7 @@ defmodule Shippex.ISO do
       iex> ISO.country_code("Not a country.")
       nil
   """
-  @spec country_code(String.t()) :: nil | String.t()
+  @spec country_code(String.t()) :: nil | country_code()
 
   def country_code(country) do
     country
@@ -164,7 +167,7 @@ defmodule Shippex.ISO do
       iex> ISO.subdivision_code("MX", "Not a subdivision.")
       nil
   """
-  @spec subdivision_code(String.t(), String.t()) :: nil | String.t()
+  @spec subdivision_code(country_code(), String.t()) :: nil | String.t()
   def subdivision_code(country, subdivision)
       when is_bitstring(subdivision) and is_bitstring(country) do
     divisions = @iso[country]["subdivisions"]
@@ -227,7 +230,8 @@ defmodule Shippex.ISO do
       iex> ISO.find_subdivision_code("SG", "SG-Invalid")
       {:error, "Invalid subdivision 'SG-Invalid' for country: SG (SG)"}
   """
-  @spec find_subdivision_code(String.t(), String.t()) :: {:ok, String.t()} | {:error, String.t()}
+  @spec find_subdivision_code(country_code(), String.t()) ::
+          {:ok, String.t()} | {:error, String.t()}
   def find_subdivision_code(country, subdivision) do
     country_code =
       case @iso do

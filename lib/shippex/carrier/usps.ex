@@ -53,7 +53,7 @@ defmodule Shippex.Carrier.USPS do
       end
 
     api =
-      if shipment.international? do
+      if international?(shipment) do
         "IntlRateV2"
       else
         "RateV4"
@@ -64,7 +64,7 @@ defmodule Shippex.Carrier.USPS do
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: rate}) do
       spec =
         extra_services_spec(shipment) ++
-          if shipment.international? do
+          if international?(shipment) do
             [
               name: ~x"./SvcDescription//text()"s,
               service: ~x"./SvcDescription//text()"s,
@@ -79,7 +79,7 @@ defmodule Shippex.Carrier.USPS do
           end
 
       rates =
-        if shipment.international? do
+        if international?(shipment) do
           xpath(
             body,
             ~x"//IntlRateV2Response//Package//Service"l,
@@ -116,7 +116,7 @@ defmodule Shippex.Carrier.USPS do
         end)
 
       rates =
-        if shipment.international? do
+        if international?(shipment) do
           rates
           |> Enum.sort(fn {:ok, rate1}, {:ok, rate2} ->
             service = String.downcase(service.description)
@@ -146,7 +146,7 @@ defmodule Shippex.Carrier.USPS do
   def create_transaction(%Shipment{} = shipment, %Service{} = service) do
     api =
       cond do
-        not shipment.international? ->
+        not international?(shipment) ->
           "eVS"
 
         service.id == :usps_priority_express ->
@@ -169,7 +169,7 @@ defmodule Shippex.Carrier.USPS do
 
     with_response Client.post("ShippingAPI.dll", %{API: api, XML: request}) do
       spec =
-        if shipment.international? do
+        if international?(shipment) do
           [insurance_fee: ~x"//InsuranceFee//text()"s]
         else
           extra_services_spec(shipment, "Extra")
@@ -203,7 +203,7 @@ defmodule Shippex.Carrier.USPS do
   @impl true
   def cancel_transaction(%Shippex.Shipment{} = shipment, tracking_number) do
     root =
-      if shipment.international? do
+      if international?(shipment) do
         "eVSI"
       else
         "eVS"
@@ -233,14 +233,11 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
-  def domestic?(country) when country in ~w(PR PW MH FM MP GU AS VI), do: true
-  def domestic?(_), do: false
-
   defp extra_services_spec(shipment, prefix \\ nil) do
     prefix =
       case prefix do
         nil ->
-          if shipment.international?, do: "Extra", else: "Special"
+          if international?(shipment), do: "Extra", else: "Special"
 
         prefix ->
           prefix
@@ -299,12 +296,15 @@ defmodule Shippex.Carrier.USPS do
     Map.put(rate, :line_items, line_items)
   end
 
-  defp insurance_code(%{international?: true}, %{id: :usps_gxg}), do: "106"
-  defp insurance_code(%{international?: true}, %{id: :usps_priority}), do: "108"
-  defp insurance_code(%{international?: true}, %{id: :usps_priority_express}), do: "107"
-  defp insurance_code(%{international?: false}, %{id: :usps_priority}), do: "125"
-  defp insurance_code(%{international?: false}, %{id: :usps_priority_express}), do: "101"
-  defp insurance_code(%{international?: false}, %{id: _}), do: "100"
+  defp insurance_code(%Shipment{} = shipment, service),
+    do: insurance_code(international?(shipment), service)
+
+  defp insurance_code(true, %{id: :usps_gxg}), do: "106"
+  defp insurance_code(true, %{id: :usps_priority}), do: "108"
+  defp insurance_code(true, %{id: :usps_priority_express}), do: "107"
+  defp insurance_code(false, %{id: :usps_priority}), do: "125"
+  defp insurance_code(false, %{id: :usps_priority_express}), do: "101"
+  defp insurance_code(false, %{id: _}), do: "100"
 
   @spec weight_in_ounces(number()) :: number()
   defp weight_in_ounces(pounds) do
@@ -393,7 +393,7 @@ defmodule Shippex.Carrier.USPS do
   end
 
   @impl true
-  @not_serviced ~w(AN AQ BV EH KP HM IO PN SO SJ SY SZ TF YE YU)
+  @not_serviced ~w(AN AQ BV CU EH FK HM IO KP LA LR MM PN SC SJ SL SO SS SY TF TJ TM YE YU)
   def services_country?(country) when country in @not_serviced do
     false
   end
@@ -401,6 +401,16 @@ defmodule Shippex.Carrier.USPS do
   def services_country?(_country) do
     true
   end
+
+  def domestic?("US"), do: true
+  def domestic?(country) when country in ~w(AS FM GU MH MP PR PW UM VI), do: true
+  def domestic?(_), do: false
+
+  def international?(%Shipment{to: %Address{country: c}}),
+    do: not domestic?(c)
+
+  def international?(_),
+    do: false
 
   @usps_names Shippex.json_library().decode!(
                 File.read!(:code.priv_dir(:shippex) ++ '/usps-countries.json')

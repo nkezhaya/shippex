@@ -10,16 +10,15 @@ defmodule Shippex.Shipment do
 
   alias Shippex.{Shipment, Address, Package}
 
-  @enforce_keys [:from, :to, :package, :ship_date, :international?]
-  defstruct [:id, :from, :to, :package, :ship_date, :international?]
+  @enforce_keys [:from, :to, :package, :ship_date]
+  defstruct [:id, :from, :to, :package, :ship_date]
 
   @type t :: %__MODULE__{
           id: any(),
           from: Address.t(),
           to: Address.t(),
           package: Package.t(),
-          ship_date: any(),
-          international?: boolean()
+          ship_date: any()
         }
 
   @doc """
@@ -28,7 +27,6 @@ defmodule Shippex.Shipment do
   @spec new(Address.t(), Address.t(), Package.t(), Keyword.t()) ::
           {:ok, t()} | {:error, String.t()}
   def new(%Address{} = from, %Address{} = to, %Package{} = package, opts \\ []) do
-    intl = from.country != to.country
     ship_date = Keyword.get(opts, :ship_date)
 
     if from.country != "US" do
@@ -43,8 +41,7 @@ defmodule Shippex.Shipment do
       from: from,
       to: to,
       package: package,
-      ship_date: ship_date,
-      international?: intl
+      ship_date: ship_date
     }
 
     {:ok, shipment}

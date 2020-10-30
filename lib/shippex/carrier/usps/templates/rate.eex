@@ -1,6 +1,6 @@
 <% package = @shipment.package %>
 
-<%= if @shipment.international? do %>
+<%= if international?(@shipment) do %>
   <IntlRateV2Request USERID="<%= config().username %>">
     <Revision>2</Revision>
 

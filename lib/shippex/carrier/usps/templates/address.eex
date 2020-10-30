@@ -4,7 +4,7 @@
 <% prefix = String.capitalize("#{@address}") %>
 <% address = Map.get(@shipment, @address) %>
 
-<%= if @shipment.international? do %>
+<%= if international?(@shipment) do %>
   <<%= prefix %>FirstName><%= address.first_name %></<%= prefix %>FirstName>
   <<%= prefix %>LastName><%= address.last_name %></<%= prefix %>LastName>
 <% else %>
@@ -16,7 +16,7 @@
 <<%= prefix %>Address2><%= address.address %></<%= prefix %>Address2>
 <<%= prefix %>City><%= address.city %></<%= prefix %>City>
 
-<%= if @shipment.international? and @address == :to do %>
+<%= if international?(@shipment) and @address == :to do %>
   <<%= prefix %>Province><%= address.state %></<%= prefix %>Province>
   <<%= prefix %>Country><%= country(address) %></<%= prefix %>Country>
   <<%= prefix %>PostalCode><%= address.zip %></<%= prefix %>PostalCode>

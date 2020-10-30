@@ -1,6 +1,6 @@
 <% package = @shipment.package %>
 <<%= @api %>Request USERID="<%= config().username %>">
-  <%= if @shipment.international? do %>
+  <%= if international?(@shipment) do %>
     <Revision>2</Revision>
     <%= render_address shipment: @shipment, address: :from %>
     <%= render_address shipment: @shipment, address: :to %>

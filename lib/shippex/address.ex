@@ -142,7 +142,7 @@ defmodule Shippex.Address do
 
     case address.country do
       "US" ->
-        Carrier.module(carrier).validate_address(address)
+        Shippex.Carrier.module(carrier).validate_address(address)
 
       _country ->
         {:ok, [address]}

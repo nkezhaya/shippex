@@ -39,10 +39,12 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
+  @impl true
   def fetch_rates(_shipment) do
     raise "Not implemented for USPS"
   end
 
+  @impl true
   def fetch_rate(%Shipment{} = shipment, service) do
     service =
       case service do
@@ -136,6 +138,7 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
+  @impl true
   def create_transaction(shipment, service) when is_atom(service) do
     create_transaction(shipment, Service.get(service))
   end
@@ -192,10 +195,12 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
+  @impl true
   def cancel_transaction(%Shippex.Transaction{} = transaction) do
     cancel_transaction(transaction.shipment, transaction.label.tracking_number)
   end
 
+  @impl true
   def cancel_transaction(%Shippex.Shipment{} = shipment, tracking_number) do
     root =
       if shipment.international? do
@@ -228,13 +233,8 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
-  def us_territories() do
-    ~w(PR PW MH FM MP GU AS VI)
-  end
-
-  def invalid_destinations() do
-    ~w(AN AQ BV EH KP HM IO PN SO SJ SY SZ TF YE YU)
-  end
+  def domestic?(country) when country in ~w(PR PW MH FM MP GU AS VI), do: true
+  def domestic?(_), do: false
 
   defp extra_services_spec(shipment, prefix \\ nil) do
     prefix =
@@ -366,6 +366,7 @@ defmodule Shippex.Carrier.USPS do
     end
   end
 
+  @impl true
   def validate_address(%Shippex.Address{country: "US"} = address) do
     request = render_validate_address(address: address)
 
@@ -389,6 +390,16 @@ defmodule Shippex.Carrier.USPS do
 
       {:ok, candidates}
     end
+  end
+
+  @impl true
+  @not_serviced ~w(AN AQ BV EH KP HM IO PN SO SJ SY SZ TF YE YU)
+  def services_country?(country) when country in @not_serviced do
+    false
+  end
+
+  def services_country?(_country) do
+    true
   end
 
   @usps_names Shippex.json_library().decode!(

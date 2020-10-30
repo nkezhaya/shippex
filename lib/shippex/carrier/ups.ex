@@ -29,6 +29,7 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
+  @impl true
   def fetch_rates(%Shipment{} = shipment) do
     services = Service.services_for_carrier(:ups, shipment)
 
@@ -48,6 +49,7 @@ defmodule Shippex.Carrier.UPS do
     end) ++ errors
   end
 
+  @impl true
   def fetch_rate(%Shipment{} = shipment, %Service{} = service) do
     params =
       Map.new()
@@ -75,6 +77,7 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
+  @impl true
   def create_transaction(%Shipment{} = shipment, %Service{} = service) do
     params =
       Map.new()
@@ -117,10 +120,12 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
+  @impl true
   def cancel_transaction(%Transaction{} = transaction) do
     cancel_transaction(transaction.label.tracking_number)
   end
 
+  @impl true
   def cancel_transaction(_shipment, tracking_number) do
     void_params = %{
       VoidShipmentRequest: %{
@@ -154,6 +159,13 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
+  @impl true
+  def services_country?(_country_code) do
+    # TODO
+    true
+  end
+
+  @impl true
   def validate_address(%Address{} = address) do
     xav_params = %{
       XAVRequest: %{

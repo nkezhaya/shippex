@@ -30,7 +30,7 @@ defmodule Shippex do
 
   ## Create origin/destination addresses
 
-      origin = Shippex.Address.address(%{
+      origin = Shippex.Address.new(%{
         name: "Earl G",
         phone: "123-123-1234",
         address: "9999 Hobby Lane",
@@ -40,7 +40,7 @@ defmodule Shippex do
         zip: "78703"
       })
 
-      destination = Shippex.Address.address(%{
+      destination = Shippex.Address.new(%{
         name: "Bar Baz",
         phone: "123-123-1234",
         address: "1234 Foo Blvd",
@@ -53,14 +53,14 @@ defmodule Shippex do
   ## Create a package
 
       # Currently only inches and pounds (lbs) supported.
-      package = %Shippex.Package{
+      package = Shippex.Package.new(%{
         length: 8,
         width: 8,
         height: 4,
         weight: 5,
         description: "Headphones",
         monetary_value: 20 # optional
-      }
+      })
 
   ## Link the origin, destination, and package with a Shipment
 
@@ -248,6 +248,21 @@ defmodule Shippex do
   @spec cancel_transaction(Carrier.t(), Shipment.t(), String.t()) :: {atom, response}
   def cancel_transaction(carrier, %Shipment{} = shipment, tracking_number) do
     Carrier.module(carrier).cancel_transaction(shipment, tracking_number)
+  end
+
+  @doc """
+  Returns `true` if the carrier services the given country. An
+  ISO-3166-compliant country code is required.
+
+      iex> Shippex.services_country?(:usps, "US")
+      true
+
+      iex> Shippex.services_country?(:usps, "KP")
+      false
+  """
+  @spec services_country?(Carrier.t(), ISO.country_code()) :: boolean()
+  def services_country?(carrier, country) do
+    Carrier.module(carrier).services_country?(country)
   end
 
   @doc """

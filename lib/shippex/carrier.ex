@@ -5,7 +5,7 @@ defmodule Shippex.Carrier do
   """
 
   alias Shippex.Carrier
-  alias Shippex.{Shipment, Service, Rate, Transaction}
+  alias Shippex.{ISO, Shipment, Service, Rate, Transaction}
 
   @callback fetch_rates(Shipment.t()) :: [{atom, Rate.t()}]
   @callback fetch_rate(Shipment.t(), Service.t()) :: [{atom, Rate.t()}] | {atom, Rate.t()}
@@ -14,6 +14,7 @@ defmodule Shippex.Carrier do
   @callback cancel_transaction(Transaction.t()) :: {atom, String.t()}
   @callback cancel_transaction(Shipment.t(), String.t()) :: {atom, String.t()}
   @callback validate_address(Address.t()) :: {:ok, [Address.t()]} | {:error, any()}
+  @callback services_country?(ISO.country_code()) :: boolean()
 
   @type t :: atom
 

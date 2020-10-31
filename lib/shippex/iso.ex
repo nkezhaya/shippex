@@ -4,6 +4,8 @@ defmodule Shippex.ISO do
   compliance with the ISO-3166-2 standard.
   """
 
+  import Shippex.Util, only: [unaccent: 1]
+
   @iso Shippex.Config.json_library().decode!(
          File.read!(:code.priv_dir(:shippex) ++ '/iso-3166-2.json')
        )
@@ -55,6 +57,7 @@ defmodule Shippex.ISO do
 
       iex> ISO.territory?("PR")
       true
+
       iex> ISO.territory?("US")
       false
   """
@@ -82,18 +85,34 @@ defmodule Shippex.ISO do
   @doc """
   Converts a country's 2-letter code to its full name.
 
-      iex> ISO.country_code_to_name("US")
+      iex> ISO.country_name("US")
       "United States of America (the)"
 
-      iex> ISO.country_code_to_name("TN")
+      iex> ISO.country_name("US", :informal)
+      "United States of America"
+
+      iex> ISO.country_name("US", :short_name)
+      "UNITED STATES OF AMERICA"
+
+      iex> ISO.country_name("TN")
       "Tunisia"
 
-      iex> ISO.country_code_to_name("TX")
+      iex> ISO.country_name("TX")
       nil
   """
-  @spec country_code_to_name(country_code()) :: nil | String.t()
-  def country_code_to_name(code) when is_bitstring(code) do
-    countries()[code]
+  @spec country_name(country_code(), nil | :informal | :short_name) :: nil | String.t()
+  def country_name(code, type \\ nil) do
+    case @iso[code] do
+      %{"name" => name, "short_name" => short_name} ->
+        case type do
+          nil -> name
+          :short_name -> short_name
+          :informal -> strip_parens(name)
+        end
+
+      _ ->
+        nil
+    end
   end
 
   @doc """
@@ -108,6 +127,15 @@ defmodule Shippex.ISO do
       iex> ISO.country_code("Mexico")
       "MX"
 
+      iex> ISO.country_code("Iran")
+      "IR"
+
+      iex> ISO.country_code("Taiwan")
+      "TW"
+
+      iex> ISO.country_code("Bolivia")
+      "BO"
+
       iex> ISO.country_code("Not a country.")
       nil
   """
@@ -119,21 +147,48 @@ defmodule Shippex.ISO do
     |> do_country_code()
   end
 
+  defp do_country_code("ASCENSION" <> _), do: "SH"
+  defp do_country_code("BRITISH VIRGIN ISLANDS"), do: "VG"
+  defp do_country_code("GREAT BRITAIN" <> _), do: "GB"
+  defp do_country_code("IRAN" <> _), do: "IR"
+  defp do_country_code("SAINT HELENA" <> _), do: "SH"
+  defp do_country_code("SAINT MARTIN" <> _), do: "MF"
+  defp do_country_code("SINT MAARTEN" <> _), do: "SX"
+  defp do_country_code("SWAZILAND" <> _), do: "SZ"
+  defp do_country_code("SYRIA" <> _), do: "SY"
+  defp do_country_code("TAIWAN" <> _), do: "TW"
+  defp do_country_code("TRISTAN" <> _), do: "SH"
   defp do_country_code("UNITED STATES" <> _), do: "US"
+  defp do_country_code("UNITED KINGDOM" <> _), do: "GB"
+  defp do_country_code("VENEZUELA" <> _), do: "VE"
 
   defp do_country_code(country) do
     Enum.find_value(@iso, fn
       {code, %{"short_name" => ^country}} ->
         code
 
-      {code, %{"name" => name, "full_name" => full_name}} ->
-        if String.upcase(name) == country or String.upcase(full_name) == country do
-          code
+      {code, %{"short_name" => short_name, "name" => name, "full_name" => full_name}} ->
+        cond do
+          String.upcase(name) == country -> code
+          String.upcase(full_name) == country -> code
+          strip_parens(short_name) == country -> code
+          true -> nil
         end
 
       _ ->
         nil
     end)
+  end
+
+  @formal_words ~w(united democratic republic of the and state plurinational)
+  defp strip_parens(short_name) do
+    words = "(#{Enum.join(@formal_words, "|")}| )"
+
+    short_name
+    |> String.replace(~r/\s*\(#{words}*\)/i, "", global: true)
+    |> String.replace(~r/\s*,#{words}*/i, "", global: true)
+    |> unaccent()
+    |> String.trim()
   end
 
   @doc """

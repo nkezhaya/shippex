@@ -1,54 +1,48 @@
-if Code.ensure_loaded?(Floki) and Code.ensure_loaded?(Jason) do
+if Code.ensure_loaded?(CSV) and Code.ensure_loaded?(Jason) do
   defmodule Mix.Tasks.BuildUsps do
-    import Shippex.Util, only: [unaccent: 1]
+    alias Shippex.ISO
     require Logger
 
     @moduledoc false
 
-    @iso_countries Shippex.ISO.countries()
-
+    # Builds a JSON file with the format:
+    # %{ISO_CODE => %{"usps_code" => USPS_CODE,
+    #                 "usps_name" => USPS_NAME}}
     def run(_) do
-      read()
-      |> String.replace("’", "'")
-      |> Floki.parse_fragment!()
-      |> Floki.traverse_and_update(0, fn
-        {"span", _, _}, acc -> {nil, acc}
-        {"br", _, _}, acc -> {nil, acc}
-        el, acc -> {el, acc}
+      all =
+        File.stream!(csv("usps.csv"))
+        |> CSV.decode!(strip_fields: true)
+        |> Enum.to_list()
+        |> Enum.uniq()
+
+      all
+      |> Enum.reject(fn [name, _code] -> province?(name, all) end)
+      |> Enum.reject(fn [name, code] ->
+        # Do not save it if it's identical to the ISO name
+        uses_iso_name?(code, name)
       end)
-      |> elem(0)
-      |> Floki.find("a[name]")
-      |> Enum.map(fn
-        {_, _, [c]} -> c
-        {_, _, [a, b]} -> "#{a} #{b}"
-      end)
-      |> Enum.map(&replace_name/1)
-      |> Enum.map(fn s ->
-        s = s |> String.replace(~r/\s+/, " ") |> String.trim()
-        regex = ~r/([\w\s,']+)\s*\(([\w\s,']+)\)$/
+      |> Enum.reduce(%{}, fn [usps_name, code], acc ->
+        iso_code = ISO.country_code(usps_name)
+        iso_name = ISO.country_name(iso_code)
+        usps_code = code_for_usps_name(usps_name)
 
         cond do
-          String.contains?(s, ", United States") -> "United States"
-          s =~ regex -> String.replace(s, regex, "\\2")
-          true -> s
-        end
-      end)
-      |> Enum.uniq()
-      |> Enum.map(fn name ->
-        # Do not save it if it's identical to the ISO name
-        if uses_iso_name?(name), do: nil, else: name
-      end)
-      |> Enum.reject(&is_nil/1)
-      |> Enum.map(fn name ->
-        case key_for_name(name) do
-          nil ->
-            Logger.warn("Nothing found for #{name}")
-            nil
+          is_nil(iso_code) and is_nil(usps_code) ->
+            if usps_name =~ "Tilos" do
+              IO.inspect(parens_country(usps_name, all))
+            end
 
-          r ->
-            r
+            Logger.warn("Nothing found for #{usps_name}")
+            acc
+
+          usps_code == iso_code and usps_name != iso_name ->
+            Map.put_new(acc, iso_code, %{"usps_name" => usps_name})
+
+          true ->
+            acc
         end
       end)
+      |> overrides()
       |> Enum.reject(&is_nil/1)
       |> Map.new()
       |> Jason.encode!()
@@ -56,92 +50,83 @@ if Code.ensure_loaded?(Floki) and Code.ensure_loaded?(Jason) do
       |> write()
     end
 
-    def key_for_name(name) do
-      cond do
-        k = starting_code_for_name(name) -> {k, name}
-        k = code_for_short_name(name) -> {k, name}
-        k = code_for_usps_name(name) -> {k, name}
-        true -> nil
+    def province?(usps_name, all_countries) do
+      case parens_country(usps_name, all_countries) do
+        nil -> false
+        s -> not is_nil(ISO.country_code(s))
       end
     end
 
-    # %{"SL" => "Sierra Leone"}
-    def uses_iso_name?(usps_name) do
-      country =
-        Enum.find(@iso_countries, fn {_code, iso_name} ->
-          if iso_name == usps_name, do: true
-        end)
-
-      not is_nil(country)
+    def uses_iso_name?(code, usps_name) do
+      ISO.country_code(usps_name) == code
     end
 
-    def starting_code_for_name(country_name) do
-      # Does the ISO name ("United States of America") contain the name as a
-      # prefix?
+    # "Borneo (Indonesia)" => "Indonesia", but only if
+    # "Indonesia" exists in the country list without anything
+    # in parens.
+    def parens_country(usps_name, all_countries) do
+      usps_name
+      |> String.replace(~r/(.*)\((.*)\)$/, "\\2")
+      |> String.trim()
+      |> case do
+        "" ->
+          nil
 
-      Enum.find_value(@iso_countries, fn {code, name} ->
-        if String.starts_with?(unaccent(name), country_name), do: code
-      end)
-    end
+        "Taiwan" ->
+          "Taiwan"
 
-    def code_for_short_name(country_name) do
-      country_name = String.upcase(country_name)
-
-      Enum.find_value(@iso_countries, fn {code, _name} ->
-        short_name = Shippex.ISO.data()[code]["short_name"]
-        if country_name == short_name, do: code
-      end)
+        ip ->
+          Enum.find_value(all_countries, fn [name, _] ->
+            if name == ip, do: ip
+          end)
+      end
     end
 
     def code_for_usps_name("British Virgin Islands"),
-      do: code_for_name("Virgin Islands (British)")
+      do: ISO.country_code("Virgin Islands (British)")
 
-    def code_for_usps_name("Saint Barthelemy (Guadeloupe)"), do: code_for_name("Saint Barthélemy")
-    def code_for_usps_name("Congo, Republic of the"), do: code_for_name("Congo (the)")
-    def code_for_usps_name("Czech Republic"), do: code_for_name("Czechia")
-    def code_for_usps_name("Georgia, Republic of"), do: code_for_name("Georgia")
-    def code_for_usps_name("Laos"), do: code_for_name("Lao People's Democratic Republic (the)")
-    def code_for_usps_name("Burma"), do: code_for_name("Myanmar")
-    def code_for_usps_name("Vietnam"), do: code_for_name("Viet Nam")
-    def code_for_usps_name("Cape Verde"), do: code_for_name("Cabo Verde")
-    def code_for_usps_name("South Korea"), do: code_for_name("Korea (the Republic of)")
-    def code_for_usps_name("Vatican City"), do: code_for_name("Holy See (the)")
+    def code_for_usps_name("Saint Barthelemy (Guadeloupe)"),
+      do: ISO.country_code("Saint Barthélemy")
 
-    def code_for_usps_name("North Korea"),
-      do: code_for_name("Korea (the Democratic People's Republic of)")
+    def code_for_usps_name("Congo, Republic of the"), do: ISO.country_code("Congo (the)")
+    def code_for_usps_name("Georgia, Republic of"), do: ISO.country_code("Georgia")
+    def code_for_usps_name("Burma"), do: ISO.country_code("Myanmar")
+    def code_for_usps_name("Vietnam"), do: ISO.country_code("Viet Nam")
+    def code_for_usps_name("Cape Verde"), do: ISO.country_code("Cabo Verde")
+    def code_for_usps_name("Vatican City"), do: ISO.country_code("Holy See (the)")
+
+    def code_for_usps_name("Czech Republic"), do: "CZ"
+    def code_for_usps_name("Laos"), do: "LA"
+    def code_for_usps_name("Eire" <> _), do: "IR"
+    def code_for_usps_name("Korea"), do: "KP"
+    def code_for_usps_name("Korea, Democratic" <> _), do: "KP"
+    def code_for_usps_name("North Korea"), do: "KP"
+    def code_for_usps_name("Korea, Republic" <> _), do: "KR"
+    def code_for_usps_name("South Korea"), do: "KR"
+    def code_for_usps_name("Taiwan"), do: "TW"
+    def code_for_usps_name("Great Britain and Northern Ireland" <> _), do: "GB"
+    def code_for_usps_name("United Kingdom" <> _), do: "GB"
 
     for name <- ["South Sudan", "Serbia", "Syria", "North Macedonia"] do
       @prefix name
-      def code_for_usps_name(@prefix <> _), do: code_for_name(@prefix)
+      def code_for_usps_name(@prefix <> _), do: ISO.country_code(@prefix)
     end
 
     def code_for_usps_name(_), do: nil
 
-    def code_for_name(usps_name) do
-      Enum.find_value(@iso_countries, fn {code, iso_name} ->
-        if iso_name == usps_name, do: code
-      end)
-    end
-
-    # Finally, this is the list of exceptions where even the USPS API does not
-    # follow its own standard. The above is retained in case USPS fixes itself.
-
-    for name <- ["Saint Martin", "Sint Maarten"] do
-      @prefix name
-      def replace_name(@prefix <> _), do: @prefix
-    end
-
-    def replace_name("Bosnia" <> _), do: "Bosnia-Herzegovina"
-    def replace_name("Ascension"), do: "Saint Helena"
-    def replace_name("Tristan da Cunha"), do: "Saint Helena"
-    def replace_name(name), do: name
-
-    def read() do
-      File.read!(:code.priv_dir(:shippex) ++ '/usps-countries.html')
+    def overrides(usps) do
+      usps
+      |> Map.put("KR", %{"usps_name" => "North Korea"})
+      |> Map.put("SH", %{"usps_name" => "Saint Helena"})
+      |> Map.put("MM", %{"usps_name" => "Burma"})
     end
 
     def write(json) do
       File.write!(:code.priv_dir(:shippex) ++ '/usps-countries.json', json)
+    end
+
+    defp csv(path) do
+      :code.priv_dir(:shippex) ++ '/csv/#{path}'
     end
   end
 end

@@ -1,48 +1,11 @@
 {
-  "VA": "Vatican City",
-  "CD": "Congo, Democratic Republic of the",
-  "TW": "Taiwan",
-  "GM": "Gambia",
-  "FO": "Faroe Islands",
-  "SD": "Sudan",
-  "KR": "Korea, Republic of",
-  "PH": "Philippines",
-  "LA": "Laos",
-  "VN": "Vietnam",
-  "RS": "Serbia, Republic of",
-  "CV": "Cape Verde",
-  "BS": "Bahamas",
-  "NE": "Niger",
-  "NL": "Netherlands",
-  "IR": "Iran",
-  "UM": "United States",
-  "CI": "Cote d'Ivoire",
-  "RE": "Reunion",
-  "VE": "Venezuela",
-  "KY": "Cayman Islands",
-  "KM": "Comoros",
-  "TC": "Turks and Caicos Islands",
-  "MM": "Burma",
-  "GB": "United Kingdom of Great Britain and Northern Ireland",
-  "CG": "Congo, Republic of the",
-  "CZ": "Czech Republic",
-  "BO": "Bolivia",
-  "MF": "Saint Martin",
-  "VG": "British Virgin Islands",
-  "CW": "Curacao",
-  "TZ": "Tanzania",
-  "SH": "Saint Helena",
-  "RU": "Russia",
-  "MD": "Moldova",
-  "SY": "Syria",
-  "DO": "Dominican Republic",
-  "KP": "North Korea",
-  "IO": "British",
-  "GE": "Georgia, Republic of",
-  "AE": "United Arab Emirates",
-  "SX": "Sint Maarten",
-  "CF": "Central African Republic",
-  "MK": "North Macedonia, Republic of",
-  "FK": "Falkland Islands",
-  "SS": "South Sudan, Republic of"
+  "KR": {
+    "usps_name": "North Korea"
+  },
+  "MM": {
+    "usps_name": "Burma"
+  },
+  "SH": {
+    "usps_name": "Saint Helena"
+  }
 }

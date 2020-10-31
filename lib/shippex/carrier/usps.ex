@@ -420,9 +420,9 @@ defmodule Shippex.Carrier.USPS do
   end
 
   def country(code) when is_binary(code) do
-    cond do
-      name = @usps_names[code] -> name
-      name = ISO.country_code_to_name(code) -> name
+    case @usps_names[code] do
+      %{"usps_name" => name} -> name
+      _ -> ISO.country_name(code, :informal)
     end
   end
 

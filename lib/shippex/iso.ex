@@ -24,9 +24,9 @@ defmodule Shippex.ISO do
   includes countries with subdivisions.
 
       iex> countries = ISO.countries()
-      iex> countries["US"]
+      iex> get_in(countries, ["US", "name"])
       "United States of America (the)"
-      iex> countries["PR"]
+      iex> get_in(countries, ["PR", "name"])
       "Puerto Rico"
 
       iex> countries = ISO.countries([:with_subdivisions])
@@ -37,16 +37,16 @@ defmodule Shippex.ISO do
       iex> countries["PR"]
       nil
   """
-  @spec countries([atom()]) :: %{String.t() => String.t()}
+  @spec countries([atom()]) :: %{String.t() => map()}
   def countries(opts \\ []) do
     with_subdivisions? = :with_subdivisions in opts
     exclude_territories? = :exclude_territories in opts
 
-    Enum.reduce(@iso, %{}, fn {code, %{"name" => name} = country}, acc ->
+    Enum.reduce(@iso, %{}, fn {code, %{"subdivisions" => subs} = country}, acc ->
       cond do
-        with_subdivisions? and country["subdivisions"] == %{} -> acc
+        with_subdivisions? and subs == %{} -> acc
         exclude_territories? and territory?(code) -> acc
-        true -> Map.put(acc, code, name)
+        true -> Map.put(acc, code, country)
       end
     end)
   end

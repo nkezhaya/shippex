@@ -78,7 +78,7 @@ defmodule Shippex.USPS.RateTest do
   end
 
   # Generate a test for every country
-  for {code, full} <- ISO.countries(), code != "US" do
+  for {code, %{"name" => full}} <- ISO.countries(), code != "US" do
     @tag String.to_atom(code)
     @code code
     @full full

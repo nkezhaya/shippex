@@ -76,12 +76,12 @@ defmodule Shippex.Package do
 
     description =
       case attrs do
-        %{description: d} when is_bitstring(d) and d != "" ->
+        %{description: d} when is_binary(d) and d != "" ->
           d
 
         _ ->
           items
-          |> Enum.filter(&is_bitstring(&1.description))
+          |> Enum.filter(&is_binary(&1.description))
           |> Enum.map(&String.normalize(&1.description, :nfc))
           |> Enum.join(", ")
       end

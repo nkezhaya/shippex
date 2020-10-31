@@ -49,7 +49,7 @@ defmodule Shippex.Carrier do
     end
   end
 
-  def module(string) when is_bitstring(string) do
+  def module(string) when is_binary(string) do
     string
     |> String.downcase()
     |> String.to_atom()

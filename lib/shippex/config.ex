@@ -70,14 +70,14 @@ defmodule Shippex.Config do
 
   def ups_config() do
     with cfg when is_list(cfg) <- Keyword.get(config(), :ups, {:error, :not_found}),
-         sk when is_bitstring(sk) <-
+         sk when is_binary(sk) <-
            Keyword.get(cfg, :secret_key, {:error, :not_found, :secret_key}),
          sh when is_map(sh) <- Keyword.get(cfg, :shipper, {:error, :not_found, :shipper}),
-         an when is_bitstring(an) <-
+         an when is_binary(an) <-
            Keyword.get(cfg, :shipper)
            |> Map.get(:account_number, {:error, :not_found, :account_number}),
-         un when is_bitstring(an) <- Keyword.get(cfg, :username, {:error, :not_found, :username}),
-         pw when is_bitstring(pw) <- Keyword.get(cfg, :password, {:error, :not_found, :password}) do
+         un when is_binary(an) <- Keyword.get(cfg, :username, {:error, :not_found, :username}),
+         pw when is_binary(pw) <- Keyword.get(cfg, :password, {:error, :not_found, :password}) do
       %{
         username: un,
         password: pw,

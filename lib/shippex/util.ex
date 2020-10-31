@@ -19,7 +19,7 @@ defmodule Shippex.Util do
       2800
   """
   @spec price_to_cents(nil | number() | String.t()) :: integer
-  def price_to_cents(string) when is_bitstring(string) do
+  def price_to_cents(string) when is_binary(string) do
     {float, _} = Float.parse(string)
     price_to_cents(float)
   end
@@ -131,4 +131,11 @@ defmodule Shippex.Util do
     |> String.normalize(:nfd)
     |> String.replace(diacritics, "")
   end
+
+  @doc false
+  @spec blank?(term()) :: boolean()
+  def blank?(nil), do: true
+  def blank?(""), do: true
+  def blank?(s) when is_binary(s), do: String.trim(s) == ""
+  def blank?(_), do: false
 end

@@ -393,7 +393,7 @@ defmodule Shippex.Carrier.USPS do
   end
 
   @impl true
-  @not_serviced ~w(AN AQ BV CU EH FK HM IO KP LA LR MM PN SC SJ SL SO SS SY TF TJ TM YE YU)
+  @not_serviced ~w(AN AQ BV CU EH FK GS HM IO KP LA LR MM PN PS SC SJ SL SO SS TF TJ TM UM YE YU)
   def services_country?(country) when country in @not_serviced do
     false
   end
@@ -412,18 +412,29 @@ defmodule Shippex.Carrier.USPS do
   def international?(_),
     do: false
 
-  @usps_names Shippex.json_library().decode!(
-                File.read!(:code.priv_dir(:shippex) ++ '/usps-countries.json')
-              )
   def country(%Address{country: code}) do
     country(code)
   end
 
-  def country(code) when is_binary(code) do
-    case @usps_names[code] do
-      %{"usps_name" => name} -> name
-      _ -> ISO.country_name(code, :informal)
-    end
+  def country("AX"), do: "Aland Island"
+  def country("BA"), do: "Bosnia-Herzegovina"
+  def country("BQ"), do: "Bonaire"
+  def country("CC"), do: "Cocos Island"
+  def country("CI"), do: "Ivory Coast"
+  def country("CV"), do: "Cape Verde"
+  def country("CZ"), do: "Czech Republic"
+  def country("KR"), do: "South Korea"
+  def country("KP"), do: "North Korea"
+  def country("MM"), do: "Burma"
+  def country("RU"), do: "Russia"
+  def country("SH"), do: "Saint Helena"
+  def country("SY"), do: "Syria"
+  def country("VA"), do: "Vatican City"
+  def country("TZ"), do: "Tanzania"
+  def country("WF"), do: "Wallis and Futuna Islands"
+
+  def country(code) do
+    ISO.country_name(code, :informal)
   end
 
   defp container(%Shipment{package: package}) do

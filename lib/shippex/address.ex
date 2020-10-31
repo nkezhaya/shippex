@@ -25,7 +25,7 @@ defmodule Shippex.Address do
         }
 
   alias __MODULE__, as: Address
-  alias Shippex.ISO
+  alias Shippex.{ISO, Util}
 
   @default_country "US"
 
@@ -62,7 +62,7 @@ defmodule Shippex.Address do
 
         val =
           cond do
-            is_bitstring(val) -> String.trim(val)
+            is_binary(val) -> String.trim(val)
             true -> val
           end
 
@@ -85,10 +85,27 @@ defmodule Shippex.Address do
           {nil, nil, nil}
       end
 
-    {state, country} =
-      case ISO.find_subdivision_code(params["country"] || @default_country, params["state"]) do
-        {:ok, state} -> {state, String.slice(state, 0, 2)}
-        {:error, error} -> throw({:invalid_state_and_country, error})
+    country =
+      cond do
+        Util.blank?(params["country"]) ->
+          @default_country
+
+        c = ISO.find_country(params["country"]) ->
+          {code, _} = c
+          code
+
+        true ->
+          throw({:invalid_state_and_country, "invalid country #{params["country"]}"})
+      end
+
+    state =
+      if Util.blank?(params["state"]) and not subdivision_required?(country) do
+        nil
+      else
+        case ISO.find_subdivision_code(country, params["state"]) do
+          {:ok, state} -> state
+          {:error, error} -> throw({:invalid_state_and_country, error})
+        end
       end
 
     address = %Address{

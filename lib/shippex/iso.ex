@@ -127,6 +127,9 @@ defmodule Shippex.ISO do
       iex> ISO.country_code("Mexico")
       "MX"
 
+      iex> ISO.country_code("Venezuela")
+      "VE"
+
       iex> ISO.country_code("Iran")
       "IR"
 
@@ -180,13 +183,9 @@ defmodule Shippex.ISO do
     end)
   end
 
-  @formal_words ~w(united democratic republic of the and state plurinational)
   defp strip_parens(short_name) do
-    words = "(#{Enum.join(@formal_words, "|")}| )"
-
     short_name
-    |> String.replace(~r/\s*\(#{words}*\)/i, "", global: true)
-    |> String.replace(~r/\s*,#{words}*/i, "", global: true)
+    |> String.replace(~r/\(([\w\s]+)\)$/i, "", global: true)
     |> unaccent()
     |> String.trim()
   end
@@ -224,7 +223,7 @@ defmodule Shippex.ISO do
   """
   @spec subdivision_code(country_code(), String.t()) :: nil | String.t()
   def subdivision_code(country, subdivision)
-      when is_bitstring(subdivision) and is_bitstring(country) do
+      when is_binary(subdivision) and is_binary(country) do
     divisions = @iso[country]["subdivisions"]
 
     cond do
@@ -264,7 +263,44 @@ defmodule Shippex.ISO do
   end
 
   @doc """
-  Takes a subdivision and country input and returns the validated,
+  Finds the country data for the given country. May be an ISO-3166-compliant
+  country code or a string to perform a search with. Return a tuple in the
+  format `{code, data}` if a country was found; otherwise `nil`.
+
+      iex> {code, data} = ISO.find_country("United States")
+      iex> code
+      "US"
+      iex> data |> Map.get("short_name")
+      "UNITED STATES OF AMERICA"
+
+      iex> {code, data} = ISO.find_country("US")
+      iex> code
+      "US"
+      iex> data |> Map.get("short_name")
+      "UNITED STATES OF AMERICA"
+
+      iex> ISO.find_country("Invalid")
+      nil
+  """
+
+  @spec find_country(country_code() | String.t()) :: nil | {country_code(), map()}
+  def find_country(country) do
+    if code?(country) do
+      country
+    else
+      country_code(country)
+    end
+    |> case do
+      nil -> nil
+      code -> {code, @iso[code]}
+    end
+  end
+
+  defp code?(<<code::binary-size(2)>>), do: not is_nil(@iso[code])
+  defp code?(_), do: false
+
+  @doc """
+  Takes a country input and subdivision and returns the validated,
   ISO-3166-compliant subdivision code in a tuple.
 
       iex> ISO.find_subdivision_code("US", "TX")

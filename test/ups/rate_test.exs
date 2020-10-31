@@ -1,6 +1,8 @@
 defmodule Shippex.UPS.RateTest do
   use ExUnit.Case
 
+  @moduletag :skip
+
   setup do
     [shipment: Helper.valid_shipment()]
   end

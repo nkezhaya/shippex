@@ -16,7 +16,7 @@ defmodule Shippex.Carrier.USPS.Client do
     params =
       Enum.map(params, fn
         {k, v} when is_atom(k) -> {k, v}
-        {k, v} when is_bitstring(k) -> {String.to_atom(k), v}
+        {k, v} when is_binary(k) -> {String.to_atom(k), v}
       end)
 
     {:form, params}

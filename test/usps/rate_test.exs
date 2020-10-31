@@ -75,25 +75,26 @@ defmodule Shippex.USPS.RateTest do
 
       assert rate2.price < rate3.price
     end
+  end
 
-    for {code, full} <- ISO.countries(), code != "US" do
-      @tag String.to_atom(code)
-      @code code
-      @full full
-      test "rates generated for country #{@code} #{@full}", %{shipment: shipment} do
-        package = %{shipment.package | container: :variable}
-        shipment = %{shipment | package: package}
+  # Generate a test for every country
+  for {code, full} <- ISO.countries(), code != "US" do
+    @tag String.to_atom(code)
+    @code code
+    @full full
+    @prefix if not USPS.domestic?(code), do: "international", else: "domestic"
+    test "#{@prefix} rates generated for country #{@code} #{@full}" do
+      shipment =
+        Shippex.Shipment.new!(Helper.origin(), Helper.destination(@code), Helper.package())
 
-        address = %{shipment.to | country: @code}
-        shipment = %{shipment | to: address}
+      shipment = %{shipment | package: %{shipment.package | container: :variable}}
 
-        rate = USPS.fetch_rate(shipment, :usps_priority)
+      rate = USPS.fetch_rate(shipment, :usps_priority)
 
-        if Shippex.services_country?(:usps, @code) do
-          assert {:ok, _rate} = rate
-        else
-          assert {:error, %{message: _}} = rate
-        end
+      if Shippex.services_country?(:usps, @code) do
+        assert {:ok, _rate} = rate
+      else
+        assert {:error, %{message: _}} = rate
       end
     end
   end

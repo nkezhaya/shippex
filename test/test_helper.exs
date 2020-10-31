@@ -1,4 +1,5 @@
 ExUnit.start()
+ExUnit.configure(exclude: [skip: true])
 
 defmodule Helper do
   def valid_shipment(opts \\ []) do
@@ -61,7 +62,40 @@ defmodule Helper do
     })
   end
 
+  def destination(country) when is_binary(country) do
+    state =
+      if Shippex.Address.subdivision_required?(country) do
+        {_, %{"subdivisions" => subdivisions}} = Shippex.ISO.find_country(country)
+        Map.keys(subdivisions) |> hd()
+      else
+        nil
+      end
+
+    {city, zip} = city_zip(country)
+
+    Shippex.Address.new!(%{
+      first_name: "Some",
+      last_name: "Person",
+      phone: "778-123-1234",
+      address: "4575 Random Address Rd",
+      city: city,
+      state: state,
+      zip: zip,
+      country: country
+    })
+  end
+
   def destination(%Shippex.Address{} = address), do: address
+
+  defp city_zip("AS"), do: {"Pago Pago", "96799"}
+  defp city_zip("GU"), do: {"Hagatna", "96910"}
+  defp city_zip("FM"), do: {"Chuuk", "96942"}
+  defp city_zip("MH"), do: {"Majuro", "96970"}
+  defp city_zip("MP"), do: {"Saipan", "96950"}
+  defp city_zip("PR"), do: {"San Juan", "00921"}
+  defp city_zip("PW"), do: {"Ngerulmud", "96939"}
+  defp city_zip("VI"), do: {"Cruz Bay", "00830"}
+  defp city_zip(_), do: {"City", "00000"}
 
   def package(insurance \\ nil) do
     Shippex.Package.new(%{

@@ -53,12 +53,15 @@ defmodule Shippex.ISO do
 
   @doc """
   Returns true if the country with the given code is a territory of another
-  country.
+  country. This only applies to subdivisions that have their own country code.
 
       iex> ISO.territory?("PR")
       true
 
       iex> ISO.territory?("US")
+      false
+
+      iex> ISO.territory?("TX")
       false
   """
   @spec territory?(country_code()) :: boolean()

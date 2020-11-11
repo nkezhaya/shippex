@@ -4,7 +4,7 @@ defmodule Shippex.Mixfile do
   def project do
     [
       app: :shippex,
-      version: "0.9.0",
+      version: "0.10.0",
       elixir: "~> 1.9",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -49,8 +49,9 @@ defmodule Shippex.Mixfile do
       {:httpoison, ">= 0.0.0"},
       {:sweet_xml, ">= 0.0.0"},
       {:html_entities, ">= 0.0.0"},
-      {:jason, "~> 1.2", optional: true},
+      {:jason, "~> 1.2"},
       {:decimal, "~> 1.3"},
+      {:iso, "~> 1.0"},
       {:csv, "~> 2.4", optional: true, only: [:dev]}
     ]
   end

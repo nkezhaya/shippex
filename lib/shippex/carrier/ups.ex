@@ -403,8 +403,8 @@ defmodule Shippex.Carrier.UPS do
 
     # HTTPoison implementation
     def process_url(endpoint), do: base_url() <> endpoint
-    def process_request_body(body), do: Shippex.json_library().encode!(body)
-    def process_response_body(body), do: Shippex.json_library().decode!(body)
+    def process_request_body(body), do: Jason.encode!(body)
+    def process_response_body(body), do: Jason.decode!(body)
 
     defp base_url do
       case Shippex.env() do

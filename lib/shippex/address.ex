@@ -25,7 +25,7 @@ defmodule Shippex.Address do
         }
 
   alias __MODULE__, as: Address
-  alias Shippex.{ISO, Util}
+  alias Shippex.Util
 
   @default_country "US"
 

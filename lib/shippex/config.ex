@@ -3,10 +3,6 @@ defmodule Shippex.Config do
 
   alias Shippex.InvalidConfigError
 
-  def json_library() do
-    Application.get_env(:shippex, :json_library, Jason)
-  end
-
   @spec carriers() :: [Carrier.t()]
   def carriers() do
     cfg = config()

@@ -7,7 +7,7 @@ defmodule Shippex.Carrier.USPS do
   import Shippex.Address, only: [state_without_country: 1]
 
   alias Shippex.Carrier.USPS.Client
-  alias Shippex.{Address, Package, Label, Service, Shipment, Util, ISO}
+  alias Shippex.{Address, Package, Label, Service, Shipment, Util}
 
   @default_container :rectangular
   @large_containers ~w(rectangular nonrectangular variable)a

@@ -5,7 +5,7 @@ defmodule Shippex.Carrier do
   """
 
   alias Shippex.Carrier
-  alias Shippex.{ISO, Shipment, Service, Rate, Transaction}
+  alias Shippex.{Shipment, Service, Rate, Transaction}
 
   @callback fetch_rates(Shipment.t()) :: [{atom, Rate.t()}]
   @callback fetch_rate(Shipment.t(), Service.t()) :: [{atom, Rate.t()}] | {atom, Rate.t()}

@@ -19,7 +19,7 @@ defmodule Shippex do
               address: "1234 Foo St",
               city: "Foo",
               state: "TX",
-              zip: "78999"
+              postal_code: "78999"
             }
           ],
           usps: [
@@ -37,7 +37,7 @@ defmodule Shippex do
         address_line_2: nil,
         city: "Austin",
         state: "TX",
-        zip: "78703"
+        postal_code: "78703"
       })
 
       destination = Shippex.Address.new(%{
@@ -47,7 +47,7 @@ defmodule Shippex do
         address_line_2: nil,
         city: "Plano",
         state: "TX",
-        zip: "75074"
+        postal_code: "75074"
       })
 
   ## Create a package
@@ -283,7 +283,7 @@ defmodule Shippex do
         address_line_2: nil,
         city: "Austin",
         state: "TX",
-        zip: "78703"
+        postal_code: "78703"
       })
 
       case Shippex.validate_address(address) do

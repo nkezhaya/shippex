@@ -34,7 +34,7 @@ origin = Shippex.Address.new(%{
   address_line_2: nil,
   city: "Austin",
   state: "TX",
-  zip: "78703"
+  postal_code: "78703"
 })
 
 destination = Shippex.Address.new(%{
@@ -44,7 +44,7 @@ destination = Shippex.Address.new(%{
   address_line_2: nil,
   city: "Plano",
   state: "TX",
-  zip: "75074",
+  postal_code: "75074",
   country: "US" # optional
 })
 

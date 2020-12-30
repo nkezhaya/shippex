@@ -380,7 +380,7 @@ defmodule Shippex.Carrier.USPS do
           address_line_2: ~x"./Address1//text()"s,
           city: ~x"./City//text()"s,
           state: ~x"./State//text()"s,
-          zip: ~x"./Zip5//text()"s
+          postal_code: ~x"./Zip5//text()"s
         )
         |> Enum.map(fn candidate ->
           candidate

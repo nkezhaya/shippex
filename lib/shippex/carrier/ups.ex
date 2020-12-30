@@ -183,7 +183,7 @@ defmodule Shippex.Carrier.UPS do
           AddressLine: address.address,
           PoliticalDivision2: address.city,
           PoliticalDivision1: state,
-          PostcodePrimaryLow: address.zip,
+          PostcodePrimaryLow: address.postal_code,
           CountryCode: address.country
         }
       }
@@ -218,7 +218,7 @@ defmodule Shippex.Carrier.UPS do
               "address_line_2" => address.address_line_2,
               "city" => candidate["PoliticalDivision2"],
               "state" => candidate["PoliticalDivision1"],
-              "zip" => candidate["PostcodePrimaryLow"],
+              "postal_code" => candidate["PostcodePrimaryLow"],
               "country" => candidate["CountryCode"]
             })
           end)
@@ -331,7 +331,7 @@ defmodule Shippex.Carrier.UPS do
         AddressLine: Address.address_line_list(address),
         City: address.city,
         StateProvinceCode: state,
-        PostalCode: String.replace(address.zip, ~r/\s+/, ""),
+        PostalCode: String.replace(address.postal_code, ~r/\s+/, ""),
         CountryCode: address.country
       }
     }
@@ -348,7 +348,7 @@ defmodule Shippex.Carrier.UPS do
         "address_line_2" => config.shipper[:address_line_2],
         "city" => config.shipper.city,
         "state" => config.shipper.state,
-        "zip" => config.shipper.zip,
+        "postal_code" => config.shipper.postal_code,
         "country" => config.shipper[:country]
       })
 

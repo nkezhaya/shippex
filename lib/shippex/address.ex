@@ -5,10 +5,10 @@ defmodule Shippex.Address do
   """
 
   @enforce_keys ~w(first_name last_name name phone address address_line_2 city
-                   state zip country)a
+                   state postal_code country)a
 
   defstruct ~w(first_name last_name name company_name phone address
-               address_line_2 city state zip country)a
+               address_line_2 city state postal_code country)a
 
   @type t() :: %__MODULE__{
           first_name: nil | String.t(),
@@ -20,7 +20,7 @@ defmodule Shippex.Address do
           address_line_2: nil | String.t(),
           city: String.t(),
           state: String.t(),
-          zip: String.t(),
+          postal_code: String.t(),
           country: ISO.country_code()
         }
 
@@ -47,7 +47,7 @@ defmodule Shippex.Address do
         address_line_2: nil,
         city: "Austin",
         state: "TX",
-        zip: "78703"
+        postal_code: "78703"
       })
   """
   @spec new(map()) :: {:ok, t()} | {:error, String.t()}
@@ -118,7 +118,7 @@ defmodule Shippex.Address do
       address_line_2: params["address_line_2"],
       city: params["city"],
       state: state,
-      zip: String.trim(params["zip"] || ""),
+      postal_code: String.trim(params["postal_code"] || ""),
       country: country
     }
 
@@ -187,7 +187,7 @@ defmodule Shippex.Address do
       ...>   address_line_2: nil,
       ...>   city: "Austin",
       ...>   state: "US-TX",
-      ...>   zip: "78703",
+      ...>   postal_code: "78703",
       ...>   country: "US"
       ...>  })
       iex> Address.state_without_country(address)

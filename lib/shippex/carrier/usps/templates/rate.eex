@@ -19,7 +19,7 @@
       <Height><%= package.height %></Height>
       <Girth></Girth>
 
-      <OriginZip><%= @shipment.from.zip %></OriginZip>
+      <OriginZip><%= @shipment.from.postal_code %></OriginZip>
 
       <%= if package.insurance do %>
         <ExtraServices>
@@ -34,8 +34,8 @@
 
     <Package ID="0">
       <Service><%= Service.service_code(@service) %></Service>
-      <ZipOrigination><%= @shipment.from.zip %></ZipOrigination>
-      <ZipDestination><%= @shipment.to.zip %></ZipDestination>
+      <ZipOrigination><%= @shipment.from.postal_code %></ZipOrigination>
+      <ZipDestination><%= @shipment.to.postal_code %></ZipDestination>
       <Pounds>0</Pounds>
       <Ounces><%= weight_in_ounces(@shipment.package.weight) %></Ounces>
       <Container><%= container(@shipment) %></Container>

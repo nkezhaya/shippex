@@ -12,7 +12,7 @@ defmodule Shippex.USPS.AddressTest do
         "address" => "404 S Figueroa St",
         "city" => "Los Angeles",
         "state" => "CA",
-        "zip" => "90071"
+        "postal_code" => "90071"
       })
 
     {:ok, candidates} = Shippex.validate_address(valid_address, carrier: :usps)
@@ -39,7 +39,7 @@ defmodule Shippex.USPS.AddressTest do
         "address_line_2" => "Suite 101",
         "city" => "Los Angeles",
         "state" => "CA",
-        "zip" => "90071"
+        "postal_code" => "90071"
       })
 
     assert valid_address.address_line_2 == "Suite 101"
@@ -62,7 +62,7 @@ defmodule Shippex.USPS.AddressTest do
         "address" => "9999 Wat Wat",
         "city" => "San Francisco",
         "state" => "CA",
-        "zip" => "90071"
+        "postal_code" => "90071"
       })
 
     {:error, _} = Shippex.validate_address(invalid_address, carrier: :usps)

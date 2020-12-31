@@ -53,15 +53,14 @@ defmodule Shippex.Mixfile do
       {:httpoison, ">= 0.0.0"},
       {:jason, "~> 1.2", optional: true},
       {:sweet_xml, ">= 0.0.0"},
-
       {:csv, "~> 2.4", optional: true, only: [:dev]},
-      {:ex_doc, ">= 0.0.0", only: :dev}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 
   defp docs do
     [
-      main: "readme",
+      main: "Shippex",
       source_url: @source_url,
       extras: ["README.md"]
     ]

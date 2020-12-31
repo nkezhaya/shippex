@@ -167,6 +167,12 @@ defmodule Shippex.Carrier.UPS do
 
   @impl true
   def validate_address(%Address{} = address) do
+    state =
+      case address.state do
+        nil -> nil
+        _ -> state_without_country(address)
+      end
+
     xav_params = %{
       XAVRequest: %{
         Request: %{
@@ -176,7 +182,7 @@ defmodule Shippex.Carrier.UPS do
         AddressKeyFormat: %{
           AddressLine: address.address,
           PoliticalDivision2: address.city,
-          PoliticalDivision1: state_without_country(address),
+          PoliticalDivision1: state,
           PostcodePrimaryLow: address.zip,
           CountryCode: address.country
         }
@@ -311,6 +317,12 @@ defmodule Shippex.Carrier.UPS do
   end
 
   defp address_params(%Address{} = address) do
+    state =
+      case address.state do
+        nil -> nil
+        _ -> state_without_country(address)
+      end
+
     %{
       Name: address.name,
       AttentionName: address.name,
@@ -318,7 +330,7 @@ defmodule Shippex.Carrier.UPS do
       Address: %{
         AddressLine: Address.address_line_list(address),
         City: address.city,
-        StateProvinceCode: state_without_country(address),
+        StateProvinceCode: state,
         PostalCode: String.replace(address.zip, ~r/\s+/, ""),
         CountryCode: address.country
       }
@@ -403,8 +415,8 @@ defmodule Shippex.Carrier.UPS do
 
     # HTTPoison implementation
     def process_url(endpoint), do: base_url() <> endpoint
-    def process_request_body(body), do: Shippex.json_library().encode!(body)
-    def process_response_body(body), do: Shippex.json_library().decode!(body)
+    def process_request_body(body), do: Jason.encode!(body)
+    def process_response_body(body), do: Jason.decode!(body)
 
     defp base_url do
       case Shippex.env() do

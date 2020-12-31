@@ -1,7 +1,6 @@
 defmodule Shippex.USPS.RateTest do
   use ExUnit.Case
 
-  alias Shippex.ISO
   alias Shippex.Carrier.USPS
 
   describe "domestic" do

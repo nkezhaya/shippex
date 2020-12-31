@@ -7,7 +7,7 @@ defmodule Shippex.Carrier.USPS do
   import Shippex.Address, only: [state_without_country: 1]
 
   alias Shippex.Carrier.USPS.Client
-  alias Shippex.{Address, Package, Label, Service, Shipment, Util, ISO}
+  alias Shippex.{Address, Package, Label, Service, Shipment, Util}
 
   @default_container :rectangular
   @large_containers ~w(rectangular nonrectangular variable)a
@@ -393,7 +393,7 @@ defmodule Shippex.Carrier.USPS do
   end
 
   @impl true
-  @not_serviced ~w(AN AQ BV CU EH FK GS HM IO KP LA LR MM PN PS SC SJ SL SO SS TF TJ TM UM YE YU)
+  @not_serviced ~w(AN AQ BV CU EH FK GS HM IO KP LA LR MM PM PN PS SC SJ SL SO SS TF TJ TM UM YE YU)
   def services_country?(country) when country in @not_serviced do
     false
   end

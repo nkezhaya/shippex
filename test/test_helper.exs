@@ -16,7 +16,7 @@ defmodule Helper do
       address: "3209 French Pl",
       address_line_2: nil,
       city: "Austin",
-      state: "TX",
+      state: "US-TX",
       zip: "78722"
     })
   end
@@ -31,7 +31,7 @@ defmodule Helper do
       address: "192 Rainbird Lane",
       address_line_2: nil,
       city: "Wappapello",
-      state: "MO",
+      state: "US-MO",
       zip: "63966"
     })
   end
@@ -43,7 +43,7 @@ defmodule Helper do
       phone: "778-123-1234",
       address: "4575 Clancy Loranger Way",
       city: "Vancouver",
-      state: "BC",
+      state: "CA-BC",
       zip: "V5Y 2M4",
       country: "CA"
     })
@@ -56,7 +56,7 @@ defmodule Helper do
       phone: "123-123-1234",
       address: "Ferrol 4",
       city: "Ciudad de México",
-      state: "CMX",
+      state: "MX-CMX",
       zip: "03100",
       country: "MX"
     })
@@ -64,11 +64,12 @@ defmodule Helper do
 
   def destination(country) when is_binary(country) do
     state =
-      if Shippex.Address.subdivision_required?(country) do
-        {_, %{"subdivisions" => subdivisions}} = Shippex.ISO.find_country(country)
-        Map.keys(subdivisions) |> hd()
+      with true <- Shippex.Address.subdivision_required?(country),
+           {_, %{"subdivisions" => subdivisions}} <- ISO.find_country(country),
+           [sub | _] <- subdivisions do
+        sub
       else
-        nil
+        _ -> nil
       end
 
     {city, zip} = city_zip(country)

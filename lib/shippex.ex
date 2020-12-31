@@ -221,9 +221,6 @@ defmodule Shippex do
   defdelegate validate_address(address, opts \\ []), to: Address, as: :validate
 
   @doc false
-  defdelegate json_library(), to: Config
-
-  @doc false
   defdelegate carriers(), to: Config
 
   @doc false

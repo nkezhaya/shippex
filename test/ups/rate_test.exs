@@ -1,72 +1,26 @@
 defmodule Shippex.UPS.RateTest do
   use ExUnit.Case
 
-  @moduletag :skip
+  alias Shippex.Carrier.UPS
 
-  setup do
-    [shipment: Helper.valid_shipment()]
-  end
+  # Generate a test for every country
+  for {code, %{"name" => full}} <- ISO.countries(), code in ~w(CA MX) do
+    @tag String.to_atom(code)
+    @code code
+    @full full
+    test "rates generated for country #{@code} #{@full}" do
+      shipment =
+        Shippex.Shipment.new!(Helper.origin(), Helper.destination(@code), Helper.package())
 
-  test "rates generated, label fetched", %{shipment: shipment} do
-    rates(shipment)
-  end
+      shipment = %{shipment | package: %{shipment.package | container: :variable}}
 
-  test "rates generated, label fetched with metric", %{shipment: shipment} do
-    Application.put_env(:shippex, :distance_unit, :cm)
-    Application.put_env(:shippex, :weight_unit, :kg)
-
-    rates(shipment)
-  end
-
-  test "rates generated for canada", %{shipment: shipment} do
-    destination =
-      Shippex.Address.new!(%{
-        name: "Canada Name",
-        phone: "123-123-1234",
-        address: "655 Burrard St",
-        city: "Vancouver",
-        state: "BC",
-        zip: "V6C 2R7",
-        country: "CA"
-      })
-
-    shipment = Shippex.Shipment.new!(shipment.from, destination, shipment.package)
-
-    rates(shipment)
-  end
-
-  test "rates generated for mexico", %{shipment: shipment} do
-    destination =
-      Shippex.Address.new!(%{
-        name: "Mexico Name",
-        phone: "123-123-1234",
-        address: "Ferrol 4",
-        city: "Ciudad de México",
-        state: "CMX",
-        zip: "03100",
-        country: "MX"
-      })
-
-    shipment = Shippex.Shipment.new!(shipment.from, destination, shipment.package)
-
-    rates(shipment)
-  end
-
-  defp rates(shipment) do
-    # Fetch rates
-    rates = Shippex.Carrier.UPS.fetch_rates(shipment)
-
-    assert rates
-
-    Enum.each(rates, fn rate ->
-      {:ok, _} = rate
-    end)
-
-    # Accept one of the services and print the label
-    {:ok, rate} = rates |> Enum.shuffle() |> hd
-
-    {:ok, label} = Shippex.Carrier.UPS.create_transaction(shipment, rate.service)
-
-    assert label
+      for rate <- UPS.fetch_rates(shipment) do
+        if Shippex.services_country?(:ups, @code) do
+          assert {:ok, _rate} = rate
+        else
+          assert {:error, %{message: _}} = rate
+        end
+      end
+    end
   end
 end

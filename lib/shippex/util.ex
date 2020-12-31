@@ -132,10 +132,52 @@ defmodule Shippex.Util do
     |> String.replace(diacritics, "")
   end
 
-  @doc false
+  @doc ~S"""
+  Returns `true` for `nil`, empty strings, and strings only containing
+  whitespace. Returns `false` otherwise.
+
+      iex> Util.blank?(nil)
+      true
+      iex> Util.blank?("")
+      true
+      iex> Util.blank?("   ")
+      true
+      iex> Util.blank?(" \t\r\n ")
+      true
+      iex> Util.blank?("Test")
+      false
+      iex> Util.blank?(100)
+      false
+  """
   @spec blank?(term()) :: boolean()
   def blank?(nil), do: true
   def blank?(""), do: true
   def blank?(s) when is_binary(s), do: String.trim(s) == ""
   def blank?(_), do: false
+
+  @doc """
+  Returns the given map with keys converted to strings, and the values trimmed
+  (if the values are also strings).
+
+      iex> Util.stringify_and_trim(%{foo: "  bar  "}) 
+      %{"foo" => "bar"}
+  """
+  @spec stringify_and_trim(map()) :: map()
+  def stringify_and_trim(params) do
+    for {key, val} <- params, into: %{} do
+      key =
+        cond do
+          is_atom(key) -> Atom.to_string(key)
+          true -> key
+        end
+
+      val =
+        cond do
+          is_binary(val) -> String.trim(val)
+          true -> val
+        end
+
+      {key, val}
+    end
+  end
 end

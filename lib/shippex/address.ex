@@ -52,22 +52,7 @@ defmodule Shippex.Address do
   """
   @spec new(map()) :: {:ok, t()} | {:error, String.t()}
   def new(params) when is_map(params) do
-    params =
-      for {key, val} <- params, into: %{} do
-        key =
-          cond do
-            is_atom(key) -> Atom.to_string(key)
-            true -> key
-          end
-
-        val =
-          cond do
-            is_binary(val) -> String.trim(val)
-            true -> val
-          end
-
-        {key, val}
-      end
+    params = Util.stringify_and_trim(params)
 
     {first_name, last_name, name} =
       cond do

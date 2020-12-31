@@ -1,4 +1,5 @@
 defmodule Shippex.Carrier.Dummy do
+  @moduledoc false
   @behaviour Shippex.Carrier
 
   @impl true

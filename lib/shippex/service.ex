@@ -6,19 +6,20 @@ defmodule Shippex.Service do
 
   Service fields are:
 
-    * `id`          - A unique Shippex ID that can be used to perform lookups or fetch rates
-    * `carrier`     - The atom representing the carrier
-    * `code`        - Internally used by Shippex for API requests
-    * `description` - A user-friendly string containing the name of the service
+    * `:id`          - A unique Shippex ID that can be used to perform lookups or fetch rates
+    * `:carrier`     - The atom representing the carrier
+    * `:code`        - Internally used by Shippex for API requests
+    * `:description` - A user-friendly string containing the name of the service
 
+  ## Example
 
-      Shippex.Service.services_for_carrier(:ups)
-      [
-        %Shippex.Service{id: :ups_next_day_air, carrier: :ups, description: "UPS Next Day Air"},
-        %Shippex.Service{id: :ups_second_day_air, carrier: :ups, description: "UPS 2nd Day Air"},
-        %Shippex.Service{id: :ups_three_day_select, carrier: :ups, description: "UPS 3 Day Select"},
-        %Shippex.Service{id: :ups_ground, carrier: :ups, description: "UPS Ground"}
-      ]
+        iex> Shippex.Service.services_for_carrier(:ups)
+        [
+          %Shippex.Service{id: :ups_next_day_air, carrier: :ups, description: "UPS Next Day Air"},
+          %Shippex.Service{id: :ups_second_day_air, carrier: :ups, description: "UPS 2nd Day Air"},
+          %Shippex.Service{id: :ups_three_day_select, carrier: :ups, description: "UPS 3 Day Select"},
+          %Shippex.Service{id: :ups_ground, carrier: :ups, description: "UPS Ground"}
+        ]
   """
 
   alias __MODULE__, as: S
@@ -27,7 +28,7 @@ defmodule Shippex.Service do
   @enforce_keys [:id, :carrier, :description]
   defstruct [:id, :carrier, :description]
 
-  @type t :: %__MODULE__{
+  @type t() :: %__MODULE__{
           id: atom(),
           carrier: Carrier.t(),
           description: String.t()

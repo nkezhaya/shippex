@@ -65,8 +65,8 @@ defmodule Helper do
   def destination(country) when is_binary(country) do
     state =
       with true <- Shippex.Address.subdivision_required?(country),
-           {_, %{"subdivisions" => subdivisions}} <- ISO.find_country(country),
-           [sub | _] <- subdivisions do
+           {_, %{"subdivisions" => %{} = subdivisions}} <- ISO.find_country(country),
+           [sub | _] <- Map.keys(subdivisions) do
         sub
       else
         _ -> nil

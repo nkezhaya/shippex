@@ -16,7 +16,7 @@ Add `shippex` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:shippex, "~> 0.9"}]
+  [{:shippex, "~> 0.11"}]
 end
 ```
 
@@ -48,7 +48,7 @@ config :shippex,
         address: "1234 Foo St",
         city: "Foo",
         state: "TX",
-        zip: "78999"
+        postal_code: "78999"
       }
     ],
     usps: [

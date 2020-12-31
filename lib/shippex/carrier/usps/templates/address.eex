@@ -19,12 +19,12 @@
 <%= if international?(@shipment) and @address == :to do %>
   <<%= prefix %>Province><%= address.state %></<%= prefix %>Province>
   <<%= prefix %>Country><%= country(address) %></<%= prefix %>Country>
-  <<%= prefix %>PostalCode><%= address.zip %></<%= prefix %>PostalCode>
+  <<%= prefix %>PostalCode><%= address.postal_code %></<%= prefix %>PostalCode>
   <<%= prefix %>POBoxFlag>N</<%= prefix %>POBoxFlag>
   <<%= prefix %>Phone><%= address.phone %></<%= prefix %>Phone>
 <% else %>
   <<%= prefix %>State><%= state_without_country(address) %></<%= prefix %>State>
-  <<%= prefix %>Zip5><%= address.zip %></<%= prefix %>Zip5>
+  <<%= prefix %>Zip5><%= address.postal_code %></<%= prefix %>Zip5>
   <<%= prefix %>Zip4></<%= prefix %>Zip4>
   <% phone = (address.phone || "") |> String.replace(~r/^\+1/, "") |> String.replace(~r/\D+/, "") %>
   <<%= prefix %>Phone><%= phone %></<%= prefix %>Phone>

@@ -17,7 +17,7 @@ defmodule Helper do
       address_line_2: nil,
       city: "Austin",
       state: "US-TX",
-      zip: "78722"
+      postal_code: "78722"
     })
   end
 
@@ -32,7 +32,7 @@ defmodule Helper do
       address_line_2: nil,
       city: "Wappapello",
       state: "US-MO",
-      zip: "63966"
+      postal_code: "63966"
     })
   end
 
@@ -44,7 +44,7 @@ defmodule Helper do
       address: "4575 Clancy Loranger Way",
       city: "Vancouver",
       state: "CA-BC",
-      zip: "V5Y 2M4",
+      postal_code: "V5Y 2M4",
       country: "CA"
     })
   end
@@ -57,7 +57,7 @@ defmodule Helper do
       address: "Ferrol 4",
       city: "Ciudad de México",
       state: "MX-CMX",
-      zip: "03100",
+      postal_code: "03100",
       country: "MX"
     })
   end
@@ -72,7 +72,7 @@ defmodule Helper do
         _ -> nil
       end
 
-    {city, zip} = city_zip(country)
+    {city, postal_code} = city_postal_code(country)
 
     Shippex.Address.new!(%{
       first_name: "Some",
@@ -81,22 +81,22 @@ defmodule Helper do
       address: "4575 Random Address Rd",
       city: city,
       state: state,
-      zip: zip,
+      postal_code: postal_code,
       country: country
     })
   end
 
   def destination(%Shippex.Address{} = address), do: address
 
-  defp city_zip("AS"), do: {"Pago Pago", "96799"}
-  defp city_zip("GU"), do: {"Hagatna", "96910"}
-  defp city_zip("FM"), do: {"Chuuk", "96942"}
-  defp city_zip("MH"), do: {"Majuro", "96970"}
-  defp city_zip("MP"), do: {"Saipan", "96950"}
-  defp city_zip("PR"), do: {"San Juan", "00921"}
-  defp city_zip("PW"), do: {"Ngerulmud", "96939"}
-  defp city_zip("VI"), do: {"Cruz Bay", "00830"}
-  defp city_zip(_), do: {"City", "00000"}
+  defp city_postal_code("AS"), do: {"Pago Pago", "96799"}
+  defp city_postal_code("GU"), do: {"Hagatna", "96910"}
+  defp city_postal_code("FM"), do: {"Chuuk", "96942"}
+  defp city_postal_code("MH"), do: {"Majuro", "96970"}
+  defp city_postal_code("MP"), do: {"Saipan", "96950"}
+  defp city_postal_code("PR"), do: {"San Juan", "00921"}
+  defp city_postal_code("PW"), do: {"Ngerulmud", "96939"}
+  defp city_postal_code("VI"), do: {"Cruz Bay", "00830"}
+  defp city_postal_code(_), do: {"City", "00000"}
 
   def package(insurance \\ nil) do
     Shippex.Package.new(%{

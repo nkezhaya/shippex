@@ -6,7 +6,7 @@
     <Address2><%= @address.address %></Address2>
     <City><%= @address.city %></City>
     <State><%= @address.state %></State>
-    <Zip5><%= @address.zip %></Zip5>
+    <Zip5><%= @address.postal_code %></Zip5>
     <Zip4></Zip4>
   </Address>
 </AddressValidateRequest>

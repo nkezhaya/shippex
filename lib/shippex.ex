@@ -205,7 +205,7 @@ defmodule Shippex do
         address_line_2: nil,
         city: "Austin",
         state: "TX",
-        zip: "78703"
+        postal_code: "78703"
       })
 
       case Shippex.validate_address(address) do

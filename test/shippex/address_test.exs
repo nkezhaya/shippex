@@ -10,7 +10,7 @@ defmodule Shippex.AddressTest do
         "address" => "9999 Hobby Ln",
         "city" => "Austin",
         "state" => "Texas",
-        "zip" => "78703",
+        "postal_code" => "78703",
         "country" => "US"
       })
 
@@ -25,7 +25,7 @@ defmodule Shippex.AddressTest do
         "address" => "9999 Hobby Ln",
         "city" => "Austin",
         "state" => "Texas",
-        "zip" => "78703",
+        "postal_code" => "78703",
         "country" => "United States"
       })
 
@@ -42,7 +42,7 @@ defmodule Shippex.AddressTest do
         "address" => [address_line_1, address_line_2],
         "city" => "Austin",
         "state" => "Texas",
-        "zip" => "78703"
+        "postal_code" => "78703"
       })
 
     assert address.address == address_line_1
@@ -57,7 +57,7 @@ defmodule Shippex.AddressTest do
         "city" => "Singapore",
         "state" => "SG-01",
         "country" => "SG",
-        "zip" => "310260"
+        "postal_code" => "310260"
       })
 
     # Valid country, invalid state
@@ -68,7 +68,7 @@ defmodule Shippex.AddressTest do
         "city" => "Singapore",
         "state" => "SG-ABCABC",
         "country" => "SG",
-        "zip" => "310260"
+        "postal_code" => "310260"
       })
 
     assert error =~ ~r/invalid subdivision/i
@@ -81,7 +81,7 @@ defmodule Shippex.AddressTest do
         "city" => "Singapore",
         "state" => "SG-01",
         "country" => "SGG",
-        "zip" => "310260"
+        "postal_code" => "310260"
       })
 
     assert error =~ ~r/invalid country/i

@@ -1,6 +1,8 @@
 defmodule Shippex.Mixfile do
   use Mix.Project
 
+  @source_url "https://github.com/whitepaperclip/shippex"
+
   def project do
     [
       app: :shippex,
@@ -10,7 +12,8 @@ defmodule Shippex.Mixfile do
       start_permanent: Mix.env() == :prod,
       description: description(),
       package: package(),
-      deps: deps()
+      deps: deps(),
+      docs: docs()
     ]
   end
 
@@ -39,13 +42,13 @@ defmodule Shippex.Mixfile do
       ],
       maintainers: ["Nick Kezhaya"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/whitepaperclip/shippex"}
+      links: %{"GitHub" => @source_url}
     ]
   end
 
   defp deps do
     [
-      {:ex_doc, ">= 0.0.0", only: :doc},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:httpoison, ">= 0.0.0"},
       {:sweet_xml, ">= 0.0.0"},
       {:html_entities, ">= 0.0.0"},
@@ -53,6 +56,14 @@ defmodule Shippex.Mixfile do
       {:decimal, "~> 1.3"},
       {:iso, "~> 1.0"},
       {:csv, "~> 2.4", optional: true, only: [:dev]}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "Shippex",
+      source_url: @source_url,
+      extras: ["README.md"]
     ]
   end
 end

@@ -16,7 +16,7 @@ Add `shippex` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:shippex, "~> 0.6"}]
+  [{:shippex, "~> 0.9"}]
 end
 ```
 
@@ -122,8 +122,3 @@ Carrier support:
 - [x] UPS
 - [x] USPS
 - [ ] FedEx
-
-
-## License
-
-MIT License. Copyright (c) 2016-2020 Nick Kezhaya.

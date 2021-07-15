@@ -16,7 +16,7 @@ Add `shippex` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:shippex, "~> 0.11"}]
+  [{:shippex, "~> 0.12"}]
 end
 ```
 

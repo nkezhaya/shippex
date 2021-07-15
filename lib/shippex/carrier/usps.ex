@@ -393,7 +393,7 @@ defmodule Shippex.Carrier.USPS do
   end
 
   @impl true
-  @not_serviced ~w(AN AQ BV CF CU EH FK GS HM IO KP LA LR MM PM PN PS SC SJ SL SO SS TF TJ TM UM YE YU)
+  @not_serviced ~w(AN AQ BV CU EH ER FK GS HM IO KP LA MM PM PN PS SJ SO SS SY TF TJ TM UM WS YE YU)
   def services_country?(country) when country in @not_serviced do
     false
   end

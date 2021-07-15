@@ -10,7 +10,7 @@
     <ShippingContents>
       <%= for item <- package.items do %>
         <ItemDetail>
-          <Description><%= item.description %></Description>
+          <Description><%= HtmlEntities.encode(item.description) %></Description>
           <Quantity>1</Quantity>
           <Value><%= Util.price_to_dollars(item.monetary_value) %></Value>
           <NetPounds>0</NetPounds>

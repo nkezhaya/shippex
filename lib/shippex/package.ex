@@ -46,7 +46,7 @@ defmodule Shippex.Package do
           weight: number(),
           monetary_value: number(),
           girth: nil | number(),
-          container: nil | String.t(),
+          container: nil | atom() | String.t(),
           insurance: nil | number(),
           description: nil | String.t(),
           items: [Item.t()]

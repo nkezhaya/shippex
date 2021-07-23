@@ -57,18 +57,20 @@ defmodule Shippex.USPS.RateTest do
     end
 
     test "rates generated with insurance", %{shipment: shipment} do
-      package = %{shipment.package | container: :variable, insurance: nil}
+      package = %{shipment.package | container: :variable}
+
+      package = %{package | insurance: nil}
       shipment = %{shipment | package: package}
       {:ok, rate1} = USPS.fetch_rate(shipment, :usps_priority)
 
-      package = %{shipment.package | container: :variable, insurance: 200_00}
+      package = %{package | insurance: 200_00}
       shipment = %{shipment | package: package}
       {:ok, rate2} = USPS.fetch_rate(shipment, :usps_priority)
 
       # International priority shipments come with $200 insured
       assert rate1.price == rate2.price
 
-      package = %{shipment.package | container: :variable, insurance: 300_00}
+      package = %{package | insurance: 300_00}
       shipment = %{shipment | package: package}
       {:ok, rate3} = USPS.fetch_rate(shipment, :usps_priority)
 

@@ -12,7 +12,7 @@ defmodule Shippex.Carrier.USPS do
   @default_container :rectangular
   @large_containers ~w(rectangular nonrectangular variable)a
 
-  for f <- ~w(address cancel label rate validate_address)a do
+  for f <- ~w(address cancel label rate track validate_address)a do
     EEx.function_from_file(:defp, :"render_#{f}", __DIR__ <> "/usps/templates/#{f}.eex", [
       :assigns
     ])
@@ -389,6 +389,19 @@ defmodule Shippex.Carrier.USPS do
         end)
 
       {:ok, candidates}
+    end
+  end
+
+  @impl true
+  def track_packages(tracking_number) when is_binary(tracking_number) do
+    track_packages([tracking_number])
+  end
+
+  def track_packages(tracking_numbers) when is_list(tracking_numbers) do
+    request = render_track(tracking_numbers: tracking_numbers)
+
+    with_response Client.post("ShippingAPI.dll", %{API: "TrackV2", XML: request}) do
+      {:ok, body}
     end
   end
 

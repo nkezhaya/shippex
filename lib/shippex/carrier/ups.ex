@@ -166,6 +166,12 @@ defmodule Shippex.Carrier.UPS do
   end
 
   @impl true
+  def track_packages(_tracking_numbers) do
+    # TODO
+    raise "Not yet implemented for UPS"
+  end
+
+  @impl true
   def validate_address(%Address{} = address) do
     state =
       case address.state do

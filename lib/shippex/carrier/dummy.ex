@@ -41,6 +41,11 @@ defmodule Shippex.Carrier.Dummy do
     true
   end
 
+  @impl true
+  def track_packages(tracking_numbers) do
+    {:ok, tracking_numbers}
+  end
+
   defp rate() do
     %Shippex.Rate{
       service: %Shippex.Service{

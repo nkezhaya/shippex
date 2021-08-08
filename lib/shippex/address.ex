@@ -248,4 +248,29 @@ defmodule Shippex.Address do
   def subdivision_required?(_) do
     false
   end
+
+  @doc """
+  Returns `true` if addresses for the country require a postal code to be
+  specified to validate addresses.
+
+      iex> Address.postal_code_required?("US")
+      true
+
+      iex> Address.postal_code_required?("CN")
+      true
+
+      iex> Address.postal_code_required?("HK")
+      false
+  """
+  @spec postal_code_required?(ISO.country_code()) :: boolean()
+
+  for country_code <- ~w(AO AG AW BS BZ BJ BO BQ BW BF BI CM CF TD KM CG CD CK
+    CI CW DJ DM TL GQ ER FJ TF GA GM GD GY HM HK KI KP LY MW ML MR NR NU QA RW
+    KN ST SC SL SX SB SS SR SY TG TK TO TV UG AE VU ZW) do
+    def postal_code_required?(unquote(country_code)), do: false
+  end
+
+  def postal_code_required?(_) do
+    true
+  end
 end

@@ -17,7 +17,7 @@ defmodule Shippex.Carrier do
   @callback track_packages(String.t() | [String.t()]) :: {:ok | :error, any()}
   @callback services_country?(ISO.country_code()) :: boolean()
 
-  @type t :: atom
+  @type t() :: atom()
 
   @doc """
   Fetches a Carrier module by its atom/string representation.

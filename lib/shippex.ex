@@ -99,7 +99,7 @@ defmodule Shippex do
       |> Enum.map(fn {:ok, rates} -> rates end)
       |> List.flatten()
       |> Enum.reject(fn
-        {atom, _} -> not (atom in [:ok, :error])
+        {atom, _} -> atom not in [:ok, :error]
         _ -> true
       end)
 
@@ -185,6 +185,14 @@ defmodule Shippex do
   @spec services_country?(Carrier.t(), ISO.country_code()) :: boolean()
   def services_country?(carrier, country) do
     Carrier.module(carrier).services_country?(country)
+  end
+
+  @doc """
+  Returns the status for the given tracking numbers.
+  """
+  @spec track_packages(Carrier.t(), [String.t()]) :: {atom(), response()}
+  def track_packages(carrier, tracking_numbers) do
+    Carrier.module(carrier).track_packages(tracking_numbers)
   end
 
   @doc """

@@ -6,7 +6,7 @@ defmodule Shippex.Mixfile do
   def project do
     [
       app: :shippex,
-      version: "0.14.0",
+      version: "0.15.0",
       elixir: "~> 1.9",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,

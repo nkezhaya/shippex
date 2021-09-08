@@ -401,7 +401,13 @@ defmodule Shippex.Carrier.USPS do
     request = render_track(tracking_numbers: tracking_numbers)
 
     with_response Client.post("ShippingAPI.dll", %{API: "TrackV2", XML: request}) do
-      {:ok, body}
+      {:ok,
+       xpath(
+         body,
+         ~x"//TrackResponse//TrackInfo"l,
+         summary: ~x"./TrackSummary//text()"s,
+         details: ~x"./TrackDetail//text()"l
+       )}
     end
   end
 

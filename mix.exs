@@ -54,7 +54,7 @@ defmodule Shippex.Mixfile do
       {:html_entities, ">= 0.0.0"},
       {:jason, "~> 1.2"},
       {:decimal, "~> 1.3"},
-      {:iso, "~> 1.1"},
+      {:iso, "~> 1.2"},
       {:csv, "~> 2.4", optional: true, only: [:dev]}
     ]
   end

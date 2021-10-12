@@ -33,6 +33,19 @@ defmodule Shippex.AddressTest do
     assert address.country == "US"
   end
 
+  test "initialize address having non-standard subdivision" do
+    address = Shippex.Address.new!(%{
+      "address" => "18 Main St, Balleese Lower",
+      "city" => "Rathdrum",
+      "state" => "Co. Wicklow",
+      "postal_code" => "A67 EY91",
+      "country" => "Ireland"
+    })
+
+    assert address.state == "IE-WW"
+    assert address.country == "IE"
+  end
+
   test "address handles the address formatting" do
     address_line_1 = "9999 Hobby Ln"
     address_line_2 = "Ste 900"

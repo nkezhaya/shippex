@@ -4,7 +4,6 @@ defmodule Shippex.Carrier do
   function for fetching the Carrier module.
   """
 
-  alias Shippex.Carrier
   alias Shippex.{Shipment, Service, Rate, Transaction}
 
   @callback fetch_rates(Shipment.t()) :: [{atom, Rate.t()}]
@@ -32,11 +31,17 @@ defmodule Shippex.Carrier do
   @spec module(atom | String.t()) :: module()
   def module(carrier) when is_atom(carrier) do
     # NOTE, this might be a good place to use a protocol?
+
+    carriers =
+      Application.get_env(:shippex, :carriers, [])
+      |> Enum.with_index(fn(c, i) ->
+        module = List.first(c).module
+        {i, module}
+      end)
+
     module =
-      case carrier do
-        :ups -> Carrier.UPS
-        :usps -> Carrier.USPS
-        :dummy -> Carrier.Dummy
+      case Enum.filter(carriers, fn {x, _} -> x == carrier end) do
+        {_, carrier_module} -> carrier_module
         c -> raise "#{c} is not a supported carrier at this time."
       end
 

@@ -38,6 +38,7 @@ config :shippex,
   currency: :usd, # :usd, :can, :mxn, :eur
   carriers: [
     ups: [
+      module: Shippex.Carrier.UPS,
       username: "MyUsername",
       password: "MyPassword",
       secret_key: "123123",
@@ -52,6 +53,7 @@ config :shippex,
       }
     ],
     usps: [
+      module: Shippex.Carrier.USPS,
       username: "MyUsername",
       password: "MyPassword"
     ]

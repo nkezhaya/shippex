@@ -5,14 +5,8 @@ defmodule Shippex.Config do
 
   @spec carriers() :: [Carrier.t()]
   def carriers() do
-    cfg = config()
-
-    ups = if Keyword.get(cfg, :ups), do: :ups
-    fedex = if Keyword.get(cfg, :fedex), do: :fedex
-    usps = if Keyword.get(cfg, :usps), do: :usps
-    dummy = if Keyword.get(cfg, :dummy), do: :dummy
-
-    Enum.reject([ups, fedex, usps, dummy], &is_nil/1)
+    config()
+    |> Enum.map_with_index(fn _config, i -> i end)
   end
 
   @spec config() :: Keyword.t() | none()

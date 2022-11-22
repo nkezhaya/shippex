@@ -5,7 +5,7 @@ defmodule Shippex.Carrier.UPS do
   import Shippex.Address, only: [state_without_country: 1]
 
   alias Shippex.Carrier.UPS.Client
-  alias Shippex.{Address, Shipment, Service, Transaction, Util}
+  alias Shippex.{Address, Config, InvalidConfigError, Shipment, Service, Transaction, Util}
 
   defmacro with_response(response, do: block) do
     quote do
@@ -432,5 +432,17 @@ defmodule Shippex.Carrier.UPS do
     end
   end
 
-  defdelegate config(), to: Shippex.Config, as: :ups_config
+  defp config() do
+    with cfg when is_list(cfg) <- Keyword.get(Config.config(), :usps, {:error, :not_found}),
+         un <- Keyword.get(cfg, :username, {:error, :not_found, :username}),
+         pw <- Keyword.get(cfg, :password, {:error, :not_found, :password}) do
+      %{username: un, password: pw}
+    else
+      {:error, :not_found, token} ->
+        raise InvalidConfigError, message: "USPS config key missing: #{token}"
+
+      {:error, :not_found} ->
+        raise InvalidConfigError, message: "USPS config is either invalid or not found."
+    end
+  end
 end

@@ -7,7 +7,7 @@ defmodule Shippex.Carrier.USPS do
   import Shippex.Address, only: [state_without_country: 1]
 
   alias Shippex.Carrier.USPS.Client
-  alias Shippex.{Address, Package, Label, Service, Shipment, Util}
+  alias Shippex.{Address, Config, InvalidConfigError, Package, Label, Service, Shipment, Util}
 
   @default_container :rectangular
   @large_containers ~w(rectangular nonrectangular variable)a
@@ -489,5 +489,34 @@ defmodule Shippex.Carrier.USPS do
     |> String.replace(~r/<\/?\w+>.*<\/\w+>/, "")
   end
 
-  defdelegate config(), to: Shippex.Config, as: :usps_config
+  def config() do
+    with cfg when is_list(cfg) <-
+           Keyword.get(Config.config(), :ups, {:error, :not_found}),
+         sk when is_binary(sk) <-
+           Keyword.get(cfg, :secret_key, {:error, :not_found, :secret_key}),
+         sh when is_map(sh) <- Keyword.get(cfg, :shipper, {:error, :not_found, :shipper}),
+         an when is_binary(an) <-
+           Keyword.get(cfg, :shipper)
+           |> Map.get(:account_number, {:error, :not_found, :account_number}),
+         un when is_binary(an) <- Keyword.get(cfg, :username, {:error, :not_found, :username}),
+         pw when is_binary(pw) <- Keyword.get(cfg, :password, {:error, :not_found, :password}) do
+      %{
+        username: un,
+        password: pw,
+        secret_key: sk,
+        shipper: sh
+      }
+    else
+      {:error, :not_found, :shipper} ->
+        raise InvalidConfigError,
+          message:
+            "UPS shipper config key missing. This could be because was provided as a keyword list instead of a map."
+
+      {:error, :not_found, token} ->
+        raise InvalidConfigError, message: "UPS config key missing: #{token}"
+
+      {:error, :not_found} ->
+        raise InvalidConfigError, message: "UPS config is either invalid or not found."
+    end
+  end
 end

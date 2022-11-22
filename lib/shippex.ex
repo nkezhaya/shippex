@@ -236,4 +236,7 @@ defmodule Shippex do
 
   @doc false
   defdelegate env(), to: Config
+
+  @version Mix.Project.config()[:version]
+  def version, do: @version
 end

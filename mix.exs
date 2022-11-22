@@ -1,12 +1,12 @@
 defmodule Shippex.Mixfile do
   use Mix.Project
-
+  @version "0.18.0"
   @source_url "https://github.com/whitepaperclip/shippex"
 
   def project do
     [
       app: :shippex,
-      version: "0.17.0",
+      version: @version,
       elixir: "~> 1.12",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,

@@ -180,4 +180,30 @@ defmodule Shippex.Util do
       {key, val}
     end
   end
+
+  @doc """
+  Returns the mane and module tuple.
+
+      iex> Util.get_modules()
+      {%{}, :module_name}
+  """
+  def get_modules() do
+    {:ok, modules} = :application.get_key(:shippex, :modules)
+
+    modules
+    |> Stream.map(&Module.split/1)
+    |> Stream.filter(fn module ->
+      case module do
+        ["Shippex", "Carrier", _] -> true
+        ["Shippex", "Carrier", "_", "Client"] -> false
+        _ -> false
+      end
+    end)
+    # concat
+    |> Stream.map(&Module.concat/1)
+    |> Stream.map(&{&1, apply(&1, :carrier, [])})
+    |> Enum.map(fn output ->
+      output
+    end)
+  end
 end

@@ -4,7 +4,7 @@ defmodule Shippex.Carrier do
   function for fetching the Carrier module.
   """
 
-  alias Shippex.{Shipment, Service, Rate, Transaction}
+  alias Shippex.{Shipment, Service, Rate, Transaction, Util}
 
   @callback fetch_rates(Shipment.t()) :: [{atom, Rate.t()}]
   @callback fetch_rate(Shipment.t(), Service.t()) :: [{atom, Rate.t()}] | {atom, Rate.t()}
@@ -15,6 +15,7 @@ defmodule Shippex.Carrier do
   @callback validate_address(Address.t()) :: {:ok, [Address.t()]} | {:error, any()}
   @callback track_packages(String.t() | [String.t()]) :: {:ok | :error, any()}
   @callback services_country?(ISO.country_code()) :: boolean()
+  @callback carrier() :: atom
 
   @type t() :: atom()
 
@@ -31,13 +32,22 @@ defmodule Shippex.Carrier do
   @spec module(atom | String.t()) :: module()
   def module(carrier) when is_atom(carrier) do
     # NOTE, this might be a good place to use a protocol?
+    default_modules = Util.get_modules()
 
     carriers =
       Application.get_env(:shippex, :carriers, [])
-      |> Enum.with_index(fn(c, i) ->
-        module = List.first(c).module
-        {i, module}
+      |> Enum.with_index(fn c, i ->
+        module = Keyword.get(c, :module)
+
+        case module do
+          nil ->
+            Enum.filter(default_modules, fn {_module, module_carrier} -> module_carrier == i end)
+
+          module ->
+            {i, module}
+        end
       end)
+      |> Enum.reject(fn x -> x == nil end)
 
     module =
       case Enum.filter(carriers, fn {x, _} -> x == carrier end) do

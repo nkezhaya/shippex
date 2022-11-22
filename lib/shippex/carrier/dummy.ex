@@ -47,10 +47,11 @@ defmodule Shippex.Carrier.Dummy do
   end
 
   defp rate() do
+    {carrier, _} = carrier()
     %Shippex.Rate{
       service: %Shippex.Service{
         id: :dummy,
-        carrier: carrier(),
+        carrier: carrier,
         description: "Dummy Shipping Service"
       },
       price: 1000,
@@ -61,7 +62,9 @@ defmodule Shippex.Carrier.Dummy do
   defp shipment() do
   end
 
-  defp carrier() do
+  @impl true
+  def carrier() do
     :dummy
   end
+
 end

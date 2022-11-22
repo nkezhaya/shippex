@@ -519,4 +519,9 @@ defmodule Shippex.Carrier.USPS do
         raise InvalidConfigError, message: "UPS config is either invalid or not found."
     end
   end
+
+  @impl true
+  def carrier() do
+    :usps
+  end
 end

@@ -6,7 +6,7 @@ defmodule Shippex.Config do
   @spec carriers() :: [Carrier.t()]
   def carriers() do
     config()
-    |> Enum.with_index(fn _config, i -> i end)
+    |> Enum.map(fn({x,_}) -> x end)
   end
 
   @spec config() :: Keyword.t() | none()

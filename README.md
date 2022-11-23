@@ -94,9 +94,13 @@ package = Shippex.Package.new(%{
   description: "Headphones",
   monetary_value: 20 # optional
 })
+{:ok, origin} = origin
+{:ok, destination} = destination
 
 # Link the origin, destination, and package with a shipment.
 shipment = Shippex.Shipment.new(origin, destination, package)
+
+{:ok, shipment} = shipment
 
 # Fetch rates to present to the user.
 rates = Shippex.fetch_rates(shipment, carriers: :usps)

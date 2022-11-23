@@ -36,21 +36,24 @@ defmodule Shippex.Carrier do
 
     carriers =
       Application.get_env(:shippex, :carriers, [])
-      |> Enum.with_index(fn c, i ->
+      |> Enum.map(fn {k,c} ->
         module = Keyword.get(c, :module)
 
         case module do
           nil ->
-            Enum.filter(default_modules, fn {_module, module_carrier} -> module_carrier == i end)
+            Enum.filter(default_modules, fn {_module, module_carrier} -> module_carrier == k end)
 
           module ->
-            {i, module}
+            {k, module}
         end
       end)
+      |> IO.inspect()
       |> Enum.reject(fn x -> x == nil end)
 
+
     module =
-      case Enum.filter(carriers, fn {x, _} -> x == carrier end) do
+      case Enum.filter(carriers, fn {k,_} ->  k == carrier end) do
+        [{_, carrier_module}] -> carrier_module
         {_, carrier_module} -> carrier_module
         c -> raise "#{c} is not a supported carrier at this time."
       end
@@ -60,8 +63,9 @@ defmodule Shippex.Carrier do
     if carrier in available_carriers do
       module
     else
-      raise Shippex.InvalidConfigError,
-            "#{inspect(carrier)} not found in carriers: #{inspect(available_carriers)}"
+#      raise Shippex.InvalidConfigError,
+#            "#{inspect(carrier)} not found in carriers: #{inspect(available_carriers)}"
+IO.puts "fuck"
     end
   end
 

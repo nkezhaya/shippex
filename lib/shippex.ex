@@ -25,6 +25,7 @@ defmodule Shippex do
   def fetch_rates(%Shipment{} = shipment, opts \\ []) do
     # Convert the atom to a list if necessary.
     carriers = Keyword.get(opts, :carriers)
+
     services = Keyword.get(opts, :services)
 
     carriers =
@@ -71,7 +72,7 @@ defmodule Shippex do
           """
       end
       |> Enum.reject(&(Service.get(&1).carrier in carriers))
-
+##
     carrier_tasks =
       Enum.map(carriers, fn carrier ->
         Task.async(fn ->

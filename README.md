@@ -128,7 +128,7 @@ File.write!("#{label.tracking_number}.#{label.format}", Base.decode64!(label.ima
 
 ## Creating your own shipping modules
 there are 2 ways of setting up your own shipping module either specifing it in the config if its in its own namespace or
-creating a module in your project with following module naming conventions defmodule Shippex.Carrier.Modulename, and setting up the config carriers key to match the modules config() return. see the ups module for syntax examples
+creating a module in your project with following module naming conventions defmodule applicationname.Shippex.Carrier.Modulename, and setting up the config carriers key to match the modules config() return. see the ups module for syntax examples
 ## TODO:
 
 Carrier support:

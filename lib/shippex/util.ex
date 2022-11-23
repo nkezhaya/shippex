@@ -196,6 +196,8 @@ defmodule Shippex.Util do
       case module do
         ["Shippex", "Carrier", _] -> true
         ["Shippex", "Carrier", "_", "Client"] -> false
+        [_, "Shippex", "Carrier", _] -> true
+        [_, "Shippex", "Carrier", "Client"] -> false
         _ -> false
       end
     end)

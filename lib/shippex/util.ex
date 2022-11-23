@@ -182,12 +182,12 @@ defmodule Shippex.Util do
   end
 
   @doc """
-  Returns the mane and module tuple.
+  Returns the name and module tuple.
 
-      iex> Util.get_modules()
+      iex> Util.get_shipping_modules()
       {%{}, :module_name}
   """
-  def get_modules() do
+  def get_shipping_modules() do
     {:ok, modules} = :application.get_key(:shippex, :modules)
 
     modules

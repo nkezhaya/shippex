@@ -32,7 +32,7 @@ defmodule Shippex.Carrier do
   @spec module(atom | String.t()) :: module()
   def module(carrier) when is_atom(carrier) do
     # NOTE, this might be a good place to use a protocol?
-    default_modules = Util.get_modules()
+    default_modules = Util.get_shipping_modules()
 
     carriers =
       Application.get_env(:shippex, :carriers, [])

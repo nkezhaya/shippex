@@ -63,6 +63,8 @@ config :shippex,
 ## Usage
 
 ```elixir
+# set the config after compilation (optional)
+carriers_config =  [usps: [module: Shippex.Carrier.USPS, username: "MyUsername",password: "MyPassword"]]
 # Create origin/destination addresses.
 origin = Shippex.Address.new(%{
   name: "Earl G",
@@ -102,8 +104,11 @@ shipment = Shippex.Shipment.new(origin, destination, package)
 
 {:ok, shipment} = shipment
 
+
 # Fetch rates to present to the user.
 rates = Shippex.fetch_rates(shipment, carriers: :usps)
+# Fetch rates to present to the user with carrier config passed at runtime.
+#rates = Shippex.fetch_rates(shipment, carriers: :usps, carriers_config)
 
 # Accept one of the services and print the label
 {:ok, rate} = Enum.shuffle(rates) |> hd

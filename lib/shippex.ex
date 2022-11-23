@@ -21,8 +21,8 @@ defmodule Shippex do
   If no options are provided, Shippex will fetch rates for every service from
   every available carrier.
   """
-  @spec fetch_rates(Shipment.t(), Keyword.t()) :: [{atom, Rate.t()}]
-  def fetch_rates(%Shipment{} = shipment, opts \\ []) do
+  @spec fetch_rates(Shipment.t(), Keyword.t(), Keyword.t()) :: [{atom, Rate.t()}]
+  def fetch_rates(%Shipment{} = shipment, opts \\ [], carriers_config \\ nil) do
     # Convert the atom to a list if necessary.
     carriers = Keyword.get(opts, :carriers)
 
@@ -30,7 +30,7 @@ defmodule Shippex do
 
     carriers =
       if is_nil(carriers) and is_nil(services) do
-        Shippex.carriers()
+        Shippex.carriers(carriers_config)
       else
         cond do
           is_nil(carriers) ->
@@ -231,6 +231,9 @@ defmodule Shippex do
 
   @doc false
   defdelegate carriers(), to: Config
+
+  @doc false
+  defdelegate carriers(list), to: Config
 
   @doc false
   defdelegate currency_code(), to: Config

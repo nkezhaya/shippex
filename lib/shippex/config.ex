@@ -9,6 +9,18 @@ defmodule Shippex.Config do
     |> Enum.map(fn({x,_}) -> x end)
   end
 
+  @spec carriers() :: [Carrier.t()]
+  def carriers(nil) do
+    config()
+    |> Enum.map(fn({x,_}) -> x end)
+  end
+
+  @spec carriers(List.t()) :: [Carrier.t()]
+  def carriers(config) do
+    config
+    |> Enum.map(fn({x,_}) -> x end)
+  end
+
   @spec config() :: Keyword.t() | none()
   def config() do
     case Application.get_env(:shippex, :carriers, :not_found) do

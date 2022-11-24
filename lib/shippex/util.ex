@@ -194,10 +194,11 @@ defmodule Shippex.Util do
     |> Stream.map(&Module.split/1)
     |> Stream.filter(fn module ->
       case module do
-        ["Shippex", "Carrier", _] -> true
         ["Shippex", "Carrier", "_", "Client"] -> false
-        [_, "Shippex", "Carrier", _] -> true
         [_, "Shippex", "Carrier", "Client"] -> false
+        ["Shippex", "Carrier", _] -> true
+        [_, "Shippex", "Carrier", _] -> true
+
         _ -> false
       end
     end)

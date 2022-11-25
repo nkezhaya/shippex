@@ -63,9 +63,9 @@ defmodule Shippex.Carrier do
     if carrier in available_carriers do
       module
     else
-#      raise Shippex.InvalidConfigError,
-#            "#{inspect(carrier)} not found in carriers: #{inspect(available_carriers)}"
-IO.puts "fuck"
+      raise Shippex.InvalidConfigError,
+            "#{inspect(carrier)} not found in carriers: #{inspect(available_carriers)}"
+
     end
   end
 

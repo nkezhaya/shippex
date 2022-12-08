@@ -21,10 +21,11 @@ defmodule Shippex do
   If no options are provided, Shippex will fetch rates for every service from
   every available carrier.
   """
-  @spec fetch_rates(Shipment.t(), Keyword.t(), Keyword.t()) :: [{atom, Rate.t()}]
-  def fetch_rates(%Shipment{} = shipment, opts \\ [], carriers_config \\ nil) do
+  @spec fetch_rates(Shipment.t(), Keyword.t()) :: [{atom, Rate.t()}]
+  def fetch_rates(%Shipment{} = shipment, opts \\ []) do
     # Convert the atom to a list if necessary.
     carriers = Keyword.get(opts, :carriers)
+    carriers_config = Keyword.get(opts, :carrier_config, nil)
 
     services = Keyword.get(opts, :services)
 
@@ -71,8 +72,12 @@ defmodule Shippex do
               Shippex.fetch_rates(shipment, services: :usps_priority)
           """
       end
+
+
+    services
       |> Enum.reject(&(Service.get(&1).carrier in carriers))
 ##
+
     carrier_tasks =
       Enum.map(carriers, fn carrier ->
         Task.async(fn ->

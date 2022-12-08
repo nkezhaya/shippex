@@ -64,7 +64,7 @@ config :shippex,
 
 ```elixir
 # set the config after compilation (optional)
-carriers_config =  [usps: [module: Shippex.Carrier.USPS, username: "MyUsername",password: "MyPassword"]]
+carriers_config =  [usps: [module: Shippex.Carrier.USPS, username: "", password: ""]]
 # Create origin/destination addresses.
 origin = Shippex.Address.new(%{
   name: "Earl G",
@@ -88,27 +88,39 @@ destination = Shippex.Address.new(%{
 })
 
 # Create a package. Currently only inches and pounds (lbs) supported.
-package = Shippex.Package.new(%{
+package = Shippex.Package.new(%{items: [%{
   length: 8,
   width: 8,
+  quantity: 8,
   height: 4,
-  weight: 5,
+  weight: 45,
   description: "Headphones",
   monetary_value: 20 # optional
+}], length: 8,
+    width: 8,
+    quantity: 8,
+    height: 4
 })
+
 {:ok, origin} = origin
 {:ok, destination} = destination
 
 # Link the origin, destination, and package with a shipment.
-shipment = Shippex.Shipment.new(origin, destination, package)
+shipment = Shippex.Shipment.new(origin, destination, [package])
 
 {:ok, shipment} = shipment
 
+carrier = :usps
+
+## fetch the available shipping methods
+services = Shippex.Service.services_for_carrier(carrier, shipment) |> Enum.map(fn(x) -> x.id end)
 
 # Fetch rates to present to the user.
-rates = Shippex.fetch_rates(shipment, carriers: :usps)
+rates = Shippex.fetch_rates(shipment, [carriers: carrier, services: services])
+# rates = Shippex.fetch_rate(shipment, :usps_retail_ground) 
 # Fetch rates to present to the user with carrier config passed at runtime.
-#rates = Shippex.fetch_rates(shipment, carriers: :usps, carriers_config)
+#carrier_config = []
+#rates = Shippex.fetch_rates(shipment, [carriers: carrier, services: services, carrier_config: carrier_config])
 
 # Accept one of the services and print the label
 {:ok, rate} = Enum.shuffle(rates) |> hd

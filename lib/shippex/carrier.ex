@@ -47,7 +47,6 @@ defmodule Shippex.Carrier do
             {k, module}
         end
       end)
-      |> IO.inspect()
       |> Enum.reject(fn x -> x == nil end)
 
 

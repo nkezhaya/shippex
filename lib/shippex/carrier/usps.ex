@@ -16,7 +16,7 @@ defmodule Shippex.Carrier.USPS do
   for f <- ~w(address cancel label rate track validate_address)a do
     EEx.function_from_file(:defp, :"render_#{f}", __DIR__ <> "/usps/templates/#{f}.eex", [
       :assigns
-    ])
+    ], [trim: true])
   end
 
   defmacro with_response(response, do: block) do

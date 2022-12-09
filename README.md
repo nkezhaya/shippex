@@ -89,16 +89,12 @@ destination = Shippex.Address.new(%{
 
 # Create a package. Currently only inches and pounds (lbs) supported.
 package = Shippex.Package.new(%{items: [%{
-  length: 8,
-  width: 8,
   quantity: 8,
-  height: 4,
   weight: 45,
   description: "Headphones",
   monetary_value: 20 # optional
 }], length: 8,
     width: 8,
-    quantity: 8,
     height: 4
 })
 
@@ -116,7 +112,7 @@ carrier = :usps
 services = Shippex.Service.services_for_carrier(carrier, shipment) |> Enum.map(fn(x) -> x.id end)
 
 # Fetch rates to present to the user.
-rates = Shippex.fetch_rates(shipment, [carriers: carrier, services: services])
+rates = Shippex.fetch_rates(shipment, [carriers: carrier, services: services]) |> Enum.reject(fn({x,_}) -> x == :error end)
 # rates = Shippex.fetch_rate(shipment, :usps_retail_ground) 
 # Fetch rates to present to the user with carrier config passed at runtime.
 #carrier_config = []

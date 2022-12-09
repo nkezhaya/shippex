@@ -1,0 +1,57 @@
+ <RateRequest>
+         <WebAuthenticationDetail>
+            <UserCredential>
+               <Key><%= config().username %></Key>
+               <Password><%= config().password %></Password>
+            </UserCredential>
+         </WebAuthenticationDetail>
+         <ClientDetail>
+            <AccountNumber><%= config().account_number %></AccountNumber>
+            <MeterNumber><%= config().meter_number %></MeterNumber>
+         </ClientDetail>
+         <TransactionDetail>
+            <CustomerTransactionId>*** PS Rate Request ***</CustomerTransactionId>
+         </TransactionDetail>
+         <Version>
+            <ServiceId>crs</ServiceId>
+            <Major>31</Major>
+            <Intermediate>0</Intermediate>
+            <Minor>0</Minor>
+         </Version>
+         <ReturnTransitAndCommit>1</ReturnTransitAndCommit>
+         <RequestedShipment>
+            <ShipTimestamp><%= @shipment.ship_date %></ShipTimestamp>
+            <DropoffType><%= @params.dropoff_type %></DropoffType>
+            <PackagingType><%= @params.packaging_type %></PackagingType>
+            <TotalWeight>
+               <Units>oz</Units>
+               <Value><%= weight_in_ounces(@shipment.total_weight) %></Value>
+            </TotalWeight>
+            <PreferredCurrency><%= @shipment.currency %></PreferredCurrency>
+            <Shipper>
+               <AccountNumber><%= config().account_number %></AccountNumber>
+               <Address>
+                  <PostalCode><%= @shipment.from.postal_code %></PostalCode>
+                  <CountryCode><%= country(@shipment.from) %></CountryCode>
+               </Address>
+            </Shipper>
+            <Recipient>
+               <Address>
+                   <PostalCode><%= @shipment.to.postal_code %></PostalCode>
+                  <CountryCode><%= country(@shipment.to) %></CountryCode>
+                  <Residential><%= @shipment.to.address %></Residential>
+               </Address>
+            </Recipient>
+             <ShippingChargesPayment>
+               <PaymentType>SENDER</PaymentType>
+               <Payor>
+                  <ResponsibleParty>
+                     <AccountNumber><%= config().account_number %></AccountNumber>
+                  </ResponsibleParty>
+               </Payor>
+            </ShippingChargesPayment>
+            <RateRequestTypes><%= Shippex.Carrier.Fedex.Client.service_code(@service) %></RateRequestTypes>
+            <PackageCount><%= Enum.count(@shipment.packages) %></PackageCount>
+
+			</RequestedShipment>
+      </RateRequest>

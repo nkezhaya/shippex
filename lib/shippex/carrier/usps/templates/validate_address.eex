@@ -1,12 +1,3 @@
-<AddressValidateRequest USERID="<%= config().username %>">
-  <Revision>1</Revision>
-  <Address ID="0">
-    <FirmName><%= @address.company_name %></FirmName>
-    <Address1><%= @address.address_line_2 %></Address1>
-    <Address2><%= @address.address %></Address2>
-    <City><%= @address.city %></City>
-    <State><%= @address.state %></State>
-    <Zip5><%= @address.postal_code %></Zip5>
-    <Zip4></Zip4>
-  </Address>
-</AddressValidateRequest>
+<% username = config().username %>
+
+<AddressValidateRequest USERID='<%= username %>'><Revision>1</Revision><Address ID='0'><FirmName><%= @address.company_name %></FirmName><Address1><%= @address.address_line_2 %></Address1><Address2><%= @address.address %></Address2><City><%= @address.city %></City><State><%= @address.state %></State><Zip5><%= @address.postal_code %></Zip5> <Zip4></Zip4></Address></AddressValidateRequest>

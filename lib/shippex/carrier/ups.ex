@@ -299,15 +299,15 @@ defmodule Shippex.Carrier.UPS do
       Shipper: shipper_address_params(),
       ShipFrom: address_params(from),
       ShipTo: address_params(to),
-      Package: package_params(shipment),
+      Package: package_params(package),
       Service: service_params(service)
     }
 
-    if not is_nil(shipment.package.monetary_value) do
+    if not is_nil(package.monetary_value) do
       %{
         InvoiceLineTotal: %{
           CurrencyCode: Shippex.currency_code(),
-          MonetaryValue: to_string(shipment.package.monetary_value)
+          MonetaryValue: to_string(package.monetary_value)
         }
       }
     end
@@ -363,8 +363,7 @@ defmodule Shippex.Carrier.UPS do
     |> Map.put(:ShipperNumber, config.shipper.account_number)
   end
 
-  defp package_params(%Shipment{} = shipment) do
-    package = shipment.package
+  defp package_params(package) do
 
     [len, width, height] =
       case Application.get_env(:shippex, :distance_unit, :in) do

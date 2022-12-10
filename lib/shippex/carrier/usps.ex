@@ -13,7 +13,7 @@ defmodule Shippex.Carrier.USPS do
   @default_container :rectangular
   @large_containers ~w(rectangular nonrectangular variable)a
 
-  for f <- ~w(address cancel label rate track validate_address)a do
+  for f <- ~w(address cancel city_state_by_zipcode label rate track validate_address zipcode)a do
     EEx.function_from_file(:defp, :"render_#{f}", __DIR__ <> "/usps/templates/#{f}.eex", [
       :assigns
     ], [trim: true])

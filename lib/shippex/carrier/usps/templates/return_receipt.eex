@@ -1,0 +1,16 @@
+<% username = config().username %>
+<PTSRreRequest USERID='<%= username %>'>
+<TrackId><%= @tracking_number %></TrackId >
+<ClientIp><%= @client_ip %></ClientIp>
+<SourceId><%= @company_name %></SourceId>
+<MpSuffix><%= @mp_suffix %></MpSuffix>
+<MpDate><%= @mp_date %></MpDate>
+<RequestType><%= @request_type %></RequestType>
+<FirstName><%= @first_name %></FirstName>
+<LastName><%= @last_name %></LastName>
+<Email1><%= @email1 %></Email1>
+<Email2></Email2>
+<Email3></Email3>
+<TableCode><%= @table_code %></TableCode>
+<CustRegID><%= @cust_reg_id %></CustRegID>
+</PTSRreRequest>

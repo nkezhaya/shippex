@@ -1,0 +1,22 @@
+<% username = config().username %>
+<CarrierPickupChangeRequest USERID='<%= username %>'>
+<FirstName><%= @first_name %></FirstName>
+<LastName><%= @last_name %></LastName>
+<FirmName><%= @firm_name %></FirmName>
+<SuiteOrApt><%= @suite_or_apt %></SuiteOrApt>
+<Address2><%= @address2 %></Address2>
+<Urbanization><%= @urbanization %></Urbanization>
+<City><%= @city %></City>
+<State><%= @state %></State>
+<ZIP5><%= @zip5 %></ZIP5>
+<ZIP4><%= @zip4 %></ZIP4>
+<Extension><%= @extension %></Extension>
+<Package>
+<ServiceType><%= @eervice_type %></ServiceType>
+<Count><%= @count %></Count>
+</Package>
+<EstimatedWeight><%= @estimated_weight %></EstimatedWeight>
+<PackageLocation><%= @packag_location %></PackageLocation>
+<SpecialInstructions><%= @special_instructions %></SpecialInstructions>
+<ConfirmationNumber><%= @confirmation_number %><</ConfirmationNumber>
+</CarrierPickupChangeRequest>

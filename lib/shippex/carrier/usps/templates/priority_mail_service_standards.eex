@@ -1,0 +1,6 @@
+<% username = config().username %>
+<PriorityMailRequest USERID='<%= username %>'>
+<OriginZip><%= @origin_zip %></OriginZip>
+<DestinationZip><%= @destination_zip %></DestinationZip>
+<MailClass><%= @mail_class %></MailClass>
+</PriorityMailRequest>

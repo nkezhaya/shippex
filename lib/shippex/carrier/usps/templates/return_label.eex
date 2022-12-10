@@ -1,0 +1,43 @@
+<% username = config().username %>
+
+<USPSReturnsLabelRequest USERID='<%= username %>'>
+<Option/>
+<Revision></Revision>
+<ImageParameters>
+<ImageType><%= @image_type %></ImageType>
+<SeparateReceiptPage><%= @separate_receipt_page %></SeparateReceiptPage>
+</ImageParameters>
+<CustomerFirstName><%= @customer_first_name %></CustomerFirstName>
+<CustomerLastName><%= @customer_last_name %></CustomerLastName>
+<CustomerFirm><%= @customer_firm %></CustomerFirm>
+<CustomerAddress1/>
+<CustomerAddress2><%= @customer_address2 %></CustomerAddress2>
+<CustomerUrbanization/>
+<CustomerCity><%= @customer_city %></CustomerCity>
+<CustomerState><%= @customer_state %></CustomerState>
+<CustomerZip5><%= @customer_zip5 %></CustomerZip5>
+<CustomerZip4><%= @customer_zip4 %></CustomerZip4>
+<POZipCode><%= @po_zip_code %></POZipCode>
+<AllowNonCleansedOriginAddr><%= @allow_non_cleansed_origin_addr %></AllowNonCleansedOriginAddr>
+<RetailerATTN><%= @retailer_attn %></RetailerATTN>
+<RetailerFirm><%= @retailer_firm %></RetailerFirm>
+<WeightInOunces><%= @weight_in_ounces %></WeightInOunces>
+<ServiceType><%= @service_type %></ServiceType>
+<Width><%= @width %></Width>
+<Length><%= @length %></Length>
+<Height><%= @height %></Height>
+<Girth><%= @girth %></Girth>
+<Machinable><%= @machinable %></Machinable>
+<CustomerRefNo><%= @customer_ref_no %></CustomerRefNo>
+<PrintCustomerRefNo><%= @print_customer_ref_no %></PrintCustomerRefNo>
+<CustomerRefNo2> <%= @customer_ref_no2 %> </CustomerRefNo2>
+<PrintCustomerRefNo2><%= @print_customer_ref_no2 %></PrintCustomerRefNo2>
+<SenderName><%= @sender_name %></SenderName>
+<SenderEmail><%= @sender_email %></SenderEmail>
+<RecipientName><%= @recipient_name %></RecipientName>
+<RecipientEmail><%= @recipient_email %></RecipientEmail>
+<TrackingEmailPDF><%= @tracking_email_pdf %></TrackingEmailPDF>
+<ExtraServices>
+<ExtraService><%= @extra_service %></ExtraService>
+</ExtraServices>
+</USPSReturnsLabelRequest>

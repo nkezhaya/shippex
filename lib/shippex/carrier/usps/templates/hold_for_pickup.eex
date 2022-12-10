@@ -1,0 +1,8 @@
+<% username = config().username %>
+<HFPFacilityInfoRequest USERID='<%= username %>'>
+<PickupCity />
+<PickupState/>
+<PickupZIP><%= @pickup_zip %></PickupZIP>
+<PickupZIP4 />
+<Service />
+</HFPFacilityInfoRequest>

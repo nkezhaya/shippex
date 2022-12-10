@@ -1,13 +1,13 @@
 <% package = @shipment.package %>
 <% username = config().username %>
-<% machineable = Map.get(config(), :machineable, "False") %>
+
 <%= if international?(@shipment) do %>
   <IntlRateV2Request USERID='<%= username %>'>
     <Revision>2</Revision>
     <Package ID='<%= create_hash(@shipment.to) %>'>
       <Pounds>0</Pounds>
       <Ounces><%= weight_in_ounces(@shipment.package.weight) %></Ounces>
-      <Machinable><%= machineable %></Machinable>
+      <Machinable><%= machineable?(package) %></Machinable>
       <MailType><%= international_mail_type(package) %></MailType>
       <ValueOfContents><%= Util.price_to_dollars(package.insurance || package.monetary_value) %></ValueOfContents>
       <Country><%= country(@shipment.to) %></Country>
@@ -44,7 +44,7 @@
   <%= if package.insurance do %>
   <SpecialServices><SpecialService><%= insurance_code(@shipment, @service) %></SpecialService></SpecialServices>
   <% end %>
-  <Machinable><%= machineable %></Machinable>
+  <Machinable><%= machineable?(package) %></Machinable>
   </Package>
   </RateV4Request>
 <% end %>

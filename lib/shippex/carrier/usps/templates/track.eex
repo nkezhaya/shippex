@@ -1,4 +1,5 @@
-<TrackRequest USERID="<%= config().username %>">
+<% username = config().username %>
+<TrackRequest  USERID='<%= username %>'>
 <%= for tracking_number <- @tracking_numbers do %>
 <TrackID ID="<%= tracking_number %>"></TrackID>
 <% end %>

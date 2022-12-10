@@ -14,9 +14,15 @@ defmodule Shippex.Carrier.USPS do
   @large_containers ~w(rectangular nonrectangular variable)a
 
   for f <- ~w(address cancel city_state_by_zipcode label rate track validate_address zipcode)a do
-    EEx.function_from_file(:defp, :"render_#{f}", __DIR__ <> "/usps/templates/#{f}.eex", [
-      :assigns
-    ], [trim: true])
+    EEx.function_from_file(
+      :defp,
+      :"render_#{f}",
+      __DIR__ <> "/usps/templates/#{f}.eex",
+      [
+        :assigns
+      ],
+      trim: true
+    )
   end
 
   defmacro with_response(response, do: block) do
@@ -304,6 +310,16 @@ defmodule Shippex.Carrier.USPS do
 
   defp insurance_code(_, data), do: Insurance.code(data)
 
+  @spec create_hash(String.t(), number()) :: String.t()
+  def create_hash(string, min_len \\ 5) do
+    case string do
+      nil ->  Nanoid.generate(min_len)
+      _->  Nanoid.generate(min_len, string)
+      end
+
+    end
+
+
   @spec weight_in_ounces(number()) :: number()
   defp weight_in_ounces(pounds) do
     16 *
@@ -347,7 +363,9 @@ defmodule Shippex.Carrier.USPS do
 
       description =~ ~r/gxg/i ->
         :usps_gxg
-        true -> :usps_retail_ground
+
+      true ->
+        :usps_retail_ground
     end
     |> Shippex.Service.get()
   end

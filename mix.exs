@@ -55,7 +55,8 @@ defmodule Shippex.Mixfile do
       {:jason, "~> 1.2"},
       {:decimal, "~> 1.3"},
       {:iso, "~> 1.2"},
-      {:csv, "~> 2.4", optional: true, only: [:dev]}
+      {:csv, "~> 2.4", optional: true, only: [:dev]},
+      {:nanoid, "~> 2.0"}
     ]
   end
 

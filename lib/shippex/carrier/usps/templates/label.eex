@@ -1,5 +1,13 @@
 <% package = @shipment.package %>
-<<%= @api %>Request USERID="<%= config().username %>">
+<% username = config().username %>
+<% hs_tariff_number = Map.get(config(), :hs_tariff_number, "") %>
+<% agreement = Map.get(config(), :agreement, "Y") %>
+<% image_type = Map.get(config(), :image_type, "PDF") %>
+<% content_type = Map.get(config(), :content_type, "MERCHANDISE") %>
+<% destination_rate_indicator = Map.get(config(), :destination_rate_indicator, "N") %>
+<% address_service_requested = Map.get(config(), :address_service_requested, "true") %>
+<% country_of_origin = Map.get(@shipment.from, :country, "US")  %>
+<<%= @api %>Request USERID='<%= username %>'>
   <%= if international?(@shipment) do %>
     <Revision>2</Revision>
     <%= render_address shipment: @shipment, address: :from %>
@@ -11,12 +19,12 @@
       <%= for item <- package.items do %>
         <ItemDetail>
           <Description><%= HtmlEntities.encode(item.description) %></Description>
-          <Quantity>1</Quantity>
+          <Quantity><%= item.quantity %></Quantity>
           <Value><%= Util.price_to_dollars(item.monetary_value) %></Value>
           <NetPounds>0</NetPounds>
           <NetOunces><%= round(weight_in_ounces(item.weight)) %></NetOunces>
-          <HSTariffNumber></HSTariffNumber>
-          <CountryOfOrigin>United States</CountryOfOrigin>
+          <HSTariffNumber><%= hs_tariff_number %></HSTariffNumber>
+          <CountryOfOrigin><%= country(country_of_origin) %></CountryOfOrigin>
         </ItemDetail>
       <% end %>
     </ShippingContents>
@@ -24,15 +32,15 @@
     <InsuredAmount><%= Util.price_to_dollars(package.insurance) %></InsuredAmount>
     <GrossPounds>0</GrossPounds>
     <GrossOunces><%= round(weight_in_ounces(@shipment.package.weight)) %></GrossOunces>
-    <ContentType>MERCHANDISE</ContentType>
-    <Agreement>Y</Agreement>
-    <ImageType>PDF</ImageType>
+    <ContentType><%= content_type %></ContentType>
+    <Agreement><%= agreement %></Agreement>
+    <ImageType><%= image_type %></ImageType>
     <Size><%= size(@shipment) %></Size>
     <Length><%= package.length %></Length>
     <Width><%= package.width %></Width>
     <Height><%= package.height %></Height>
     <Girth></Girth>
-    <DestinationRateIndicator>N</DestinationRateIndicator>
+    <DestinationRateIndicator><%= destination_rate_indicator %></DestinationRateIndicator>
     <%= if date = @shipment.ship_date do %>
       <LabelDate>
         <%= Date.to_iso8601(date) |> String.split("-") |> Enum.reverse |> Enum.join("/") %>
@@ -56,7 +64,7 @@
     <ProcessingCategory></ProcessingCategory>
     <PriceOptions></PriceOptions>
     <InsuredAmount><%= Util.price_to_dollars(package.insurance) %></InsuredAmount>
-    <AddressServiceRequested>true</AddressServiceRequested>
+    <AddressServiceRequested><%= address_service_requested %></AddressServiceRequested>
 
     <%= if date = @shipment.ship_date do %>
       <ShipDate>
@@ -74,6 +82,6 @@
       <CustomerRefNo><%= @shipment.id %></CustomerRefNo>
     <% end %>
 
-    <ImageType>PDF</ImageType>
+    <ImageType><%= image_type %></ImageType>
   <% end %>
 </<%= @api %>Request>

@@ -66,8 +66,4 @@ defmodule Shippex.Shipment do
       {:error, error} -> raise error
     end
   end
-
-  defmodule Manifest do
-
-  end
 end

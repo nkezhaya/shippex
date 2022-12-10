@@ -6,17 +6,17 @@
     <Revision>2</Revision>
     <Package ID='<%= create_hash(@shipment.to) %>'>
       <Pounds>0</Pounds>
-      <Ounces><%= weight_in_ounces(@shipment.package.weight) %></Ounces>
+      <Ounces><%= weight_in_ounces(package.weight) %></Ounces>
       <Machinable><%= machineable?(package) %></Machinable>
       <MailType><%= international_mail_type(package) %></MailType>
       <ValueOfContents><%= Util.price_to_dollars(package.insurance || package.monetary_value) %></ValueOfContents>
       <Country><%= country(@shipment.to) %></Country>
-      <Container><%= container(@shipment) %></Container>
-      <Size><%= size(@shipment) %></Size>
+      <Container><%= container(package) %></Container>
+      <Size><%= size(package) %></Size>
       <Width><%= package.width %></Width>
       <Length><%= package.length %></Length>
       <Height><%= package.height %></Height>
-      <Girth></Girth>
+      <Girth><%= package.girth %></Girth>
       <OriginZip><%= @shipment.from.postal_code %></OriginZip>
       <%= if package.insurance do %>
         <ExtraServices>
@@ -33,13 +33,13 @@
   <ZipOrigination><%= @shipment.from.postal_code %></ZipOrigination>
   <ZipDestination><%= @shipment.to.postal_code %></ZipDestination>
   <Pounds>0</Pounds>
-  <Ounces><%= weight_in_ounces(@shipment.package.weight) %></Ounces>
-  <Container><%= container(@shipment) %></Container>
-  <Size><%= size(@shipment) %></Size>
+  <Ounces><%= weight_in_ounces(package.weight) %></Ounces>
+  <Container><%= container(package) %></Container>
+  <Size><%= size(package) %></Size>
   <Width><%= package.width %></Width>
   <Length><%= package.length %></Length>
   <Height><%= package.height %></Height>
-  <Girth></Girth>
+  <Girth><%= package.girth %></Girth>
   <Value><%= Util.price_to_dollars(package.insurance || package.monetary_value) %></Value>
   <%= if package.insurance do %>
   <SpecialServices><SpecialService><%= insurance_code(@shipment, @service) %></SpecialService></SpecialServices>

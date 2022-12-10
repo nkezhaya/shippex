@@ -481,7 +481,7 @@ defmodule Shippex.Carrier.USPS do
     ISO.country_name(code, :informal)
   end
 
-  defp container(%Shipment{package: package}) do
+  defp container(package) do
     case Package.usps_containers()[package.container] do
       nil -> Package.usps_containers()[@default_container]
       container -> container
@@ -489,10 +489,10 @@ defmodule Shippex.Carrier.USPS do
     |> String.upcase()
   end
 
-  defp size(%Shipment{package: package} = shipment) do
+  defp size(package) do
     is_large? =
       cond do
-        container(shipment) == "RECTANGULAR" ->
+        container(package) == "RECTANGULAR" ->
           true
 
         package.container in @large_containers ->

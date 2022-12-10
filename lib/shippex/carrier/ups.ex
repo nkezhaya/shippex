@@ -293,9 +293,10 @@ defmodule Shippex.Carrier.UPS do
   defp shipment_params(%Shipment{} = shipment, %Service{} = service) do
     from = shipment.from
     to = shipment.to
+    package = List.first(shipment.packages)
 
     params = %{
-      Description: shipment.package.description,
+      Description: package.description,
       Shipper: shipper_address_params(),
       ShipFrom: address_params(from),
       ShipTo: address_params(to),

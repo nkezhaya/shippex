@@ -196,9 +196,9 @@ defmodule Shippex do
   @doc """
   Returns the status for the given tracking numbers.
   """
-  @spec track_packages(Carrier.t(), [String.t()]) :: {atom(), response()}
-  def track_packages(carrier, tracking_numbers) do
-    Carrier.module(carrier).track_packages(tracking_numbers)
+  @spec track_parcels(Carrier.t(), [String.t()]) :: {atom(), response()}
+  def track_parcels(carrier, tracking_numbers) do
+    Carrier.module(carrier).track_parcels(tracking_numbers)
   end
 
   @doc """

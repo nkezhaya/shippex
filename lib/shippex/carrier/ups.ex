@@ -166,7 +166,7 @@ defmodule Shippex.Carrier.UPS do
   end
 
   @impl true
-  def track_packages(_tracking_numbers) do
+  def track_parcels(_tracking_numbers) do
     # TODO
     raise "Not yet implemented for UPS"
   end
@@ -293,7 +293,7 @@ defmodule Shippex.Carrier.UPS do
   defp shipment_params(%Shipment{} = shipment, %Service{} = service) do
     from = shipment.from
     to = shipment.to
-    package = List.first(shipment.packages)
+    package = List.first(shipment.parcels)
 
     params = %{
       Description: package.description,
@@ -365,7 +365,6 @@ defmodule Shippex.Carrier.UPS do
   end
 
   defp package_params(package) do
-
     [len, width, height] =
       case Application.get_env(:shippex, :distance_unit, :in) do
         :in ->
@@ -452,8 +451,8 @@ defmodule Shippex.Carrier.UPS do
     else
       {:error, :not_found, :shipper} ->
         raise InvalidConfigError,
-              message:
-                "UPS shipper config key missing. This could be because was provided as a keyword list instead of a map."
+          message:
+            "UPS shipper config key missing. This could be because was provided as a keyword list instead of a map."
 
       {:error, :not_found, token} ->
         raise InvalidConfigError, message: "UPS config key missing: #{token}"

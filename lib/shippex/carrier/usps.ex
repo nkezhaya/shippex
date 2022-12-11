@@ -8,7 +8,7 @@ defmodule Shippex.Carrier.USPS do
 
   alias Shippex.Carrier.USPS.Client
   alias Shippex.Carrier.USPS.Insurance
-  alias Shippex.{Address, Config, InvalidConfigError, Package, Label, Service, Shipment, Util}
+  alias Shippex.{Address, Config, InvalidConfigError, Parcel, Label, Service, Shipment, Util}
 
   @default_container :rectangular
   @large_containers ~w(rectangular nonrectangular variable)a
@@ -19,7 +19,8 @@ defmodule Shippex.Carrier.USPS do
   @sortation_level ~w(3D 5D BAS CR MIX NDC NONE PST SCF TBE TBF TBH TBT)a
   @destination_entry_facility_type ~w(DDU DNDC DCSF NONE)a
 
-  for f <- ~w(address cancel carrier_pickup_availability city_state_by_zipcode express_mail_commitments first_class_service_standards hold_for_pickup package_pickup_cancel package_pickup_change package_pickup_inquery package_pickup_schedule package_service_standardb priority_mail_service_standards proof_of_delivery return_label return_receipt label rate scan sdc_get_locations sunday_holiday track track_confirm_by_email track_fields validate_address zipcode)a do
+  for f <-
+        ~w(address cancel carrier_pickup_availability city_state_by_zipcode express_mail_commitments first_class_service_standards hold_for_pickup package_pickup_cancel package_pickup_change package_pickup_inquery package_pickup_schedule package_service_standardb priority_mail_service_standards proof_of_delivery return_label return_receipt label rate scan sdc_get_locations sunday_holiday track track_confirm_by_email track_fields validate_address zipcode)a do
     EEx.function_from_file(
       :defp,
       :"render_#{f}",
@@ -148,7 +149,7 @@ defmodule Shippex.Carrier.USPS do
         else
           rates
         end
-#IO.inspect(rates, label: "retes")
+
       case rates do
         [] -> {:error, "Rate unavailable for service."}
         [rate] -> rate
@@ -281,32 +282,34 @@ defmodule Shippex.Carrier.USPS do
     postage_line_item = %{name: "Postage", price: rate.rate}
 
     insurance_line_item =
-      cond do
-        is_nil(shipment.package.insurance) ->
-          nil
+      Enum.map(shipment.parcels, fn parcel ->
+        cond do
+          is_nil(parcel.insurance) ->
+            nil
 
-        not is_nil(rate[:insurance_fee]) ->
-          %{name: "Insurance", price: rate.insurance_fee}
+          not is_nil(rate[:insurance_fee]) ->
+            %{name: "Insurance", price: rate.insurance_fee}
 
-        true ->
-          insurance_code = Integer.to_string(insurance_code(shipment, service))
+          true ->
+            insurance_code = Integer.to_string(insurance_code(shipment, service))
 
-          rate.extra_services
-          |> Enum.find(fn
-            %{available: available, id: ^insurance_code} when available != "false" -> true
-            _ -> false
-          end)
-          |> case do
-            %{price: price} ->
-              %{name: "Insurance", price: price}
+            rate.extra_services
+            |> Enum.find(fn
+              %{available: available, id: ^insurance_code} when available != "false" -> true
+              _ -> false
+            end)
+            |> case do
+              %{price: price} ->
+                %{name: "Insurance", price: price}
 
-            _ ->
-              nil
-          end
-      end
+              _ ->
+                nil
+            end
+        end
+      end)
 
     line_items =
-      [postage_line_item, insurance_line_item]
+      ([postage_line_item] ++ insurance_line_item)
       |> Enum.reject(&is_nil/1)
       |> Enum.map(fn %{price: price} = line_item ->
         %{line_item | price: Util.price_to_cents(price)}
@@ -378,9 +381,9 @@ defmodule Shippex.Carrier.USPS do
     |> Shippex.Service.get()
   end
 
-  defp international_mail_type(%Package{container: nil}), do: "PACKAGE"
+  defp international_mail_type(%Parcel{container: nil}), do: "PACKAGE"
 
-  defp international_mail_type(%Package{container: container}) do
+  defp international_mail_type(%Parcel{container: container}) do
     container = "#{container}"
 
     cond do
@@ -418,11 +421,11 @@ defmodule Shippex.Carrier.USPS do
   end
 
   @impl true
-  def track_packages(tracking_number) when is_binary(tracking_number) do
-    track_packages([tracking_number])
+  def track_parcels(tracking_number) when is_binary(tracking_number) do
+    track_parcels([tracking_number])
   end
 
-  def track_packages(tracking_numbers) when is_list(tracking_numbers) do
+  def track_parcels(tracking_numbers) when is_list(tracking_numbers) do
     request = render_track(tracking_numbers: tracking_numbers)
 
     with_response Client.post("ShippingAPI.dll", %{API: "TrackV2", XML: request}) do
@@ -481,22 +484,22 @@ defmodule Shippex.Carrier.USPS do
     ISO.country_name(code, :informal)
   end
 
-  defp container(package) do
-    case Package.usps_containers()[package.container] do
-      nil -> Package.usps_containers()[@default_container]
+  defp container(parcel) do
+    case Parcel.usps_containers()[parcel.container] do
+      nil -> Parcel.usps_containers()[@default_container]
       container -> container
     end
     |> String.upcase()
   end
 
-  defp size(package) do
+  defp size(parcel) do
     is_large? =
       cond do
-        container(package) == "RECTANGULAR" ->
+        container(parcel) == "RECTANGULAR" ->
           true
 
-        package.container in @large_containers ->
-          package
+        parcel.container in @large_containers ->
+          parcel
           |> Map.take(~w(large width height)a)
           |> Map.values()
           |> Enum.any?(&(&1 > 12))
@@ -544,149 +547,148 @@ defmodule Shippex.Carrier.USPS do
 end
 
 defmodule Shippex.Carrier.USPS.Classid do
-  defstruct ratev4:  [
-      "0": "First-ClassMail;LargeEnvelope",
-      "0": "First-ClassMail;StampedLetter",
-      "0": "First-ClassPackageService-Retail",
-      "0": "First-ClassMail;Postcards",
-      "1": "PriorityMail",
-      "2": "PriorityMailExpress;HoldForPickup",
-      "3": "PriorityMailExpress",
-      "4": "StandardPost",
-      "5": "BoundPrintedMatterParcels",
-      "6": "MediaMailParcel",
-      "7": "LibraryMailParcel",
-      "13": "PriorityMailExpress;FlatRateEnvelope",
-      "15": "First-ClassMail;LargePostcards",
-      "16": "PriorityMail;FlatRateEnvelope",
-      "17": "PriorityMail;MediumFlatRateBox",
-      "20": "BoundPrintedMatterFlats",
-      "22": "PriorityMail;LargeFlatRateBox",
-      "23": "PriorityMailExpress;Sunday/HolidayDelivery",
-      "25": "PriorityMailExpress;Sunday/HolidayDeliveryFlatRateEnvelope",
-      "27": "PriorityMailExpress;FlatRateEnvelopeHoldForPickup",
-      "28": "PriorityMail;SmallFlatRateBox",
-      "29": "PriorityMail;PaddedFlatRateEnvelope",
-      "30": "PriorityMailExpress;LegalFlatRateEnvelope",
-      "31": "PriorityMailExpress;LegalFlatRateEnvelopeHoldForPickup",
-      "32": "PriorityMailExpress;Sunday/HolidayDeliveryLegalFlatRateEnvelope",
-      "33": "PriorityMail;HoldForPickup",
-      "34": "PriorityMail;LargeFlatRateBoxHoldForPickup",
-      "35": "PriorityMail;MediumFlatRateBoxHoldForPickup",
-      "36": "PriorityMail;SmallFlatRateBoxHoldForPickup",
-      "37": "PriorityMail;FlatRateEnvelopeHoldForPickup",
-      "38": "PriorityMail;GiftCardFlatRateEnvelope",
-      "39": "PriorityMail;GiftCardFlatRateEnvelopeHoldForPickup",
-      "40": "PriorityMail;WindowFlatRateEnvelope",
-      "41": "PriorityMail;WindowFlatRateEnvelopeHoldForPickup",
-      "42": "PriorityMail;SmallFlatRateEnvelope",
-      "43": "PriorityMail;SmallFlatRateEnvelopeHoldForPickup",
-      "44": "PriorityMail;LegalFlatRateEnvelope",
-      "45": "PriorityMail;LegalFlatRateEnvelopeHoldForPickup",
-      "46": "PriorityMail;PaddedFlatRateEnvelopeHoldForPickup",
-      "47": "PriorityMail;RegionalRateBoxA",
-      "48": "PriorityMail;RegionalRateBoxAHoldForPickup",
-      "49": "PriorityMail;RegionalRateBoxB",
-      "50": "PriorityMail;RegionalRateBoxBHoldForPickup",
-      "53": "First-Class;PackageServiceHoldForPickup",
-      "55": "PriorityMailExpress;FlatRateBoxes",
-      "56": "PriorityMailExpress;FlatRateBoxesHoldForPickup",
-      "57": "PriorityMailExpress;Sunday/HolidayDeliveryFlatRateBoxes",
-      "58": "PriorityMail;RegionalRateBoxC",
-      "59": "PriorityMail;RegionalRateBoxCHoldForPickup",
-      "61": "First-Class;PackageService",
-      "62": "PriorityMailExpress;PaddedFlatRateEnvelope",
-      "63": "PriorityMailExpress;PaddedFlatRateEnvelopeHoldForPickup",
-      "64": "PriorityMailExpress;Sunday/HolidayDeliveryPaddedFlatRateEnvelope",
-      "77": "ParcelSelectGround",
-      "78": "First-ClassMail;MeteredLetter",
-      "82": "ParcelSelectLightweightMachinableParcels5-Digit",
-      "82": "ParcelSelectLightweightIrregularParcels5-Digit",
-      "82": "ParcelSelectLightweightMachinableParcelsNDC",
-      "82": "ParcelSelectLightweightIrregularParcelsNDC",
-      "82": "ParcelSelectLightweightMachinableParcelsMixedNDC",
-      "82": "ParcelSelectLightweightIrregularParcelsMixedNDC",
-      "82": "ParcelSelectLightweightIrregularParcelsSCF",
-      "84": "PriorityMailCubic",
-      "88": "USPSConnectLocalDDU",
-      "89": "USPSConnectLocalFlatRateBag–SmallDDU",
-      "90": "USPSConnectLocalFlatRateBag–LargeDDU",
-      "91": "USPSConnectLocalFlatRateBoxDDU",
-      "92": "ParcelSelectGroundCubic",
-      "179": "ParcelSelectDestinationEntryMachinableDDU",
-      "179": "ParcelSelectDestinationEntryNonmachinableDDU",
-      "179": "ParcelSelectDestinationEntryMachinableDSCF5D",
-      "179": "ParcelSelectDestinationEntryNonmachinableDSCF5-Digit",
-      "179": "ParcelSelectDestinationEntryMachinableDSCFSCF",
-      "179": "ParcelSelectDestinationEntryNonmachinableDSCF3-Digit",
-      "179": "ParcelSelectDestinationEntryMachinableDNDC",
-      "179": "ParcelSelectDestinationEntryNonmachinableDNDC",
-      "922": "PriorityMailReturnServicePaddedFlatRateEnvelope",
-      "932": "PriorityMailReturnServiceGiftCardFlatRateEnvelope",
-      "934": "PriorityMailReturnServiceWindowFlatRateEnvelope",
-      "936": "PriorityMailReturnServiceSmallFlatRateEnvelope",
-      "938": "PriorityMailReturnServiceLegalFlatRateEnvelope",
-      "939": "PriorityMailReturnServiceFlatRateEnvelope",
-      "946": "PriorityMailReturnServiceRegionalRateBoxA",
-      "947": "PriorityMailReturnServiceRegionalRateBoxB",
-      "962": "PriorityMailReturnService",
-      "963": "PriorityMailReturnServiceLargeFlatRateBox",
-      "964": "PriorityMailReturnServiceMediumFlatRateBox",
-      "965": "PriorityMailReturnServiceSmallFlatRateBox",
-      "967": "PriorityMailReturnServiceCubic",
-      "968": "First-ClassPackageReturnService",
-      "969": "GroundReturnService",
-      "2020": "BoundPrintedMatterFlatsHoldForPickup",
-      "2071": "ParcelSelectGround;HoldForPickup",
-      "2077": "BoundPrintedMatterParcelsHoldForPickup",
-      "2082": "ParcelSelectLightweightMachinableParcels5-DigitHoldForPickup",
-      "2082": "ParcelSelectLightweightIrregularParcels5-DigitHoldForPickup",
-      "2082": "ParcelSelectLightweightMachinableParcelsNDCHoldForPickup",
-      "2082": "ParcelSelectLightweightIrregularParcelsNDCHoldForPickup",
-      "2082": "ParcelSelectLightweightMachinableParcelsMixedNDCHoldForPickup",
-      "2082": "ParcelSelectLightweightIrregularParcelsMixedNDCHoldForPickup",
-      "2082": "ParcelSelectLightweightIrregularParcelsSCFHoldForPickup"
-    ],
-    ratev6: [
-      "1": "Priority Mail Express International",
-      "2": "Priority Mail International",
-      "4": "Global Express Guaranteed; (GXG)**",
-      "5": "Global Express Guaranteed; Document",
-      "6": "Global Express Guarantee; Non-Document Rectangular",
-      "7": "Global Express Guaranteed; Non-Document Non-Rectangular",
-      "8": "Priority Mail International; Flat Rate Envelope**",
-      "9": "Priority Mail International; Medium Flat Rate Box",
-      "10": "Priority Mail Express International; Flat Rate Envelope",
-      "11": "Priority Mail International; Large Flat Rate Box",
-      "12": "USPS GXG; Envelopes**",
-      "13": "First-Class Mail; International Letter**",
-      "14": "First-Class Mail; International Large Envelope**",
-      "15": "First-Class Package International Service**",
-      "16": "Priority Mail International; Small Flat Rate Box**",
-      "17": "Priority Mail Express International; Legal Flat Rate Envelope",
-      "18": "Priority Mail International; Gift Card Flat Rate Envelope**",
-      "19": "Priority Mail International; Window Flat Rate Envelope**",
-      "20": "Priority Mail International; Small Flat Rate Envelope**",
-      "1": "Priority Mail Express International",
-      "2": "Priority Mail International",
-      "4": "Global Express Guaranteed; (GXG)**",
-      "5": "Global Express Guaranteed; Document",
-      "6": "Global Express Guarantee; Non-Document Rectangular",
-      "7": "Global Express Guaranteed; Non-Document Non-Rectangular",
-      "8": "Priority Mail International; Flat Rate Envelope**",
-      "9": "Priority Mail International; Medium Flat Rate Box",
-      "10": "Priority Mail Express International; Flat Rate Envelope",
-      "11": "Priority Mail International; Large Flat Rate Box",
-      "12": "USPS GXG; Envelopes**",
-      "13": "First-Class Mail; International Letter**",
-      "14": "First-Class Mail; International Large Envelope**",
-      "15": "First-Class Package International Service**",
-      "16": "Priority Mail International; Small Flat Rate Box**",
-      "17": "Priority Mail Express International; Legal Flat Rate Envelope",
-      "18": "Priority Mail International; Gift Card Flat Rate Envelope**",
-      "19": "Priority Mail International; Window Flat Rate Envelope**",
-      "20": "Priority Mail International; Small Flat Rate Envelope**",
-      "28": "Airmail M-Bag"
-    ]
-
+  defstruct ratev4: [
+              "0": "First-ClassMail;LargeEnvelope",
+              "0": "First-ClassMail;StampedLetter",
+              "0": "First-ClassPackageService-Retail",
+              "0": "First-ClassMail;Postcards",
+              "1": "PriorityMail",
+              "2": "PriorityMailExpress;HoldForPickup",
+              "3": "PriorityMailExpress",
+              "4": "StandardPost",
+              "5": "BoundPrintedMatterParcels",
+              "6": "MediaMailParcel",
+              "7": "LibraryMailParcel",
+              "13": "PriorityMailExpress;FlatRateEnvelope",
+              "15": "First-ClassMail;LargePostcards",
+              "16": "PriorityMail;FlatRateEnvelope",
+              "17": "PriorityMail;MediumFlatRateBox",
+              "20": "BoundPrintedMatterFlats",
+              "22": "PriorityMail;LargeFlatRateBox",
+              "23": "PriorityMailExpress;Sunday/HolidayDelivery",
+              "25": "PriorityMailExpress;Sunday/HolidayDeliveryFlatRateEnvelope",
+              "27": "PriorityMailExpress;FlatRateEnvelopeHoldForPickup",
+              "28": "PriorityMail;SmallFlatRateBox",
+              "29": "PriorityMail;PaddedFlatRateEnvelope",
+              "30": "PriorityMailExpress;LegalFlatRateEnvelope",
+              "31": "PriorityMailExpress;LegalFlatRateEnvelopeHoldForPickup",
+              "32": "PriorityMailExpress;Sunday/HolidayDeliveryLegalFlatRateEnvelope",
+              "33": "PriorityMail;HoldForPickup",
+              "34": "PriorityMail;LargeFlatRateBoxHoldForPickup",
+              "35": "PriorityMail;MediumFlatRateBoxHoldForPickup",
+              "36": "PriorityMail;SmallFlatRateBoxHoldForPickup",
+              "37": "PriorityMail;FlatRateEnvelopeHoldForPickup",
+              "38": "PriorityMail;GiftCardFlatRateEnvelope",
+              "39": "PriorityMail;GiftCardFlatRateEnvelopeHoldForPickup",
+              "40": "PriorityMail;WindowFlatRateEnvelope",
+              "41": "PriorityMail;WindowFlatRateEnvelopeHoldForPickup",
+              "42": "PriorityMail;SmallFlatRateEnvelope",
+              "43": "PriorityMail;SmallFlatRateEnvelopeHoldForPickup",
+              "44": "PriorityMail;LegalFlatRateEnvelope",
+              "45": "PriorityMail;LegalFlatRateEnvelopeHoldForPickup",
+              "46": "PriorityMail;PaddedFlatRateEnvelopeHoldForPickup",
+              "47": "PriorityMail;RegionalRateBoxA",
+              "48": "PriorityMail;RegionalRateBoxAHoldForPickup",
+              "49": "PriorityMail;RegionalRateBoxB",
+              "50": "PriorityMail;RegionalRateBoxBHoldForPickup",
+              "53": "First-Class;PackageServiceHoldForPickup",
+              "55": "PriorityMailExpress;FlatRateBoxes",
+              "56": "PriorityMailExpress;FlatRateBoxesHoldForPickup",
+              "57": "PriorityMailExpress;Sunday/HolidayDeliveryFlatRateBoxes",
+              "58": "PriorityMail;RegionalRateBoxC",
+              "59": "PriorityMail;RegionalRateBoxCHoldForPickup",
+              "61": "First-Class;PackageService",
+              "62": "PriorityMailExpress;PaddedFlatRateEnvelope",
+              "63": "PriorityMailExpress;PaddedFlatRateEnvelopeHoldForPickup",
+              "64": "PriorityMailExpress;Sunday/HolidayDeliveryPaddedFlatRateEnvelope",
+              "77": "ParcelSelectGround",
+              "78": "First-ClassMail;MeteredLetter",
+              "82": "ParcelSelectLightweightMachinableParcels5-Digit",
+              "82": "ParcelSelectLightweightIrregularParcels5-Digit",
+              "82": "ParcelSelectLightweightMachinableParcelsNDC",
+              "82": "ParcelSelectLightweightIrregularParcelsNDC",
+              "82": "ParcelSelectLightweightMachinableParcelsMixedNDC",
+              "82": "ParcelSelectLightweightIrregularParcelsMixedNDC",
+              "82": "ParcelSelectLightweightIrregularParcelsSCF",
+              "84": "PriorityMailCubic",
+              "88": "USPSConnectLocalDDU",
+              "89": "USPSConnectLocalFlatRateBag–SmallDDU",
+              "90": "USPSConnectLocalFlatRateBag–LargeDDU",
+              "91": "USPSConnectLocalFlatRateBoxDDU",
+              "92": "ParcelSelectGroundCubic",
+              "179": "ParcelSelectDestinationEntryMachinableDDU",
+              "179": "ParcelSelectDestinationEntryNonmachinableDDU",
+              "179": "ParcelSelectDestinationEntryMachinableDSCF5D",
+              "179": "ParcelSelectDestinationEntryNonmachinableDSCF5-Digit",
+              "179": "ParcelSelectDestinationEntryMachinableDSCFSCF",
+              "179": "ParcelSelectDestinationEntryNonmachinableDSCF3-Digit",
+              "179": "ParcelSelectDestinationEntryMachinableDNDC",
+              "179": "ParcelSelectDestinationEntryNonmachinableDNDC",
+              "922": "PriorityMailReturnServicePaddedFlatRateEnvelope",
+              "932": "PriorityMailReturnServiceGiftCardFlatRateEnvelope",
+              "934": "PriorityMailReturnServiceWindowFlatRateEnvelope",
+              "936": "PriorityMailReturnServiceSmallFlatRateEnvelope",
+              "938": "PriorityMailReturnServiceLegalFlatRateEnvelope",
+              "939": "PriorityMailReturnServiceFlatRateEnvelope",
+              "946": "PriorityMailReturnServiceRegionalRateBoxA",
+              "947": "PriorityMailReturnServiceRegionalRateBoxB",
+              "962": "PriorityMailReturnService",
+              "963": "PriorityMailReturnServiceLargeFlatRateBox",
+              "964": "PriorityMailReturnServiceMediumFlatRateBox",
+              "965": "PriorityMailReturnServiceSmallFlatRateBox",
+              "967": "PriorityMailReturnServiceCubic",
+              "968": "First-ClassPackageReturnService",
+              "969": "GroundReturnService",
+              "2020": "BoundPrintedMatterFlatsHoldForPickup",
+              "2071": "ParcelSelectGround;HoldForPickup",
+              "2077": "BoundPrintedMatterParcelsHoldForPickup",
+              "2082": "ParcelSelectLightweightMachinableParcels5-DigitHoldForPickup",
+              "2082": "ParcelSelectLightweightIrregularParcels5-DigitHoldForPickup",
+              "2082": "ParcelSelectLightweightMachinableParcelsNDCHoldForPickup",
+              "2082": "ParcelSelectLightweightIrregularParcelsNDCHoldForPickup",
+              "2082": "ParcelSelectLightweightMachinableParcelsMixedNDCHoldForPickup",
+              "2082": "ParcelSelectLightweightIrregularParcelsMixedNDCHoldForPickup",
+              "2082": "ParcelSelectLightweightIrregularParcelsSCFHoldForPickup"
+            ],
+            ratev6: [
+              "1": "Priority Mail Express International",
+              "2": "Priority Mail International",
+              "4": "Global Express Guaranteed; (GXG)**",
+              "5": "Global Express Guaranteed; Document",
+              "6": "Global Express Guarantee; Non-Document Rectangular",
+              "7": "Global Express Guaranteed; Non-Document Non-Rectangular",
+              "8": "Priority Mail International; Flat Rate Envelope**",
+              "9": "Priority Mail International; Medium Flat Rate Box",
+              "10": "Priority Mail Express International; Flat Rate Envelope",
+              "11": "Priority Mail International; Large Flat Rate Box",
+              "12": "USPS GXG; Envelopes**",
+              "13": "First-Class Mail; International Letter**",
+              "14": "First-Class Mail; International Large Envelope**",
+              "15": "First-Class Package International Service**",
+              "16": "Priority Mail International; Small Flat Rate Box**",
+              "17": "Priority Mail Express International; Legal Flat Rate Envelope",
+              "18": "Priority Mail International; Gift Card Flat Rate Envelope**",
+              "19": "Priority Mail International; Window Flat Rate Envelope**",
+              "20": "Priority Mail International; Small Flat Rate Envelope**",
+              "1": "Priority Mail Express International",
+              "2": "Priority Mail International",
+              "4": "Global Express Guaranteed; (GXG)**",
+              "5": "Global Express Guaranteed; Document",
+              "6": "Global Express Guarantee; Non-Document Rectangular",
+              "7": "Global Express Guaranteed; Non-Document Non-Rectangular",
+              "8": "Priority Mail International; Flat Rate Envelope**",
+              "9": "Priority Mail International; Medium Flat Rate Box",
+              "10": "Priority Mail Express International; Flat Rate Envelope",
+              "11": "Priority Mail International; Large Flat Rate Box",
+              "12": "USPS GXG; Envelopes**",
+              "13": "First-Class Mail; International Letter**",
+              "14": "First-Class Mail; International Large Envelope**",
+              "15": "First-Class Package International Service**",
+              "16": "Priority Mail International; Small Flat Rate Box**",
+              "17": "Priority Mail Express International; Legal Flat Rate Envelope",
+              "18": "Priority Mail International; Gift Card Flat Rate Envelope**",
+              "19": "Priority Mail International; Window Flat Rate Envelope**",
+              "20": "Priority Mail International; Small Flat Rate Envelope**",
+              "28": "Airmail M-Bag"
+            ]
 end

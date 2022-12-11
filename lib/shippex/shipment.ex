@@ -1,24 +1,23 @@
 defmodule Shippex.Shipment do
   @moduledoc """
   A `Shipment` represents everything needed to fetch rates from carriers: an
-  origin, a destination, and a package description. An optional `:id` field
+  origin, a destination, and a list of parcels. An optional `:id` field
   is provided in the struct, which may be used by the end user to represent the
   user's internal identifier for the shipment. The id is not used by Shippex.
 
   Shipments are created by `shipment/3`.
   """
 
-  alias Shippex.{Shipment, Address, Package}
+  alias Shippex.{Shipment, Address, Parcel}
 
-  @enforce_keys [:from, :to, :package, :ship_date, :packages, :params]
-  defstruct [:id, :from, :to, :package, :ship_date, :packages, :params]
+  @enforce_keys [:from, :to, :ship_date, :parcels, :params]
+  defstruct [:id, :from, :to, :ship_date, :parcels, :params]
 
   @type t :: %__MODULE__{
           id: any(),
           from: Address.t(),
           to: Address.t(),
-          package: Package.t(),
-          packages: List.t(),
+          parcels: List.t(),
           ship_date: any(),
           params: any()
         }
@@ -28,7 +27,7 @@ defmodule Shippex.Shipment do
   """
   @spec new(Address.t(), Address.t(), List.t(), Keyword.t()) ::
           {:ok, t()} | {:error, String.t()}
-  def new(%Address{} = from, %Address{} = to, packages \\ [], opts \\ []) do
+  def new(%Address{} = from, %Address{} = to, parcels \\ [], opts \\ []) do
     ship_date = Keyword.get(opts, :ship_date)
     params = Keyword.get(opts, :params)
 
@@ -40,13 +39,10 @@ defmodule Shippex.Shipment do
       throw({:error, "Invalid ship date: #{ship_date}"})
     end
 
-    package = List.first(packages)
-
     shipment = %Shipment{
       from: from,
       to: to,
-      package: package,
-      packages: packages,
+      parcels: parcels,
       ship_date: ship_date,
       params: params
     }
@@ -60,8 +56,8 @@ defmodule Shippex.Shipment do
   Builds a `Shipment`. Raises on failure.
   """
   @spec new!(Address.t(), Address.t(), List.t(), Keyword.t()) :: t() | none()
-  def new!(%Address{} = from, %Address{} = to, [] = packages, opts \\ []) do
-    case new(from, to, packages, opts) do
+  def new!(%Address{} = from, %Address{} = to, [] = parcels, opts \\ []) do
+    case new(from, to, parcels, opts) do
       {:ok, shipment} -> shipment
       {:error, error} -> raise error
     end

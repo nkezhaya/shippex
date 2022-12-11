@@ -1,4 +1,4 @@
-<% package = @shipment.package %>
+<% parcels = @shipment.parcel %>
 <% username = config().username %>
 <% hs_tariff_number = Map.get(config(), :hs_tariff_number, "") %>
 <% agreement = Map.get(config(), :agreement, "Y") %>
@@ -13,7 +13,8 @@
     <%= render_address shipment: @shipment, address: :from %>
     <%= render_address shipment: @shipment, address: :to %>
 
-    <Container><%= container(@shipment) %></Container>
+<%= for package <- parcels do %>
+    <Container><%= container(package) %></Container>
 
     <ShippingContents>
       <%= for item <- package.items do %>
@@ -31,11 +32,11 @@
 
     <InsuredAmount><%= Util.price_to_dollars(package.insurance) %></InsuredAmount>
     <GrossPounds>0</GrossPounds>
-    <GrossOunces><%= round(weight_in_ounces(@shipment.package.weight)) %></GrossOunces>
+    <GrossOunces><%= round(weight_in_ounces(package.weight)) %></GrossOunces>
     <ContentType><%= content_type %></ContentType>
     <Agreement><%= agreement %></Agreement>
     <ImageType><%= image_type %></ImageType>
-    <Size><%= size(@shipment) %></Size>
+    <Size><%= size(package) %></Size>
     <Length><%= package.length %></Length>
     <Width><%= package.width %></Width>
     <Height><%= package.height %></Height>
@@ -46,16 +47,17 @@
         <%= Date.to_iso8601(date) |> String.split("-") |> Enum.reverse |> Enum.join("/") %>
       </LabelDate>
     <% end %>
+    <% end %>
   <% else %>
     <%= render_address shipment: @shipment, address: :from %>
     <%= render_address shipment: @shipment, address: :to %>
-
-    <WeightInOunces><%= weight_in_ounces(@shipment.package.weight) %></WeightInOunces>
+<%= for package <- parcels do %>
+    <WeightInOunces><%= weight_in_ounces(package.weight) %></WeightInOunces>
     <ServiceType><%= Service.service_code(@service) %></ServiceType>
     <%= if @service.id == :usps_priority_express do %>
       <Container>VARIABLE</Container>
     <% else %>
-      <Container><%= container(@shipment) %></Container>
+      <Container><%= container(package) %></Container>
     <% end %>
     <Width><%= package.width %></Width>
     <Length><%= package.length %></Length>
@@ -83,5 +85,6 @@
     <% end %>
 
     <ImageType><%= image_type %></ImageType>
+  <% end %>
   <% end %>
 </<%= @api %>Request>

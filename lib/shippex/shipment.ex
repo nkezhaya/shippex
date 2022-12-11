@@ -8,7 +8,7 @@ defmodule Shippex.Shipment do
   Shipments are created by `shipment/3`.
   """
 
-  alias Shippex.{Shipment, Address, Parcel}
+  alias Shippex.{Shipment, Address}
 
   @enforce_keys [:from, :to, :ship_date, :parcels, :params]
   defstruct [:id, :from, :to, :ship_date, :parcels, :params]

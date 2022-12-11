@@ -84,7 +84,8 @@ destination = Shippex.Address.new(%{
   city: "Plano",
   state: "TX",
   postal_code: "75074",
-  country: "US" # optional
+  country: "US", # optional
+  type: :residential # optional :residential, :business
 })
 
 # Create a package. Currently only inches and pounds (lbs) supported.

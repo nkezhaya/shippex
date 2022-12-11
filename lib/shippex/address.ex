@@ -4,11 +4,11 @@ defmodule Shippex.Address do
   *not* initialize this struct directly. Instead, use `address/1`.
   """
 
-  @enforce_keys ~w(first_name last_name name phone address address_line_2 city
-                   state postal_code country)a
+  @enforce_keys ~w(first_name last_name name phone address address_line_2 address_line_3 city
+                   state postal_code country type)a
 
   defstruct ~w(first_name last_name name company_name phone address
-               address_line_2 city state postal_code country)a
+               address_line_2 address_line_3 city state postal_code country type meta valid)a
 
   @type t() :: %__MODULE__{
           first_name: nil | String.t(),
@@ -18,9 +18,13 @@ defmodule Shippex.Address do
           phone: nil | String.t(),
           address: String.t(),
           address_line_2: nil | String.t(),
+          address_line_3: nil | String.t(),
           city: String.t(),
           state: String.t(),
           postal_code: String.t(),
+          type: String.t(),
+    valid: String.t(),
+          meta: String.t(),
           country: ISO.country_code()
         }
 
@@ -45,9 +49,14 @@ defmodule Shippex.Address do
         phone: "123-123-1234",
         address: "9999 Hobby Lane",
         address_line_2: nil,
+        address_line_3: nil,
         city: "Austin",
         state: "TX",
-        postal_code: "78703"
+        type: :residential,
+        postal_code: "78703",
+        valid: true,
+        email: nil
+        meta: nil
       })
   """
   @spec new(map()) :: {:ok, t()} | {:error, String.t()}
@@ -93,6 +102,13 @@ defmodule Shippex.Address do
         end
       end
 
+    type =
+      if is_nil(params["type"]) do
+        :residential
+      else
+        params["type"]
+      end
+
     address = %Address{
       name: name,
       first_name: first_name,
@@ -101,10 +117,14 @@ defmodule Shippex.Address do
       phone: params["phone"],
       address: params["address"],
       address_line_2: params["address_line_2"],
+      address_line_3: params["address_line_3"],
       city: params["city"],
       state: state,
+      type: type,
       postal_code: String.trim(params["postal_code"] || ""),
-      country: country
+      country: country,
+      valid: nil,
+      meta: nil
     }
 
     # Check for a passed array.
@@ -164,7 +184,7 @@ defmodule Shippex.Address do
   @doc """
   Returns the state code without its country code prefix.
 
-      iex> address = Shippex.Address.new!(%{
+      iex> address = Shippex.Address.state_without_country(%{
       ...>   first_name: "Earl",
       ...>   last_name: "Grey",
       ...>   phone: "123-123-1234",
@@ -173,7 +193,9 @@ defmodule Shippex.Address do
       ...>   city: "Austin",
       ...>   state: "US-TX",
       ...>   postal_code: "78703",
+      ...>   type: :business,
       ...>   country: "US"
+      ...>   meta: nil
       ...>  })
       iex> Address.state_without_country(address)
       "TX"

@@ -66,7 +66,7 @@ defmodule Shippex.Carrier.USPS do
     {:error, "Fetch All Rates Not implemented for USPS"}
   end
 
-  def machineable?(_shipment) do
+  def machineable?(_parcel) do
     "False"
   end
 

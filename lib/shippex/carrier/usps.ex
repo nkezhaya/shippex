@@ -19,6 +19,14 @@ defmodule Shippex.Carrier.USPS do
   @sortation_level ~w(3D 5D BAS CR MIX NDC NONE PST SCF TBE TBF TBH TBT)a
   @destination_entry_facility_type ~w(DDU DNDC DCSF NONE)a
 
+  @typep flat_rate_container() :: %{
+    name: String.t(),
+    rate: integer(),
+    length: number(),
+    width: number(),
+    height: number()
+  }
+
   for f <-
         ~w(address cancel carrier_pickup_availability city_state_by_zipcode express_mail_commitments first_class_service_standards hold_for_pickup package_pickup_cancel package_pickup_change package_pickup_inquery package_pickup_schedule package_service_standardb priority_mail_service_standards proof_of_delivery return_label return_receipt label rate scan sdc_get_locations sunday_holiday track track_confirm_by_email track_fields validate_address zipcode)a do
     EEx.function_from_file(
@@ -459,34 +467,82 @@ defmodule Shippex.Carrier.USPS do
   def international?(_),
     do: false
 
-  def country(%Address{country: code}) do
-    country(code)
+  defdelegate country(data), to: Shippex.Country
+
+  @doc """
+  Returns a map of predefined containers for use with USPS. These can be
+  passed to `parcel.container` for fetching rates.
+  """
+  @spec containers() :: %{atom() => String.t()}
+  defp containers() do
+      %{
+        box_large: "Lg Flat Rate Box",
+        box_medium: "Md Flat Rate Box",
+        box_small: "Sm Flat Rate Box",
+        envelope: "Flat Rate Envelope",
+        envelope_gift_card: "Gift Card Flat Rate Envelope",
+        envelope_legal: "Legal Flat Rate Envelope",
+        envelope_padded: "Padded Flat Rate Envelope",
+        envelope_small: "Sm Flat Rate Envelope",
+        envelope_window: "Window Flat Rate Envelope",
+        nonrectangular: "Nonrectangular",
+        rectangular: "Rectangular",
+        variable: "Variable"
+      }
   end
 
-  def country("AX"), do: "Aland Island"
-  def country("BA"), do: "Bosnia-Herzegovina"
-  def country("BQ"), do: "Bonaire"
-  def country("CC"), do: "Cocos Island"
-  def country("CI"), do: "Ivory Coast"
-  def country("CV"), do: "Cape Verde"
-  def country("CZ"), do: "Czech Republic"
-  def country("KR"), do: "South Korea"
-  def country("KP"), do: "North Korea"
-  def country("MM"), do: "Burma"
-  def country("RU"), do: "Russia"
-  def country("SH"), do: "Saint Helena"
-  def country("SY"), do: "Syria"
-  def country("VA"), do: "Vatican City"
-  def country("TZ"), do: "Tanzania"
-  def country("WF"), do: "Wallis and Futuna Islands"
-
-  def country(code) do
-    ISO.country_name(code, :informal)
+  @doc """
+  Returns a map of flat rate USPS containers, along with their string description
+  and flat shipping rate (in cents).
+  """
+  @spec flat_rate_containers() :: %{atom() => flat_rate_container()}
+  def flat_rate_containers() do
+    %{
+      envelope: %{name: "Flat Rate Envelope", rate: 665, length: 12.5, height: 9.5, width: 0},
+      envelope_gift_card: %{
+        name: "Gift Card Flat Rate Envelope",
+        rate: 665,
+        length: 10,
+        height: 7,
+        width: 0
+      },
+      envelope_window: %{
+        name: "Window Flat Rate Envelope",
+        rate: 665,
+        length: 10,
+        height: 5,
+        width: 0
+      },
+      envelope_small: %{name: "Sm Flat Rate Envelope", rate: 665, length: 10, height: 6, width: 0},
+      envelope_legal: %{
+        name: "Legal Flat Rate Envelope",
+        rate: 695,
+        length: 15,
+        height: 9.5,
+        width: 0
+      },
+      envelope_padded: %{
+        name: "Padded Flat Rate Envelope",
+        rate: 720,
+        length: 12.5,
+        height: 9.5,
+        width: 0
+      },
+      box_small: %{
+        name: "Sm Flat Rate Box",
+        rate: 715,
+        length: 8.6875,
+        height: 5.4375,
+        width: 1.75
+      },
+      box_medium: %{name: "Md Flat Rate Box", rate: 1360, length: 11.25, height: 8.75, width: 6},
+      box_large: %{name: "Lg Flat Rate Box", rate: 1885, length: 12.25, height: 12.25, width: 6}
+    }
   end
 
   defp container(parcel) do
-    case Parcel.usps_containers()[parcel.container] do
-      nil -> Parcel.usps_containers()[@default_container]
+    case containers()[parcel.container] do
+      nil -> containers()[@default_container]
       container -> container
     end
     |> String.upcase()

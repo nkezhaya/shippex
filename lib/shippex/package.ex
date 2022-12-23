@@ -1,20 +1,20 @@
-defmodule Shippex.Parcel do
+defmodule Shippex.Package do
   @moduledoc """
-  Defines the struct for storing a `Parcel`, which is then passed along with
+  Defines the struct for storing a `Package`, which is then passed along with
   an origin and destination address for shipping estimates. A `description` is
   optional, as it may or may not be used with various carriers.
 
-  For USPS, a parcel has a `container` string which can be one of the
+  For USPS, a package has a `container` string which can be one of the
   pre-defined USPS containers.
 
   Do not pass a `weight` parameter. Instead, pass in a list of `:items` with a
-  weight parameter on each of these. The weight on the parcel will be the sum
+  weight parameter on each of these. The weight on the package will be the sum
   of the weights of each of these. Same for `:monetary_value`.
 
   `:description` can optionally be passed in. Otherwise, it will be generated
   by joining the descriptions of each of the items.
 
-      Shippex.Parcel.parcel(%{length: 8
+      Shippex.Package.package(%{length: 8
                                 width: 8,
                                 height: 8,
                                 items: [
@@ -22,7 +22,7 @@ defmodule Shippex.Parcel do
                                   %{weight: 2, monetary_value: 200, description: "B"}
                                 ]})
 
-      # => %Parcel{weight: 3, monetary_value: 300, description: "A, B", ...}
+      # => %Package{weight: 3, monetary_value: 300, description: "A, B", ...}
   """
 
   alias Shippex.Item
@@ -45,7 +45,7 @@ defmodule Shippex.Parcel do
         }
 
   @doc """
-  Builds and returns a `Parcel`. Use this instead of directly initializing
+  Builds and returns a `Package`. Use this instead of directly initializing
   the struct.
   """
   @spec new(map()) :: t()

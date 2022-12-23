@@ -42,7 +42,7 @@ defmodule Shippex.Carrier.Dummy do
   end
 
   @impl true
-  def track_parcels(tracking_numbers) do
+  def track_packages(tracking_numbers) do
     {:ok, tracking_numbers}
   end
 

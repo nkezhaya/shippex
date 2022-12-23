@@ -89,7 +89,7 @@ destination = Shippex.Address.new(%{
 })
 
 # Create a package. Currently only inches and pounds (lbs) supported.
-package = Shippex.Parcel.new(%{items: [%{
+package = Shippex.Package.new(%{items: [%{
   quantity: 8,
   weight: 45,
   description: "Headphones",

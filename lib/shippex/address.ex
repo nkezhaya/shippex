@@ -194,7 +194,7 @@ defmodule Shippex.Address do
       ...>   state: "US-TX",
       ...>   postal_code: "78703",
       ...>   type: :business,
-      ...>   country: "US"
+      ...>   country: "US",
       ...>   meta: nil
       ...>  })
       iex> Address.state_without_country(address)
@@ -204,6 +204,12 @@ defmodule Shippex.Address do
   def state_without_country(%{state: state, country: country}) do
     String.replace(state, "#{country}-", "")
   end
+
+  @spec state_without_country(String.t()) :: String.t()
+  def state_without_country(state) do
+    state
+  end
+
 
   @doc """
   Returns a common country name for the given country code.  This removes

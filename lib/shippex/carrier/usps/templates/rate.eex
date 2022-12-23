@@ -1,10 +1,10 @@
-<% parcels = @shipment.parcels %>
+<% packages = @shipment.packages %>
 <% username = config().username %>
 
 <%= if international?(@shipment) do %>
   <IntlRateV2Request USERID='<%= username %>'>
     <Revision>2</Revision>
-    <%= for package <- parcels do %>
+    <%= for package <- packages do %>
     <Package ID='<%= create_hash(@shipment.to) %>'>
       <Pounds>0</Pounds>
       <Ounces><%= weight_in_ounces(package.weight) %></Ounces>
@@ -30,7 +30,7 @@
 <% else %>
   <RateV4Request USERID='<%= username %>'>
   <Revision>2</Revision>
-    <%= for package <- parcels do %>
+    <%= for package <- packages do %>
   <Package ID='<%= create_hash(@shipment.to, 5) %>'>
   <Service><%= Service.service_code(@service) %></Service>
   <ZipOrigination><%= @shipment.from.postal_code %></ZipOrigination>

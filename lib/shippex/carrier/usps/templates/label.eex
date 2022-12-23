@@ -1,4 +1,4 @@
-<% parcels = @shipment.parcel %>
+<% packages = @shipment.package %>
 <% username = config().username %>
 <% hs_tariff_number = Map.get(config(), :hs_tariff_number, "") %>
 <% agreement = Map.get(config(), :agreement, "Y") %>
@@ -13,7 +13,7 @@
     <%= render_address shipment: @shipment, address: :from %>
     <%= render_address shipment: @shipment, address: :to %>
 
-<%= for package <- parcels do %>
+<%= for package <- packages do %>
     <Container><%= container(package) %></Container>
 
     <ShippingContents>
@@ -51,7 +51,7 @@
   <% else %>
     <%= render_address shipment: @shipment, address: :from %>
     <%= render_address shipment: @shipment, address: :to %>
-<%= for package <- parcels do %>
+<%= for package <- packages do %>
     <WeightInOunces><%= weight_in_ounces(package.weight) %></WeightInOunces>
     <ServiceType><%= Service.service_code(@service) %></ServiceType>
     <%= if @service.id == :usps_priority_express do %>

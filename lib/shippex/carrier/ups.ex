@@ -166,7 +166,7 @@ defmodule Shippex.Carrier.UPS do
   end
 
   @impl true
-  def track_parcels(_tracking_numbers) do
+  def track_packages(_tracking_numbers) do
     # TODO
     raise "Not yet implemented for UPS"
   end
@@ -293,7 +293,7 @@ defmodule Shippex.Carrier.UPS do
   defp shipment_params(%Shipment{} = shipment, %Service{} = service) do
     from = shipment.from
     to = shipment.to
-    package = List.first(shipment.parcels)
+    package = List.first(shipment.packages)
 
     params = %{
       Description: package.description,

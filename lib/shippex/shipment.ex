@@ -1,7 +1,7 @@
 defmodule Shippex.Shipment do
   @moduledoc """
   A `Shipment` represents everything needed to fetch rates from carriers: an
-  origin, a destination, and a list of parcels. An optional `:id` field
+  origin, a destination, and a list of packages. An optional `:id` field
   is provided in the struct, which may be used by the end user to represent the
   user's internal identifier for the shipment. The id is not used by Shippex.
 
@@ -10,14 +10,14 @@ defmodule Shippex.Shipment do
 
   alias Shippex.{Shipment, Address}
 
-  @enforce_keys [:from, :to, :ship_date, :parcels, :params]
-  defstruct [:id, :from, :to, :ship_date, :parcels, :params]
+  @enforce_keys [:from, :to, :ship_date, :packages, :params]
+  defstruct [:id, :from, :to, :ship_date, :packages, :params]
 
   @type t :: %__MODULE__{
           id: any(),
           from: Address.t(),
           to: Address.t(),
-          parcels: List.t(),
+          packages: List.t(),
           ship_date: any(),
           params: any()
         }
@@ -27,7 +27,7 @@ defmodule Shippex.Shipment do
   """
   @spec new(Address.t(), Address.t(), List.t(), Keyword.t()) ::
           {:ok, t()} | {:error, String.t()}
-  def new(%Address{} = from, %Address{} = to, parcels \\ [], opts \\ []) do
+  def new(%Address{} = from, %Address{} = to, packages, opts \\ []) when is_list(packages) do
     ship_date = Keyword.get(opts, :ship_date)
     params = Keyword.get(opts, :params)
 
@@ -42,7 +42,7 @@ defmodule Shippex.Shipment do
     shipment = %Shipment{
       from: from,
       to: to,
-      parcels: parcels,
+      packages: packages,
       ship_date: ship_date,
       params: params
     }
@@ -52,14 +52,23 @@ defmodule Shippex.Shipment do
     {:error, _} = e -> e
   end
 
+  def new(%Address{} = from, %Address{} = to, package, opts) do
+    new(from, to, [package], opts)
+    end
+
   @doc """
   Builds a `Shipment`. Raises on failure.
   """
   @spec new!(Address.t(), Address.t(), List.t(), Keyword.t()) :: t() | none()
-  def new!(%Address{} = from, %Address{} = to, [] = parcels, opts \\ []) do
-    case new(from, to, parcels, opts) do
+  def new!(%Address{} = from, %Address{} = to, [] = packages, opts \\ []) when is_list(packages) do
+    case new(from, to, packages, opts) do
       {:ok, shipment} -> shipment
       {:error, error} -> raise error
     end
   end
+
+  def new!(from,to, package, opts ) do
+    new!(from, to, [package], opts)
+  end
+
 end

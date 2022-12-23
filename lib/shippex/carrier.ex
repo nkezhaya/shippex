@@ -13,7 +13,7 @@ defmodule Shippex.Carrier do
   @callback cancel_transaction(Transaction.t()) :: {atom, String.t()}
   @callback cancel_transaction(Shipment.t(), String.t()) :: {atom, String.t()}
   @callback validate_address(Address.t()) :: {:ok, [Address.t()]} | {:error, any()}
-  @callback track_parcels(String.t() | [String.t()]) :: {:ok | :error, any()}
+  @callback track_packages(String.t() | [String.t()]) :: {:ok | :error, any()}
   @callback services_country?(ISO.country_code()) :: boolean()
   @callback carrier() :: atom
 

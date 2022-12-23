@@ -5,16 +5,16 @@ defmodule Shippex.Pickup do
   Pickups are created by `pickup/3`.
   """
 
-  alias Shippex.{Pickup, Address, Parcel}
+  alias Shippex.{Pickup, Address, Package}
 
-  @enforce_keys [:from, :to,  :pickup_date, :parcels, :params]
-  defstruct [:id, :from, :to, :pickup_date, :parcels, :params]
+  @enforce_keys [:from, :to,  :pickup_date, :packages, :params]
+  defstruct [:id, :from, :to, :pickup_date, :packages, :params]
 
   @type t :: %__MODULE__{
           id: any(),
           from: Address.t(),
           to: Address.t(),
-          parcels: List.t(),
+          packages: List.t(),
           pickup_date: any(),
           params: any()
         }

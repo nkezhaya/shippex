@@ -8,7 +8,7 @@ defmodule Shippex.Carrier.USPS do
 
   alias Shippex.Carrier.USPS.Client
   alias Shippex.Carrier.USPS.Insurance
-  alias Shippex.{Address, Config, InvalidConfigError, Parcel, Label, Service, Shipment, Util}
+  alias Shippex.{Address, Config, InvalidConfigError, Package, Label, Service, Shipment, Util}
 
   @default_container :rectangular
   @large_containers ~w(rectangular nonrectangular variable)a
@@ -66,7 +66,7 @@ defmodule Shippex.Carrier.USPS do
     {:error, "Fetch All Rates Not implemented for USPS"}
   end
 
-  def machineable?(_parcel) do
+  def machineable?(_package) do
     "False"
   end
 
@@ -290,9 +290,9 @@ defmodule Shippex.Carrier.USPS do
     postage_line_item = %{name: "Postage", price: rate.rate}
 
     insurance_line_item =
-      Enum.map(shipment.parcels, fn parcel ->
+      Enum.map(shipment.packages, fn package ->
         cond do
-          is_nil(parcel.insurance) ->
+          is_nil(package.insurance) ->
             nil
 
           not is_nil(rate[:insurance_fee]) ->
@@ -389,9 +389,9 @@ defmodule Shippex.Carrier.USPS do
     |> Shippex.Service.get()
   end
 
-  defp international_mail_type(%Parcel{container: nil}), do: "PACKAGE"
+  defp international_mail_type(%Package{container: nil}), do: "PACKAGE"
 
-  defp international_mail_type(%Parcel{container: container}) do
+  defp international_mail_type(%Package{container: container}) do
     container = "#{container}"
 
     cond do
@@ -429,11 +429,11 @@ defmodule Shippex.Carrier.USPS do
   end
 
   @impl true
-  def track_parcels(tracking_number) when is_binary(tracking_number) do
-    track_parcels([tracking_number])
+  def track_packages(tracking_number) when is_binary(tracking_number) do
+    track_packages([tracking_number])
   end
 
-  def track_parcels(tracking_numbers) when is_list(tracking_numbers) do
+  def track_packages(tracking_numbers) when is_list(tracking_numbers) do
     request = render_track(tracking_numbers: tracking_numbers)
 
     with_response Client.post("ShippingAPI.dll", %{API: "TrackV2", XML: request}) do
@@ -471,7 +471,7 @@ defmodule Shippex.Carrier.USPS do
 
   @doc """
   Returns a map of predefined containers for use with USPS. These can be
-  passed to `parcel.container` for fetching rates.
+  passed to `package.container` for fetching rates.
   """
   @spec containers() :: %{atom() => String.t()}
   defp containers() do
@@ -540,22 +540,22 @@ defmodule Shippex.Carrier.USPS do
     }
   end
 
-  defp container(parcel) do
-    case containers()[parcel.container] do
+  defp container(package) do
+    case containers()[package.container] do
       nil -> containers()[@default_container]
       container -> container
     end
     |> String.upcase()
   end
 
-  defp size(parcel) do
+  defp size(package) do
     is_large? =
       cond do
-        container(parcel) == "RECTANGULAR" ->
+        container(package) == "RECTANGULAR" ->
           true
 
-        parcel.container in @large_containers ->
-          parcel
+        package.container in @large_containers ->
+          package
           |> Map.take(~w(large width height)a)
           |> Map.values()
           |> Enum.any?(&(&1 > 12))
@@ -612,9 +612,9 @@ defmodule Shippex.Carrier.USPS.Classid do
               "2": "PriorityMailExpress;HoldForPickup",
               "3": "PriorityMailExpress",
               "4": "StandardPost",
-              "5": "BoundPrintedMatterParcels",
-              "6": "MediaMailParcel",
-              "7": "LibraryMailParcel",
+              "5": "BoundPrintedMatterPackages",
+              "6": "MediaMailPackage",
+              "7": "LibraryMailPackage",
               "13": "PriorityMailExpress;FlatRateEnvelope",
               "15": "First-ClassMail;LargePostcards",
               "16": "PriorityMail;FlatRateEnvelope",
@@ -657,29 +657,29 @@ defmodule Shippex.Carrier.USPS.Classid do
               "62": "PriorityMailExpress;PaddedFlatRateEnvelope",
               "63": "PriorityMailExpress;PaddedFlatRateEnvelopeHoldForPickup",
               "64": "PriorityMailExpress;Sunday/HolidayDeliveryPaddedFlatRateEnvelope",
-              "77": "ParcelSelectGround",
+              "77": "PackageSelectGround",
               "78": "First-ClassMail;MeteredLetter",
-              "82": "ParcelSelectLightweightMachinableParcels5-Digit",
-              "82": "ParcelSelectLightweightIrregularParcels5-Digit",
-              "82": "ParcelSelectLightweightMachinableParcelsNDC",
-              "82": "ParcelSelectLightweightIrregularParcelsNDC",
-              "82": "ParcelSelectLightweightMachinableParcelsMixedNDC",
-              "82": "ParcelSelectLightweightIrregularParcelsMixedNDC",
-              "82": "ParcelSelectLightweightIrregularParcelsSCF",
+              "82": "PackageSelectLightweightMachinablePackages5-Digit",
+              "82": "PackageSelectLightweightIrregularPackages5-Digit",
+              "82": "PackageSelectLightweightMachinablePackagesNDC",
+              "82": "PackageSelectLightweightIrregularPackagesNDC",
+              "82": "PackageSelectLightweightMachinablePackagesMixedNDC",
+              "82": "PackageSelectLightweightIrregularPackagesMixedNDC",
+              "82": "PackageSelectLightweightIrregularPackagesSCF",
               "84": "PriorityMailCubic",
               "88": "USPSConnectLocalDDU",
               "89": "USPSConnectLocalFlatRateBag–SmallDDU",
               "90": "USPSConnectLocalFlatRateBag–LargeDDU",
               "91": "USPSConnectLocalFlatRateBoxDDU",
-              "92": "ParcelSelectGroundCubic",
-              "179": "ParcelSelectDestinationEntryMachinableDDU",
-              "179": "ParcelSelectDestinationEntryNonmachinableDDU",
-              "179": "ParcelSelectDestinationEntryMachinableDSCF5D",
-              "179": "ParcelSelectDestinationEntryNonmachinableDSCF5-Digit",
-              "179": "ParcelSelectDestinationEntryMachinableDSCFSCF",
-              "179": "ParcelSelectDestinationEntryNonmachinableDSCF3-Digit",
-              "179": "ParcelSelectDestinationEntryMachinableDNDC",
-              "179": "ParcelSelectDestinationEntryNonmachinableDNDC",
+              "92": "PackageSelectGroundCubic",
+              "179": "PackageSelectDestinationEntryMachinableDDU",
+              "179": "PackageSelectDestinationEntryNonmachinableDDU",
+              "179": "PackageSelectDestinationEntryMachinableDSCF5D",
+              "179": "PackageSelectDestinationEntryNonmachinableDSCF5-Digit",
+              "179": "PackageSelectDestinationEntryMachinableDSCFSCF",
+              "179": "PackageSelectDestinationEntryNonmachinableDSCF3-Digit",
+              "179": "PackageSelectDestinationEntryMachinableDNDC",
+              "179": "PackageSelectDestinationEntryNonmachinableDNDC",
               "922": "PriorityMailReturnServicePaddedFlatRateEnvelope",
               "932": "PriorityMailReturnServiceGiftCardFlatRateEnvelope",
               "934": "PriorityMailReturnServiceWindowFlatRateEnvelope",
@@ -696,15 +696,15 @@ defmodule Shippex.Carrier.USPS.Classid do
               "968": "First-ClassPackageReturnService",
               "969": "GroundReturnService",
               "2020": "BoundPrintedMatterFlatsHoldForPickup",
-              "2071": "ParcelSelectGround;HoldForPickup",
-              "2077": "BoundPrintedMatterParcelsHoldForPickup",
-              "2082": "ParcelSelectLightweightMachinableParcels5-DigitHoldForPickup",
-              "2082": "ParcelSelectLightweightIrregularParcels5-DigitHoldForPickup",
-              "2082": "ParcelSelectLightweightMachinableParcelsNDCHoldForPickup",
-              "2082": "ParcelSelectLightweightIrregularParcelsNDCHoldForPickup",
-              "2082": "ParcelSelectLightweightMachinableParcelsMixedNDCHoldForPickup",
-              "2082": "ParcelSelectLightweightIrregularParcelsMixedNDCHoldForPickup",
-              "2082": "ParcelSelectLightweightIrregularParcelsSCFHoldForPickup"
+              "2071": "PackageSelectGround;HoldForPickup",
+              "2077": "BoundPrintedMatterPackagesHoldForPickup",
+              "2082": "PackageSelectLightweightMachinablePackages5-DigitHoldForPickup",
+              "2082": "PackageSelectLightweightIrregularPackages5-DigitHoldForPickup",
+              "2082": "PackageSelectLightweightMachinablePackagesNDCHoldForPickup",
+              "2082": "PackageSelectLightweightIrregularPackagesNDCHoldForPickup",
+              "2082": "PackageSelectLightweightMachinablePackagesMixedNDCHoldForPickup",
+              "2082": "PackageSelectLightweightIrregularPackagesMixedNDCHoldForPickup",
+              "2082": "PackageSelectLightweightIrregularPackagesSCFHoldForPickup"
             ],
             ratev6: [
               "1": "Priority Mail Express International",

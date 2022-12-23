@@ -73,19 +73,19 @@ defmodule Shippex.Service do
   def get(:ups_worldwide_express),
     do: %S{id: :ups_worldwide_express, carrier: :ups, description: "UPS Worldwide Express"}
 
-  def get(:usps_media), do: %S{id: :usps_media, carrier: :usps, description: "Media Mail Parcel"}
+  def get(:usps_media), do: %S{id: :usps_media, carrier: :usps, description: "Media Mail Package"}
 
   def get(:usps_library),
-    do: %S{id: :usps_library, carrier: :usps, description: "Library Mail Parcel"}
+    do: %S{id: :usps_library, carrier: :usps, description: "Library Mail Package"}
 
   def get(:usps_first_class),
-    do: %S{id: :usps_first_class, carrier: :usps, description: "First-Class Mail Parcel"}
+    do: %S{id: :usps_first_class, carrier: :usps, description: "First-Class Mail Package"}
 
   def get(:usps_retail_ground),
     do: %S{id: :usps_retail_ground, carrier: :usps, description: "USPS Retail Ground"}
 
-  def get(:usps_parcel_select),
-    do: %S{id: :usps_parcel_select, carrier: :usps, description: "Parcel Select Ground"}
+  def get(:usps_package_select),
+    do: %S{id: :usps_package_select, carrier: :usps, description: "Package Select Ground"}
 
   def get(:usps_priority),
     do: %S{id: :usps_priority, carrier: :usps, description: "Priority Mail"}
@@ -117,7 +117,7 @@ defmodule Shippex.Service do
   end
 
   defp services_for_carrier_to_country(:usps, "US") do
-    ~w(usps_media usps_library usps_first_class usps_retail_ground usps_parcel_select usps_priority usps_priority_express)a
+    ~w(usps_media usps_library usps_first_class usps_retail_ground usps_package_select usps_priority usps_priority_express)a
   end
 
   defp services_for_carrier_to_country(:usps, _country) do
@@ -154,7 +154,7 @@ defmodule Shippex.Service do
   def service_code(:usps_library), do: "LIBRARY MAIL"
   def service_code(:usps_first_class), do: "FIRST CLASS"
   def service_code(:usps_retail_ground), do: "RETAIL GROUND"
-  def service_code(:usps_parcel_select), do: "PARCEL SELECT GROUND"
+  def service_code(:usps_package_select), do: "PARCEL SELECT GROUND"
   def service_code(:usps_priority), do: "PRIORITY"
   def service_code(:usps_priority_express), do: "PRIORITY EXPRESS"
   def service_code(:usps_priority_international), do: "PRIORITY INTERNATIONAL"

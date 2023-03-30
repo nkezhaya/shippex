@@ -1,0 +1,24 @@
+<% username = config().username %>
+<SCANRequest USERID='<%= username %>'>
+<Option>
+<Form><%= @form %></Form>
+</Option>
+<FromName><%= @name %></FromName>
+<FromFirm><%= @firm %></FromFirm>
+<FromAddress1><%= @address1 %></FromAddress1>
+<FromAddress2><%= @address2 %></FromAddress2>
+<FromCity><%= @city %></FromCity>
+<FromState><%= @state %></FromState>
+<FromZip5><%= @zip5 %></FromZip5>
+<FromZip4><%= @zip4 %></FromZip4>
+<Shipment>
+<PackageDetail>
+<PkgBarcode><%= @pkg_bar_code %></PkgBarcode>
+</PackageDetail>
+</Shipment>
+<MailDate><%= @mail_date %></MailDate>
+<MailTime><%= @mail_time %></MailTime>
+<EntryFacility/>
+<ImageType><%= @image_type %></ImageType>
+<CustomerRefNo><%= @customer_ref_no %></CustomerRefNo>
+</SCANRequest>

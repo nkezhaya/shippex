@@ -1,0 +1,6 @@
+<% username = config().username %>
+<ZipCodeLookupRequest USERID='<%= username %>'>
+ <ZipCode ID='<%= create_hash(nil) %>'>
+ <Zip5><%= @zipcode %></Zip5>
+ </ZipCode>
+ </CityStateLookupRequest>

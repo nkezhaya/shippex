@@ -1,7 +1,7 @@
-defmodule Shippex.USPS.TrackTest do
+defmodule ExShip.USPS.TrackTest do
   use ExUnit.Case
 
-  alias Shippex.Carrier.USPS
+  alias ExShip.Carrier.USPS
 
   setup do
     [shipment: Helper.valid_shipment()]

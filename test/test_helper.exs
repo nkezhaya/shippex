@@ -5,11 +5,11 @@ defmodule Helper do
   def valid_shipment(opts \\ []) do
     to = Keyword.get(opts, :to, "US")
     insurance = Keyword.get(opts, :insurance)
-    Shippex.Shipment.new!(origin(), destination(to), package(insurance))
+    ExShip.Shipment.new!(origin(), destination(to), package(insurance))
   end
 
   def origin() do
-    Shippex.Address.new!(%{
+    ExShip.Address.new!(%{
       first_name: "Jimmy",
       last_name: "Go",
       phone: "213-624-2378",
@@ -24,7 +24,7 @@ defmodule Helper do
   def destination(country \\ "US")
 
   def destination("US") do
-    Shippex.Address.new!(%{
+    ExShip.Address.new!(%{
       first_name: "Charlie",
       last_name: "Foo",
       phone: "646-473-0204",
@@ -37,7 +37,7 @@ defmodule Helper do
   end
 
   def destination("CA") do
-    Shippex.Address.new!(%{
+    ExShip.Address.new!(%{
       first_name: "Some",
       last_name: "Person",
       phone: "778-123-1234",
@@ -50,7 +50,7 @@ defmodule Helper do
   end
 
   def destination("MX") do
-    Shippex.Address.new!(%{
+    ExShip.Address.new!(%{
       first_name: "Mexico",
       last_name: "Mexico",
       phone: "123-123-1234",
@@ -64,7 +64,7 @@ defmodule Helper do
 
   def destination(country) when is_binary(country) do
     state =
-      with true <- Shippex.Address.subdivision_required?(country),
+      with true <- ExShip.Address.subdivision_required?(country),
            {_, %{"subdivisions" => %{} = subdivisions}} <- ISO.find_country(country),
            [sub | _] <- Map.keys(subdivisions) do
         sub
@@ -74,7 +74,7 @@ defmodule Helper do
 
     {city, postal_code} = city_postal_code(country)
 
-    Shippex.Address.new!(%{
+    ExShip.Address.new!(%{
       first_name: "Some",
       last_name: "Person",
       phone: "778-123-1234",
@@ -86,7 +86,7 @@ defmodule Helper do
     })
   end
 
-  def destination(%Shippex.Address{} = address), do: address
+  def destination(%ExShip.Address{} = address), do: address
 
   defp city_postal_code("AS"), do: {"Pago Pago", "96799"}
   defp city_postal_code("GU"), do: {"Hagatna", "96910"}
@@ -99,7 +99,7 @@ defmodule Helper do
   defp city_postal_code(_), do: {"City", "00000"}
 
   def package(insurance \\ nil) do
-    Shippex.Package.new(%{
+    ExShip.Package.new(%{
       length: 8,
       width: 8,
       height: 4,

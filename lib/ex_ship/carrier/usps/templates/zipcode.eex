@@ -1,0 +1,13 @@
+<% username = config().username %>
+<% address = @address %>
+<% salt = @address.address_line_1 <> @address.address_line_2 <> @address.city <> @address.state <> @address.postal_code %>
+<ZipCodeLookupRequest USERID='<%= username %>'>
+<Address ID='<%= create_hash(salt) %>'>
+<Address1><%= address.address_line_1 %></Address1>
+<Address2><%= address.address_line_2 %></Address2>
+<City><%= address.city %><</City>
+<State><%= address.state %></State>
+<Zip5><%= address.postal_code %></Zip5>
+<Zip4></Zip4>
+</Address>
+</ZipCodeLookupRequest>

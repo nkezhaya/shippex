@@ -1,0 +1,7 @@
+<% username = config().username %>
+<SundayHolidayRequest USERID='<%= username %>'>
+<SundayHoliday><%= @sunday_holiday %></SundayHoliday>
+<OriginZip><%= @origin_zip %></OriginZip>
+<FromZipCode><%= @destination_zip %></FromZipCode>
+<ToZipCode><%= @accept_date %></ToZipCode>
+</SundayHolidayRequest>

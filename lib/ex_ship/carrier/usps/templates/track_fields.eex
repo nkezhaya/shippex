@@ -1,0 +1,8 @@
+<% username = config().username %>
+<TrackFieldRequest  USERID='<%= username %>'>
+<Revision>1</Revision>
+<SourceId><%= @company_name %></SourceId>
+<%= for tracking_number <- @tracking_numbers do %>
+<TrackID ID="<%= tracking_number %>"></TrackID>
+<% end %>
+</TrackFieldRequest>

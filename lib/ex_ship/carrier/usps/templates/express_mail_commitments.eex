@@ -1,0 +1,9 @@
+<% username = config().username %>
+<ExpressMailCommitmentRequest USERID='<%= username %>'>
+<OriginZip><%= @origin_zip %></OriginZip>
+<DestinationZip><%= @destination_zip %></DestinationZip>
+<Date><%= @date %></Date>
+<DropOffTime><%= @drop_off_time %></DropOffTime>
+<ReturnDates><%= @return_dates %></ReturnDates>
+<PMGuarantee><%= @pm_guarantee %></PMGuarantee>
+</ExpressMailCommitmentRequest>

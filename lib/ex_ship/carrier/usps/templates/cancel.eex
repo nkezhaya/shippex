@@ -1,0 +1,4 @@
+<% username = config().username %>
+<<%= @root <> "CancelRequest" %> USERID='<%= username %>'>
+<BarcodeNumber><%= @tracking_number %></BarcodeNumber>
+</<%= @root <> "CancelRequest" %>>

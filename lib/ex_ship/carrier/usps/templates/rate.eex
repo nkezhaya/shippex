@@ -1,0 +1,54 @@
+<% packages = @shipment.packages %>
+<% username = config().username %>
+
+<%= if international?(@shipment) do %>
+  <IntlRateV2Request USERID='<%= username %>'>
+    <Revision>2</Revision>
+    <%= for package <- packages do %>
+    <Package ID='<%= create_hash(@shipment.to) %>'>
+      <Pounds>0</Pounds>
+      <Ounces><%= weight_in_ounces(package.weight) %></Ounces>
+      <Machinable><%= machineable?(package) %></Machinable>
+      <MailType><%= international_mail_type(package) %></MailType>
+      <ValueOfContents><%= Util.price_to_dollars(package.insurance || package.monetary_value) %></ValueOfContents>
+      <Country><%= country(@shipment.to) %></Country>
+      <Container><%= container(package) %></Container>
+      <Size><%= size(package) %></Size>
+      <Width><%= package.width %></Width>
+      <Length><%= package.length %></Length>
+      <Height><%= package.height %></Height>
+      <Girth><%= package.girth %></Girth>
+      <OriginZip><%= @shipment.from.postal_code %></OriginZip>
+      <%= if package.insurance do %>
+        <ExtraServices>
+          <ExtraService><%= insurance_code(@shipment, @service) %></ExtraService>
+        </ExtraServices>
+      <% end %>
+    </Package>
+     <% end %>
+  </IntlRateV2Request>
+<% else %>
+  <RateV4Request USERID='<%= username %>'>
+  <Revision>2</Revision>
+    <%= for package <- packages do %>
+  <Package ID='<%= create_hash(@shipment.to, 5) %>'>
+  <Service><%= Service.service_code(@service) %></Service>
+  <ZipOrigination><%= @shipment.from.postal_code %></ZipOrigination>
+  <ZipDestination><%= @shipment.to.postal_code %></ZipDestination>
+  <Pounds>0</Pounds>
+  <Ounces><%= weight_in_ounces(package.weight) %></Ounces>
+  <Container><%= container(package) %></Container>
+  <Size><%= size(package) %></Size>
+  <Width><%= package.width %></Width>
+  <Length><%= package.length %></Length>
+  <Height><%= package.height %></Height>
+  <Girth><%= package.girth %></Girth>
+  <Value><%= Util.price_to_dollars(package.insurance || package.monetary_value) %></Value>
+  <%= if package.insurance do %>
+  <SpecialServices><SpecialService><%= insurance_code(@shipment, @service) %></SpecialService></SpecialServices>
+  <% end %>
+  <Machinable><%= machineable?(package) %></Machinable>
+  </Package>
+   <% end %>
+  </RateV4Request>
+<% end %>

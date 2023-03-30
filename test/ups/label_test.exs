@@ -1,4 +1,4 @@
-defmodule Shippex.UPS.LabelTest do
+defmodule ExShip.UPS.LabelTest do
   use ExUnit.Case
 
   @moduletag :skip
@@ -12,15 +12,15 @@ defmodule Shippex.UPS.LabelTest do
   end
 
   test "label fetched with metric", %{shipment: shipment} do
-    Application.put_env(:shippex, :distance_unit, :cm)
-    Application.put_env(:shippex, :weight_unit, :kg)
+    Application.put_env(:exship, :distance_unit, :cm)
+    Application.put_env(:exship, :weight_unit, :kg)
 
     rates(shipment)
   end
 
   defp rates(shipment) do
     # Fetch rates
-    rates = Shippex.Carrier.UPS.fetch_rates(shipment)
+    rates = ExShip.Carrier.UPS.fetch_rates(shipment)
 
     assert rates
 
@@ -31,7 +31,7 @@ defmodule Shippex.UPS.LabelTest do
     # Accept one of the services and print the label
     {:ok, rate} = rates |> Enum.shuffle() |> hd
 
-    {:ok, label} = Shippex.Carrier.UPS.create_transaction(shipment, rate.service)
+    {:ok, label} = ExShip.Carrier.UPS.create_transaction(shipment, rate.service)
 
     assert label
   end

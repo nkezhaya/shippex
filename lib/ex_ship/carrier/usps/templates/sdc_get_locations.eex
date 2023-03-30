@@ -1,0 +1,10 @@
+<% username = config().username %>
+<SDCGetLocationsRequest USERID='<%= username %>'>
+<OriginZip><%= @origin_zip %></OriginZip>
+<DestinationZip><%= @destination_zip %></DestinationZip>
+<AcceptDate><%= @accept_date %></AcceptDate>
+<AcceptTime><%= @accept_time %></AcceptTime>
+<NonEMDetail><%= @non_em_detail %></NonEMDetail>
+<NonEMOriginType><%= @non_en_origin_type %></NonEMOriginType>
+<NonEMDestType><%= @non__em_dest_type %></NonEMDestType>
+</SDCGetLocationsRequest>

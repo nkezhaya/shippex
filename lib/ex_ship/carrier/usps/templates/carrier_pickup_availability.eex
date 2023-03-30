@@ -1,0 +1,11 @@
+<% username = config().username %>
+<CarrierPickupAvailabilityRequest USERID='<%= username %>'>
+<FirmName><%= @firm_name %></FirmName>
+<SuiteOrApt><%= @suite_or_apt %></SuiteOrApt>
+<Address2><%= @address2 %></Address2>
+<Urbanization><%= @urbanization %></Urbanization>
+<City><%= @city %></City>
+<State><%= @state %></State>
+<ZIP5><%= @zip5 %></ZIP5>
+<ZIP4><%= @zip4 %></ZIP4>
+</CarrierPickupAvailabilityRequest>

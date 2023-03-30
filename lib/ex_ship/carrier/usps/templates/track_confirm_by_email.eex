@@ -1,0 +1,9 @@
+<% username = config().username %>
+<PTSEmailRequest USERID='<%= username %>'>
+<TrackId><%= @tracking_number %></TrackId >
+<SourceId><%= @company_name %></SourceId>
+<MpSuffix ><%= @mp_suffix %></MpSuffix>
+<MpDate ><%= @mp_date %></MpDate>
+<RequestType><%= @request_type %></RequestType>
+<Email1><%= @email %></Email1>
+</PTSEmailRequest>

@@ -1,0 +1,8 @@
+#Requests List
+
+### Rate Quote
+POST https://{{url_prefix}}.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=<RateV4Request USERID="{{userid}}"><Revision>2</Revision><Package ID="0"><Service>LIBRARY MAIL</Service><ZipOrigination>78703</ZipOrigination><ZipDestination>75074</ZipDestination><Pounds>0</Pounds><Ounces>48</Ounces><Container>RECTANGULAR</Container><Size>LARGE</Size><Width>8</Width><Length>8</Length><Height>4</Height><Girth></Girth><Value>0</Value><Machinable>False</Machinable></Package></RateV4Request>
+
+
+### Address Verification
+POST https://{{url_prefix}}.shippingapis.com/ShippingAPI.dll?API=Verify&XML=<AddressValidateRequest USERID="{{userid}}"><Revision>1</Revision><Address ID="0"><Address1/><Address2>1600 Pennsylvania Avenue </Address2><City/><State>DC</State><Zip5>20500</Zip5><Zip4/></Address></AddressValidateRequest>

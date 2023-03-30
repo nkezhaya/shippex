@@ -1,11 +1,11 @@
-defmodule Shippex.AddressTest do
+defmodule ExShip.AddressTest do
   use ExUnit.Case
-  alias Shippex.Address
-  doctest Shippex.Address
+  alias ExShip.Address
+  doctest ExShip.Address
 
   test "address shortens the full state" do
     address =
-      Shippex.Address.new!(%{
+      ExShip.Address.new!(%{
         "name" => "Earl G",
         "address" => "9999 Hobby Ln",
         "city" => "Austin",
@@ -20,7 +20,7 @@ defmodule Shippex.AddressTest do
 
   test "address handles full country and state names" do
     address =
-      Shippex.Address.new!(%{
+      ExShip.Address.new!(%{
         "name" => "Earl G",
         "address" => "9999 Hobby Ln",
         "city" => "Austin",
@@ -34,7 +34,7 @@ defmodule Shippex.AddressTest do
   end
 
   test "initialize address having non-standard subdivision" do
-    address = Shippex.Address.new!(%{
+    address = ExShip.Address.new!(%{
       "address" => "18 Main St, Balleese Lower",
       "city" => "Rathdrum",
       "state" => "Co. Wicklow",
@@ -51,7 +51,7 @@ defmodule Shippex.AddressTest do
     address_line_2 = "Ste 900"
 
     address =
-      Shippex.Address.new!(%{
+      ExShip.Address.new!(%{
         "address" => [address_line_1, address_line_2],
         "city" => "Austin",
         "state" => "Texas",
@@ -64,7 +64,7 @@ defmodule Shippex.AddressTest do
 
   test "address validates state and country" do
     {:ok, _} =
-      Shippex.Address.new(%{
+      ExShip.Address.new(%{
         "address" => "260 Kim Keat Ave",
         "address_line_2" => "#01-01",
         "city" => "Singapore",
@@ -75,7 +75,7 @@ defmodule Shippex.AddressTest do
 
     # Valid country, invalid state
     {:error, error} =
-      Shippex.Address.new(%{
+      ExShip.Address.new(%{
         "address" => "260 Kim Keat Ave",
         "address_line_2" => "#01-01",
         "city" => "Singapore",
@@ -88,7 +88,7 @@ defmodule Shippex.AddressTest do
 
     # Invalid country, valid state
     {:error, error} =
-      Shippex.Address.new(%{
+      ExShip.Address.new(%{
         "address" => "260 Kim Keat Ave",
         "address_line_2" => "#01-01",
         "city" => "Singapore",

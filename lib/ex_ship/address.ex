@@ -1,6 +1,6 @@
-defmodule Shippex.Address do
+defmodule ExShip.Address do
   @moduledoc """
-  Represents an address that can be passed to other `Shippex` functions. Do
+  Represents an address that can be passed to other `ExShip` functions. Do
   *not* initialize this struct directly. Instead, use `address/1`.
   """
 
@@ -29,7 +29,7 @@ defmodule Shippex.Address do
         }
 
   alias __MODULE__, as: Address
-  alias Shippex.Util
+  alias ExShip.Util
 
   @default_country "US"
 
@@ -40,10 +40,10 @@ defmodule Shippex.Address do
   You may specify `first_name` and `last_name` separately, which will be
   concatenated to make the `name` property, or just specify `name` directly.
 
-  If `name` is specified directly, Shippex will try to infer the first and last
+  If `name` is specified directly, ExShip will try to infer the first and last
   names in case they're required separately for API calls.
 
-      Shippex.Address.new(%{
+      ExShip.Address.new(%{
         first_name: "Earl",
         last_name: "Grey",
         phone: "123-123-1234",
@@ -164,7 +164,7 @@ defmodule Shippex.Address do
 
     case address.country do
       "US" ->
-        Shippex.Carrier.module(carrier).validate_address(address)
+        ExShip.Carrier.module(carrier).validate_address(address)
 
       _country ->
         {:ok, [address]}
@@ -184,7 +184,7 @@ defmodule Shippex.Address do
   @doc """
   Returns the state code without its country code prefix.
 
-      iex> address = Shippex.Address.state_without_country(%{
+      iex> address = ExShip.Address.state_without_country(%{
       ...>   first_name: "Earl",
       ...>   last_name: "Grey",
       ...>   phone: "123-123-1234",

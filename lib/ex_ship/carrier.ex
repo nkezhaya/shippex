@@ -1,10 +1,10 @@
-defmodule Shippex.Carrier do
+defmodule ExShip.Carrier do
   @moduledoc """
   Defines a behaviour for implementing a new Carrier module. Includes a helper
   function for fetching the Carrier module.
   """
 
-  alias Shippex.{Shipment, Service, Rate, Transaction, Util}
+  alias ExShip.{Shipment, Service, Rate, Transaction, Util}
 
   @callback fetch_rates(Shipment.t()) :: [{atom, Rate.t()}]
   @callback fetch_rate(Shipment.t(), Service.t()) :: [{atom, Rate.t()}] | {atom, Rate.t()}
@@ -35,7 +35,7 @@ defmodule Shippex.Carrier do
     default_modules = Util.get_shipping_modules()
 
     carriers =
-      Application.get_env(:shippex, :carriers, [])
+      Application.get_env(:exship, :carriers, [])
       |> Enum.map(fn {k,c} ->
         module = Keyword.get(c, :module)
 
@@ -57,12 +57,12 @@ defmodule Shippex.Carrier do
         c -> raise "#{c} is not a supported carrier at this time."
       end
 
-    available_carriers = Shippex.carriers()
+    available_carriers = ExShip.carriers()
 
     if carrier in available_carriers do
       module
     else
-      raise Shippex.InvalidConfigError,
+      raise ExShip.InvalidConfigError,
             "#{inspect(carrier)} not found in carriers: #{inspect(available_carriers)}"
 
     end

@@ -1,4 +1,4 @@
-defmodule Shippex.Carrier.USPS.Insurance do
+defmodule ExShip.Carrier.USPS.Insurance do
   @moduledoc """
   This is a module that holds insurance related functions
   """

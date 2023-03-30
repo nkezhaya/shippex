@@ -1,11 +1,11 @@
-defmodule Shippex.Mixfile do
+defmodule ExShip.Mixfile do
   use Mix.Project
   @version "0.18.0"
-  @source_url "https://github.com/whitepaperclip/shippex"
+  @source_url "https://github.com/data-twister/exship"
 
   def project do
     [
-      app: :shippex,
+      app: :exship,
       version: @version,
       elixir: "~> 1.12",
       build_embedded: Mix.env() == :prod,
@@ -23,7 +23,7 @@ defmodule Shippex.Mixfile do
 
   defp description do
     """
-    Shippex is an abstraction of commonly used features in shipping with various
+    ExShip is a fork of the excellent shippex module by Nick Kezhaya which is an abstraction of commonly used features in shipping with various
     carriers. It provides a (hopefully) pleasant API to work with carrier-
     provided web interfaces for fetching rates and printing shipping labels.
     """
@@ -31,16 +31,16 @@ defmodule Shippex.Mixfile do
 
   defp package do
     [
-      name: :shippex,
+      name: :exship,
       files: [
-        "lib/shippex.ex",
-        "lib/shippex",
+        "lib/exship.ex",
+        "lib/exship",
         "priv/iso-3166-2.json",
         "mix.exs",
         "README.md",
         "LICENSE"
       ],
-      maintainers: ["Nick Kezhaya"],
+      maintainers: ["Jason Clark"],
       licenses: ["MIT"],
       links: %{"GitHub" => @source_url}
     ]
@@ -62,7 +62,7 @@ defmodule Shippex.Mixfile do
 
   defp docs do
     [
-      main: "Shippex",
+      main: "ExShip",
       source_url: @source_url,
       extras: ["README.md"]
     ]

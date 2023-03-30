@@ -1,4 +1,4 @@
-defmodule Shippex.Service do
+defmodule ExShip.Service do
   @moduledoc """
   A `Service` represents a carrier's offered shipping option. This is not
   initialized by the user directly. However, some convenience functions exist
@@ -6,24 +6,24 @@ defmodule Shippex.Service do
 
   Service fields are:
 
-    * `:id`          - A unique Shippex ID that can be used to perform lookups or fetch rates
+    * `:id`          - A unique ExShip ID that can be used to perform lookups or fetch rates
     * `:carrier`     - The atom representing the carrier
-    * `:code`        - Internally used by Shippex for API requests
+    * `:code`        - Internally used by ExShip for API requests
     * `:description` - A user-friendly string containing the name of the service
 
   ## Example
 
-        iex> Shippex.Service.services_for_carrier(:ups)
+        iex> ExShip.Service.services_for_carrier(:ups)
         [
-          %Shippex.Service{id: :ups_next_day_air, carrier: :ups, description: "UPS Next Day Air"},
-          %Shippex.Service{id: :ups_second_day_air, carrier: :ups, description: "UPS 2nd Day Air"},
-          %Shippex.Service{id: :ups_three_day_select, carrier: :ups, description: "UPS 3 Day Select"},
-          %Shippex.Service{id: :ups_ground, carrier: :ups, description: "UPS Ground"}
+          %ExShip.Service{id: :ups_next_day_air, carrier: :ups, description: "UPS Next Day Air"},
+          %ExShip.Service{id: :ups_second_day_air, carrier: :ups, description: "UPS 2nd Day Air"},
+          %ExShip.Service{id: :ups_three_day_select, carrier: :ups, description: "UPS 3 Day Select"},
+          %ExShip.Service{id: :ups_ground, carrier: :ups, description: "UPS Ground"}
         ]
   """
 
   alias __MODULE__, as: S
-  alias Shippex.{Carrier, Shipment}
+  alias ExShip.{Carrier, Shipment}
 
   @enforce_keys [:id, :carrier, :description]
   defstruct [:id, :carrier, :description]
@@ -35,7 +35,7 @@ defmodule Shippex.Service do
         }
 
   @doc """
-  Looks up a shipping service by its unique Shippex ID. Returns nil if none
+  Looks up a shipping service by its unique ExShip ID. Returns nil if none
   exist.
 
       iex> Service.get(:usps_priority)
@@ -106,7 +106,7 @@ defmodule Shippex.Service do
   @doc """
   Returns all services for `carrier` based on the `shipment` provided.
 
-      Shippex.Service.services_for_carrier(:ups)
+      ExShip.Service.services_for_carrier(:ups)
   """
   @spec services_for_carrier(Carrier.t(), Shipment.t()) :: [t]
   def services_for_carrier(carrier, %Shipment{to: %{country: dst}}) do

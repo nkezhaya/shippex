@@ -1,4 +1,4 @@
-defmodule Shippex.USPS.AddressTest do
+defmodule ExShip.USPS.AddressTest do
   use ExUnit.Case
 
   test "validate address" do
@@ -6,7 +6,7 @@ defmodule Shippex.USPS.AddressTest do
     phone = "123-456-7890"
 
     valid_address =
-      Shippex.Address.new!(%{
+      ExShip.Address.new!(%{
         "name" => name,
         "phone" => phone,
         "address" => "404 S Figueroa St",
@@ -15,7 +15,7 @@ defmodule Shippex.USPS.AddressTest do
         "postal_code" => "90071"
       })
 
-    {:ok, candidates} = Shippex.validate_address(valid_address, carrier: :usps)
+    {:ok, candidates} = ExShip.validate_address(valid_address, carrier: :usps)
     assert length(candidates) == 1
     assert hd(candidates).name == name
     assert hd(candidates).phone == phone
@@ -32,7 +32,7 @@ defmodule Shippex.USPS.AddressTest do
     phone = "123-456-7890"
 
     valid_address =
-      Shippex.Address.new!(%{
+      ExShip.Address.new!(%{
         "name" => name,
         "phone" => phone,
         "address" => "404 S Figueroa St",
@@ -44,7 +44,7 @@ defmodule Shippex.USPS.AddressTest do
 
     assert valid_address.address_line_2 == "Suite 101"
 
-    {:ok, candidates} = Shippex.validate_address(valid_address, carrier: :usps)
+    {:ok, candidates} = ExShip.validate_address(valid_address, carrier: :usps)
     assert length(candidates) == 1
     assert hd(candidates).name == name
     assert hd(candidates).phone == phone
@@ -58,13 +58,13 @@ defmodule Shippex.USPS.AddressTest do
 
   test "validate invalid address" do
     invalid_address =
-      Shippex.Address.new!(%{
+      ExShip.Address.new!(%{
         "address" => "9999 Wat Wat",
         "city" => "San Francisco",
         "state" => "CA",
         "postal_code" => "90071"
       })
 
-    {:error, _} = Shippex.validate_address(invalid_address, carrier: :usps)
+    {:error, _} = ExShip.validate_address(invalid_address, carrier: :usps)
   end
 end

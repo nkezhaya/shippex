@@ -1,4 +1,4 @@
-defmodule Shippex.Country do
+defmodule ExShip.Country do
 
   def country(%{country: code}) do
     country(code)

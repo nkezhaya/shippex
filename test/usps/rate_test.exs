@@ -1,7 +1,7 @@
-defmodule Shippex.USPS.RateTest do
+defmodule ExShip.USPS.RateTest do
   use ExUnit.Case
 
-  alias Shippex.Carrier.USPS
+  alias ExShip.Carrier.USPS
 
   describe "domestic" do
     setup do
@@ -86,13 +86,13 @@ defmodule Shippex.USPS.RateTest do
     @prefix if not USPS.domestic?(code), do: "international", else: "domestic"
     test "#{@prefix} rates generated for country #{@code} #{@full}" do
       shipment =
-        Shippex.Shipment.new!(Helper.origin(), Helper.destination(@code), Helper.package())
+        ExShip.Shipment.new!(Helper.origin(), Helper.destination(@code), Helper.package())
 
       shipment = %{shipment | package: %{shipment.package | container: :variable}}
 
       rate = USPS.fetch_rate(shipment, :usps_priority)
 
-      if Shippex.services_country?(:usps, @code) do
+      if ExShip.services_country?(:usps, @code) do
         assert {:ok, _rate} = rate
       else
         assert {:error, %{message: _}} = rate

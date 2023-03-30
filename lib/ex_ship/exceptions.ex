@@ -1,4 +1,4 @@
-defmodule Shippex.InvalidConfigError do
+defmodule ExShip.InvalidConfigError do
   defexception [:message]
 
   def exception(message) do

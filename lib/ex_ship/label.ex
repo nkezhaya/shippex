@@ -1,9 +1,9 @@
-defmodule Shippex.Label do
+defmodule ExShip.Label do
   @moduledoc """
   Defines the struct for storing a returned `Rate`, along with the tracking
   number, base64-encoded image and its format.
 
-      %Shippex.Label{rate: %Shippex.Rate{},
+      %ExShip.Label{rate: %ExShip.Rate{},
                      tracking_number: "ABCDEF1234",
                      format: :gif,
                      image: "iVBORw0K..."}

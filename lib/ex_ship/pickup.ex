@@ -1,11 +1,11 @@
-defmodule Shippex.Pickup do
+defmodule ExShip.Pickup do
   @moduledoc """
   A `Pickup` represents everything needed to manage a pickup.
 
   Pickups are created by `pickup/3`.
   """
 
-  alias Shippex.{Pickup, Address, Package}
+  alias ExShip.{Pickup, Address, Package}
 
   @enforce_keys [:from, :to,  :pickup_date, :packages, :params]
   defstruct [:id, :from, :to, :pickup_date, :packages, :params]

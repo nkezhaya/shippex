@@ -1,4 +1,4 @@
-defmodule Shippex.Item do
+defmodule ExShip.Item do
   @moduledoc """
   Defines a struct for storing an `Item` in a `Package`.
 

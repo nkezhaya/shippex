@@ -1,6 +1,6 @@
-defmodule Shippex.Carrier.Dummy do
+defmodule ExShip.Carrier.Dummy do
   @moduledoc false
-  @behaviour Shippex.Carrier
+  @behaviour ExShip.Carrier
 
   @impl true
   def fetch_rates(_arg) do
@@ -15,7 +15,7 @@ defmodule Shippex.Carrier.Dummy do
   @impl true
   def create_transaction(_arg1, _arg2) do
     {:shipment,
-     %Shippex.Transaction{shipment: shipment(), rate: rate(), label: nil, carrier: carrier()}}
+     %ExShip.Transaction{shipment: shipment(), rate: rate(), label: nil, carrier: carrier()}}
   end
 
   @impl true
@@ -48,8 +48,8 @@ defmodule Shippex.Carrier.Dummy do
 
   defp rate() do
     {carrier, _} = carrier()
-    %Shippex.Rate{
-      service: %Shippex.Service{
+    %ExShip.Rate{
+      service: %ExShip.Service{
         id: :dummy,
         carrier: carrier,
         description: "Dummy Shipping Service"

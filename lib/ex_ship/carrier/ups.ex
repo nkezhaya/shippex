@@ -1,11 +1,11 @@
-defmodule Shippex.Carrier.UPS do
+defmodule ExShip.Carrier.UPS do
   @moduledoc false
-  @behaviour Shippex.Carrier
+  @behaviour ExShip.Carrier
 
-  import Shippex.Address, only: [state_without_country: 1]
+  import ExShip.Address, only: [state_without_country: 1]
 
-  alias Shippex.Carrier.UPS.Client
-  alias Shippex.{Address, Config, InvalidConfigError, Shipment, Service, Transaction, Util}
+  alias ExShip.Carrier.UPS.Client
+  alias ExShip.{Address, Config, InvalidConfigError, Shipment, Service, Transaction, Util}
 
   defmacro with_response(response, do: block) do
     quote do
@@ -67,7 +67,7 @@ defmodule Shippex.Carrier.UPS do
             body["RatedShipment"]["TotalCharges"]["MonetaryValue"]
             |> Util.price_to_cents()
 
-          rate = %Shippex.Rate{service: service, price: price, line_items: []}
+          rate = %ExShip.Rate{service: service, price: price, line_items: []}
 
           {:ok, rate}
 
@@ -97,11 +97,11 @@ defmodule Shippex.Carrier.UPS do
             results["ShipmentCharges"]["TotalCharges"]["MonetaryValue"]
             |> Util.price_to_cents()
 
-          rate = %Shippex.Rate{service: service, price: price, line_items: []}
+          rate = %ExShip.Rate{service: service, price: price, line_items: []}
 
           package_response = results["PackageResults"]
 
-          label = %Shippex.Label{
+          label = %ExShip.Label{
             tracking_number: package_response["TrackingNumber"],
             format: :gif,
             image: package_response["ShippingLabel"]["GraphicImage"]
@@ -307,7 +307,7 @@ defmodule Shippex.Carrier.UPS do
     if not is_nil(package.monetary_value) do
       %{
         InvoiceLineTotal: %{
-          CurrencyCode: Shippex.currency_code(),
+          CurrencyCode: ExShip.currency_code(),
           MonetaryValue: to_string(package.monetary_value)
         }
       }
@@ -366,13 +366,13 @@ defmodule Shippex.Carrier.UPS do
 
   defp package_params(package) do
     [len, width, height] =
-      case Application.get_env(:shippex, :distance_unit, :in) do
+      case Application.get_env(:exship, :distance_unit, :in) do
         :in ->
           [package.length, package.width, package.height]
 
         :cm ->
           [package.length, package.width, package.height]
-          |> Enum.map(&Shippex.Util.cm_to_inches(&1))
+          |> Enum.map(&ExShip.Util.cm_to_inches(&1))
 
         u ->
           raise """
@@ -383,12 +383,12 @@ defmodule Shippex.Carrier.UPS do
       end
 
     weight =
-      case Application.get_env(:shippex, :weight_unit, :lbs) do
+      case Application.get_env(:exship, :weight_unit, :lbs) do
         :lbs ->
           package.weight
 
         :kg ->
-          Shippex.Util.kgs_to_lbs(package.weight)
+          ExShip.Util.kgs_to_lbs(package.weight)
 
         u ->
           raise """
@@ -424,7 +424,7 @@ defmodule Shippex.Carrier.UPS do
     def process_response_body(body), do: Jason.decode!(body)
 
     defp base_url do
-      case Shippex.env() do
+      case ExShip.env() do
         :prod -> "https://onlinetools.ups.com/rest"
         _ -> "https://wwwcie.ups.com/rest"
       end

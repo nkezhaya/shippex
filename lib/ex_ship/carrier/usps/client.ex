@@ -1,10 +1,10 @@
-defmodule Shippex.Carrier.USPS.Client do
+defmodule ExShip.Carrier.USPS.Client do
   @moduledoc false
   use HTTPoison.Base
 
   def process_url(endpoint) do
     subdomain =
-      case Shippex.env() do
+      case ExShip.env() do
         :dev -> "stg-secure"
         :prod -> "secure"
       end

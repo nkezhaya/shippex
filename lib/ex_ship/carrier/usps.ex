@@ -1,14 +1,14 @@
-defmodule Shippex.Carrier.USPS do
+defmodule ExShip.Carrier.USPS do
   @moduledoc false
-  @behaviour Shippex.Carrier
+  @behaviour ExShip.Carrier
 
   require EEx
   import SweetXml
-  import Shippex.Address, only: [state_without_country: 1]
+  import ExShip.Address, only: [state_without_country: 1]
 
-  alias Shippex.Carrier.USPS.Client
-  alias Shippex.Carrier.USPS.Insurance
-  alias Shippex.{Address, Config, InvalidConfigError, Package, Label, Service, Shipment, Util}
+  alias ExShip.Carrier.USPS.Client
+  alias ExShip.Carrier.USPS.Insurance
+  alias ExShip.{Address, Config, InvalidConfigError, Package, Label, Service, Shipment, Util}
 
   @default_container :rectangular
   @large_containers ~w(rectangular nonrectangular variable)a
@@ -74,7 +74,7 @@ defmodule Shippex.Carrier.USPS do
   def fetch_rate(%Shipment{} = shipment, service) do
     service =
       case service do
-        %Shippex.Service{} = service -> service
+        %ExShip.Service{} = service -> service
         s when is_atom(s) -> Service.get(s)
       end
 
@@ -134,7 +134,7 @@ defmodule Shippex.Carrier.USPS do
         |> Enum.map(fn %{name: description, service: service} = response ->
           service = %{service | description: description}
 
-          rate = %Shippex.Rate{
+          rate = %ExShip.Rate{
             service: service,
             price: response.rate,
             line_items: response.line_items
@@ -213,23 +213,23 @@ defmodule Shippex.Carrier.USPS do
       line_items = response.line_items
       price = line_items |> Enum.map(& &1.price) |> Enum.sum()
 
-      rate = %Shippex.Rate{service: service, price: price, line_items: line_items}
+      rate = %ExShip.Rate{service: service, price: price, line_items: line_items}
       image = String.replace(response.image, "\n", "")
       label = %Label{tracking_number: response.tracking_number, format: :pdf, image: image}
 
-      transaction = Shippex.Transaction.new(shipment, rate, label)
+      transaction = ExShip.Transaction.new(shipment, rate, label)
 
       {:ok, transaction}
     end
   end
 
   @impl true
-  def cancel_transaction(%Shippex.Transaction{} = transaction) do
+  def cancel_transaction(%ExShip.Transaction{} = transaction) do
     cancel_transaction(transaction.shipment, transaction.label.tracking_number)
   end
 
   @impl true
-  def cancel_transaction(%Shippex.Shipment{} = shipment, tracking_number) do
+  def cancel_transaction(%ExShip.Shipment{} = shipment, tracking_number) do
     root =
       if international?(shipment) do
         "eVSI"
@@ -342,7 +342,7 @@ defmodule Shippex.Carrier.USPS do
   @spec weight_in_ounces(number()) :: number()
   defp weight_in_ounces(pounds) do
     16 *
-      case Application.get_env(:shippex, :weight_unit, :lbs) do
+      case Application.get_env(:exship, :weight_unit, :lbs) do
         :lbs ->
           pounds
 
@@ -355,7 +355,7 @@ defmodule Shippex.Carrier.USPS do
 
           Must be either :lbs or :kg. This can be configured with:
 
-              config :shippex, :weight_unit, :lbs
+              config :exship, :weight_unit, :lbs
           """
       end
   end
@@ -386,7 +386,7 @@ defmodule Shippex.Carrier.USPS do
       true ->
         :usps_retail_ground
     end
-    |> Shippex.Service.get()
+    |> ExShip.Service.get()
   end
 
   defp international_mail_type(%Package{container: nil}), do: "PACKAGE"
@@ -403,7 +403,7 @@ defmodule Shippex.Carrier.USPS do
   end
 
   @impl true
-  def validate_address(%Shippex.Address{country: "US"} = address) do
+  def validate_address(%ExShip.Address{country: "US"} = address) do
     request = render_validate_address(address: address)
 
     with_response Client.post("", %{API: "Verify", XML: request}) do
@@ -421,7 +421,7 @@ defmodule Shippex.Carrier.USPS do
         |> Enum.map(fn candidate ->
           candidate
           |> Map.merge(Map.take(address, ~w(first_name last_name name company_name phone)a))
-          |> Shippex.Address.new!()
+          |> ExShip.Address.new!()
         end)
 
       {:ok, candidates}
@@ -467,7 +467,7 @@ defmodule Shippex.Carrier.USPS do
   def international?(_),
     do: false
 
-  defdelegate country(data), to: Shippex.Country
+  defdelegate country(data), to: ExShip.Country
 
   @doc """
   Returns a map of predefined containers for use with USPS. These can be
@@ -602,7 +602,7 @@ defmodule Shippex.Carrier.USPS do
   end
 end
 
-defmodule Shippex.Carrier.USPS.Classid do
+defmodule ExShip.Carrier.USPS.Classid do
   defstruct ratev4: [
               "0": "First-ClassMail;LargeEnvelope",
               "0": "First-ClassMail;StampedLetter",

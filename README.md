@@ -1,44 +1,40 @@
-# Shippex
+# ExShip
 
-[![Module Version](https://img.shields.io/hexpm/v/shippex.svg)](https://hex.pm/packages/shippex)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/shippex/)
-[![Total Download](https://img.shields.io/hexpm/dt/shippex.svg)](https://hex.pm/packages/shippex)
-[![License](https://img.shields.io/hexpm/l/shippex.svg)](https://hex.pm/packages/shippex)
-[![Last Updated](https://img.shields.io/github/last-commit/whitepaperclip/shippex.svg)](https://github.com/whitepaperclip/shippex/commits/master)
+[![Last Updated](https://img.shields.io/github/last-commit/data-twister/exship.svg)](https://github.com/data-twister/exship/commits/master)
 
-Shippex is an abstraction of commonly used features in shipping with various carriers. It provides a (hopefully) pleasant API to work with carrier-provided web interfaces for fetching rates and printing shipping labels.
+ExShip  is a fork of the excellent shippex module by Nick Kezhaya which is an abstraction of commonly used features in shipping with various carriers. It provides a (hopefully) pleasant API to work with carrier-provided web interfaces for fetching rates and printing shipping labels.
 
 As of now, only UPS and USPS are supported. More carrier support will come in the future. Units of measurement are mostly hardcoded to inches and miles.
 
 ## Installation
 
-Add `shippex` to your list of dependencies in `mix.exs`:
+Add `exship` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:shippex, "~> 0.17"}]
+  [{:exship, "~> 0.17"}]
 end
 ```
 
-Ensure `shippex` is started before your application:
+Ensure `exship` is started before your application:
 
 ```elixir
 def application do
-  [applications: [:shippex]]
+  [applications: [:exship]]
 end
 ```
 
 ## Configuration
 
 ```elixir
-config :shippex,
+config :exship,
   env: :dev,
   distance_unit: :in, # either :in or :cm
   weight_unit: :lbs, # either :lbs or :kg
   currency: :usd, # :usd, :can, :mxn, :eur
   carriers: [
     ups: [
-      module: Shippex.Carrier.UPS, # optional
+      module: ExShip.Carrier.UPS, # optional
       username: "MyUsername",
       password: "MyPassword",
       secret_key: "123123",
@@ -53,7 +49,7 @@ config :shippex,
       }
     ],
     usps: [
-      module: Shippex.Carrier.USPS,
+      module: ExShip.Carrier.USPS,
       username: "MyUsername",
       password: "MyPassword"
     ]
@@ -64,9 +60,9 @@ config :shippex,
 
 ```elixir
 # set the config after compilation (optional)
-carriers_config =  [usps: [module: Shippex.Carrier.USPS, username: "", password: ""]]
+carriers_config =  [usps: [module: ExShip.Carrier.USPS, username: "", password: ""]]
 # Create origin/destination addresses.
-origin = Shippex.Address.new(%{
+origin = ExShip.Address.new(%{
   name: "Earl G",
   phone: "123-123-1234",
   address: "9999 Hobby Lane",
@@ -76,7 +72,7 @@ origin = Shippex.Address.new(%{
   postal_code: "78703"
 })
 
-destination = Shippex.Address.new(%{
+destination = ExShip.Address.new(%{
   name: "Bar Baz",
   phone: "123-123-1234",
   address: "1234 Foo Blvd",
@@ -89,7 +85,7 @@ destination = Shippex.Address.new(%{
 })
 
 # Create a package. Currently only inches and pounds (lbs) supported.
-package = Shippex.Package.new(%{items: [%{
+package = ExShip.Package.new(%{items: [%{
   quantity: 8,
   weight: 45,
   description: "Headphones",
@@ -103,27 +99,27 @@ package = Shippex.Package.new(%{items: [%{
 {:ok, destination} = destination
 
 # Link the origin, destination, and package with a shipment.
-shipment = Shippex.Shipment.new(origin, destination, [package])
+shipment = ExShip.Shipment.new(origin, destination, [package])
 
 {:ok, shipment} = shipment
 
 carrier = :usps
 
 ## fetch the available shipping methods
-services = Shippex.Service.services_for_carrier(carrier, shipment) |> Enum.map(fn(x) -> x.id end)
+services = ExShip.Service.services_for_carrier(carrier, shipment) |> Enum.map(fn(x) -> x.id end)
 
 # Fetch rates to present to the user.
-rates = Shippex.fetch_rates(shipment, [carriers: carrier, services: services]) |> Enum.reject(fn({x,_}) -> x == :error end)
-# rates = Shippex.fetch_rate(shipment, :usps_retail_ground) 
+rates = ExShip.fetch_rates(shipment, [carriers: carrier, services: services]) |> Enum.reject(fn({x,_}) -> x == :error end)
+# rates = ExShip.fetch_rate(shipment, :usps_retail_ground) 
 # Fetch rates to present to the user with carrier config passed at runtime.
 #carrier_config = []
-#rates = Shippex.fetch_rates(shipment, [carriers: carrier, services: services, carrier_config: carrier_config])
+#rates = ExShip.fetch_rates(shipment, [carriers: carrier, services: services, carrier_config: carrier_config])
 
 # Accept one of the services and print the label
 {:ok, rate} = Enum.shuffle(rates) |> hd
 
 # Fetch the label. Includes the tracking number and a gif image of the label.
-{:ok, transaction} = Shippex.create_transaction(shipment, rate.service)
+{:ok, transaction} = ExShip.create_transaction(shipment, rate.service)
 
 rate = transaction.rate
 label = transaction.label
@@ -137,7 +133,7 @@ File.write!("#{label.tracking_number}.#{label.format}", Base.decode64!(label.ima
 
 ## Creating your own shipping modules
 there are 2 ways of setting up your own shipping module either specifing it in the config if its in its own namespace or
-creating a module in your project with following module naming conventions defmodule applicationname.Shippex.Carrier.Modulename, and setting up the config carriers key to match the modules config() return. see the ups module for syntax examples
+creating a module in your project with following module naming conventions defmodule applicationname.ExShip.Carrier.Modulename, and setting up the config carriers key to match the modules config() return. see the ups module for syntax examples
 ## TODO:
 
 Carrier support:

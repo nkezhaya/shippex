@@ -1,4 +1,4 @@
-defmodule Shippex.USPS.LabelTest do
+defmodule ExShip.USPS.LabelTest do
   use ExUnit.Case
 
   describe "domestic" do
@@ -25,7 +25,7 @@ defmodule Shippex.USPS.LabelTest do
     test "setting insurance to 0 does not trigger error" do
       shipment = Helper.valid_shipment(insurance: 0)
 
-      {:ok, transaction} = Shippex.Carrier.USPS.create_transaction(shipment, :usps_priority)
+      {:ok, transaction} = ExShip.Carrier.USPS.create_transaction(shipment, :usps_priority)
       assert length(transaction.rate.line_items) == 1
     end
   end
@@ -67,7 +67,7 @@ defmodule Shippex.USPS.LabelTest do
   describe "south korea" do
     test "priority label generated for south korea" do
       address =
-        Shippex.Address.new!(%{
+        ExShip.Address.new!(%{
           first_name: "John",
           last_name: "Doe",
           address: "29-11 Hoehyeondong 1(il)-ga",
@@ -84,10 +84,10 @@ defmodule Shippex.USPS.LabelTest do
 
   defp test_shipment(shipment, service) do
     expected_line_items = if shipment.package.insurance, do: 2, else: 1
-    {:ok, rate} = Shippex.Carrier.USPS.fetch_rate(shipment, service)
+    {:ok, rate} = ExShip.Carrier.USPS.fetch_rate(shipment, service)
     assert length(rate.line_items) == expected_line_items
 
-    {:ok, transaction} = Shippex.Carrier.USPS.create_transaction(shipment, rate.service)
+    {:ok, transaction} = ExShip.Carrier.USPS.create_transaction(shipment, rate.service)
     assert length(transaction.rate.line_items) == expected_line_items
   end
 end

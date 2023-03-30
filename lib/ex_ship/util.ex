@@ -1,4 +1,4 @@
-defmodule Shippex.Util do
+defmodule ExShip.Util do
   @moduledoc false
 
   @doc """
@@ -39,7 +39,7 @@ defmodule Shippex.Util do
       iex> Util.price_to_dollars(200_00)
       "200"
       iex> Util.price_to_dollars("20000")
-      ** (FunctionClauseError) no function clause matching in Shippex.Util.price_to_dollars/1
+      ** (FunctionClauseError) no function clause matching in ExShip.Util.price_to_dollars/1
   """
   @spec price_to_dollars(integer) :: String.t() | none()
   def price_to_dollars(nil), do: "0.00"
@@ -188,16 +188,16 @@ defmodule Shippex.Util do
       {%{}, :module_name}
   """
   def get_shipping_modules() do
-    {:ok, modules} = :application.get_key(:shippex, :modules)
+    {:ok, modules} = :application.get_key(:exship, :modules)
 
     modules
     |> Stream.map(&Module.split/1)
     |> Stream.filter(fn module ->
       case module do
-        ["Shippex", "Carrier", "_", "Client"] -> false
-        [_, "Shippex", "Carrier", "Client"] -> false
-        ["Shippex", "Carrier", _] -> true
-        [_, "Shippex", "Carrier", _] -> true
+        ["ExShip", "Carrier", "_", "Client"] -> false
+        [_, "ExShip", "Carrier", "Client"] -> false
+        ["ExShip", "Carrier", _] -> true
+        [_, "ExShip", "Carrier", _] -> true
 
         _ -> false
       end

@@ -1,9 +1,9 @@
-defmodule Shippex.Transaction do
+defmodule ExShip.Transaction do
   @moduledoc """
   Defines a struct that represents billable transactions with carriers.
   """
 
-  alias Shippex.{Transaction, Shipment, Rate, Label, Carrier}
+  alias ExShip.{Transaction, Shipment, Rate, Label, Carrier}
 
   @enforce_keys [:shipment, :rate, :label, :carrier]
   defstruct [:shipment, :rate, :label, :carrier]

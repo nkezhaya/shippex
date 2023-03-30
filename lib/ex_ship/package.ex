@@ -1,4 +1,4 @@
-defmodule Shippex.Package do
+defmodule ExShip.Package do
   @moduledoc """
   Defines the struct for storing a `Package`, which is then passed along with
   an origin and destination address for shipping estimates. A `description` is
@@ -14,7 +14,7 @@ defmodule Shippex.Package do
   `:description` can optionally be passed in. Otherwise, it will be generated
   by joining the descriptions of each of the items.
 
-      Shippex.Package.package(%{length: 8
+      ExShip.Package.package(%{length: 8
                                 width: 8,
                                 height: 8,
                                 items: [
@@ -25,7 +25,7 @@ defmodule Shippex.Package do
       # => %Package{weight: 3, monetary_value: 300, description: "A, B", ...}
   """
 
-  alias Shippex.Item
+  alias ExShip.Item
 
   @enforce_keys [:length, :width, :height, :weight, :items, :monetary_value, :description]
   @fields ~w(length width height weight girth container insurance monetary_value description items)a

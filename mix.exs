@@ -53,7 +53,7 @@ defmodule Shippex.Mixfile do
       {:sweet_xml, ">= 0.0.0"},
       {:html_entities, ">= 0.0.0"},
       {:jason, "~> 1.2"},
-      {:decimal, "~> 1.3"},
+      {:decimal, ">= 1.3.0"},
       {:iso, "~> 1.2"},
       {:csv, "~> 2.4", optional: true, only: [:dev]}
     ]
